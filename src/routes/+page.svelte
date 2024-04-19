@@ -15,7 +15,7 @@
     let characters = [
         {
             id: 'player',
-            name: 'frieren',
+            name: 'Frieren',
             avatar: 'characters/frieren.png',
             items: [],
             // 更多角色屬性...
@@ -25,12 +25,21 @@
 
     let items = [
         {
-            id: 'key',
-            name: 'Key',
-            icon: '/path/to/key/icon.jpg',
-            // 更多物品屬性...
+            id: 'book',
+            name: 'book',
+            icon: 'items/book.jpeg',
         },
-        // 更多物品...
+        {
+            id: 'pen',
+            name: 'pen',
+            icon: 'items/pen.jpeg',
+        },
+        {
+            id: 'laptop',
+            name: 'laptop',
+            icon: 'items/laptop.jpeg',
+        },
+        
     ];
 
     let currentScene = scenes[0];
@@ -50,5 +59,14 @@
     <img class="character-avatar" src={player.avatar} alt={player.name} />
 </div>
 <div class="subtitle-window">
+    <h2>{player.name}</h2>
     <p>{currentScene.description}</p>
+</div>
+<div class="item-container">
+    {#each items as item (item.id)}
+        <div class="item">
+            <img src={item.icon} alt={item.name} />
+            <p>{item.name}</p>
+        </div>
+    {/each}
 </div>

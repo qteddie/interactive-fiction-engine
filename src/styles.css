@@ -34,3 +34,30 @@
     box-sizing: border-box; /* This makes sure the padding is included in the window's total height */
     overflow: auto; /* This makes the window scrollable if the text is too long */
 }
+.item-container {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 20px;
+    padding: 20px;
+    background-color: #f8f8f8;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.item p {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 14px;
+}
