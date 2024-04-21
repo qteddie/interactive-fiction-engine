@@ -5,6 +5,7 @@
     import Load from './Load.svelte';
     import Settings from './Settings.svelte';
     import Help from './Help.svelte';
+    import '../node_modules/github-markdown-css/github-markdown.css';
 </script>
 
 

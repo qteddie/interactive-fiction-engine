@@ -23,21 +23,3 @@
     <button on:click={startGame}>Start</button>
 </div>
 {/if}
-
-<!-- 
-<div class="scene-container">
-    <img class="scene-image" src={currentScene.image} alt={currentScene.description} />
-    <img class="character-avatar" src={player.avatar} alt={player.name} />
-</div>
-<div class="subtitle-window">
-    <h2>{player.name}</h2>
-    <p>{currentScene.description}</p>
-</div>
-<div class="item-container">
-    {#each items as item (item.id)}
-        <div class="item">
-            <img src={item.icon} alt={item.name} />
-            <p>{item.name}</p>
-        </div>
-    {/each}
-</div> -->
