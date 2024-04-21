@@ -25,7 +25,7 @@
 #include <jansson.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <simple_parse.h>
+#include "lib/simple_parse.h"
 /* forward refs */
 void print_json(json_t *root);
 void print_json_aux(json_t *element, int indent);

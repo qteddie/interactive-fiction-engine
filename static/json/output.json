@@ -1,0 +1,105 @@
+{
+    "name": "Final Project",
+    "author": "TA",
+    "player": {
+        "starter": "start",
+        "inventory": [
+            "vision-pro"
+        ]
+    },
+    "scene": {
+        "library": {
+            "name": "The School Library",
+            "background": "assets/scene/library.bmp"
+        },
+        "meeting-room": {
+            "name": "The Meeting Room",
+            "background": "assets/scene/meeting-room.bmp"
+        }
+    },
+    "character": {
+        "classmate": {
+            "name": "Alice (your classmate)",
+            "avatar": "assets/character/alice/avatar.bmp",
+            "tachie": "assets/character/alice/tachie.bmp"
+        },
+        "ta": {
+            "location": "meeting-room",
+            "name": "Teaching Assistant",
+            "avatar": "assets/character/ta/avatar.bmp",
+            "tachie": "assets/character/ta/tachie.bmp"
+        }
+    },
+    "item": {
+        "vision-pro": {
+            "name": "Vision Pro",
+            "description": "A spatial computer",
+            "icon": "assets/item/vision-pro/icon.bmp"
+        }
+    },
+    "event": {
+        "start": {
+            "scene": "library",
+            "dialogue": "hello"
+        },
+        "change_scene_to_meeting_room": {
+            "scene": "meeting-room",
+            "dialogue": "ta_intro"
+        }
+    },
+    "dialogue": {
+        "hello": {
+            "character": "classmate",
+            "text": "嗨！聽說今年的期末專題要做互動式小說引擎喔～",
+            "options": []
+        },
+        "teamup": {
+            "character": "classmate",
+            "text": "好，那我們一組吧！想一起來討論看看嗎？",
+            "options": []
+        },
+        "explanation": {
+            "character": "classmate",
+            "text": "就是一個讓你創建和玩你自己故事的遊戲平台。聽起來有點複雜，但應該蠻有趣的！",
+            "options": []
+        },
+        "ta_intro": {
+            "character": "ta",
+            "text": "你好！來討論期末專題嗎？",
+            "options": {
+                "text": "是的，我們有一些想法想要詢問。",
+                "next": "ta_discuss"
+            }
+        },
+        "ta_discuss": {
+            "character": "ta",
+            "text": "太好了！請告訴我你們的想法。",
+            "options": []
+        },
+        "emotion_implementation": {
+            "character": "ta",
+            "text": "情感變化是一個很好的功能，可以讓遊戲更加引人入勝。你們可以設計一個情感計分系統，透過玩家的選擇來影響角色對玩家的感情。",
+            "options": []
+        },
+        "multiple_endings": {
+            "character": "ta",
+            "text": "多重結局是一個很好的方式來增加遊戲的重玩價值。你們應該考慮讓玩家的選擇導向不同的故事路線和結局。",
+            "options": []
+        },
+        "finalize_ideas": {
+            "character": "ta",
+            "text": "很好，你們似乎已經有了一個明確的方向。開始動手做吧，有任何問題可以隨時來找我討論。",
+            "options": []
+        },
+        "simplify_discussion": {
+            "character": "ta",
+            "text": "沒問題，你們可以從基本的好感度系統開始，然後逐步增加更多的功能。",
+            "options": []
+        },
+        "time_management": {
+            "character": "ta",
+            "text": "合理的時間管理和階段性目標設定對於成功完成專案非常重要。建議你們制定一個時間表。",
+            "options": []
+        }
+    }
+}
