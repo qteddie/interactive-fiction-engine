@@ -5,10 +5,12 @@
     import Load from './Load.svelte';
     import Settings from './Settings.svelte';
     import Help from './Help.svelte';
-    import '../node_modules/github-markdown-css/github-markdown.css';
+    // import 'github-markdown-css/github-markdown.css';
 </script>
 
-
+<svelte:head>
+    <link rel="stylesheet" href="/github-markdown-css/github-markdown.css">
+</svelte:head>
 <Router>
     <Route path="/start" component={Start} />
     <Route path="/load" component={Load} />
