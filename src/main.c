@@ -81,6 +81,30 @@ json_t *toml_to_json(toml_table_t *toml)
     }
     return json;
 }
+
+void process_toml_file(const char *input_file, const char *output_file)
+{
+    FILE *fp = fopen(input_file, "r");
+    if (!fp)
+    {
+        error("Failed to open file: ", strerror(errno));
+    }
+
+    char errbuf[256];
+    toml_table_t *toml = toml_parse_file(fp, errbuf, sizeof(errbuf));
+    if (!toml)
+    {
+        error("Failed to parse TOML: ", errbuf);
+    }
+
+    json_t *json = toml_to_json(toml);
+    json_dump_file(json, output_file, JSON_INDENT(4));
+
+    toml_free(toml);
+    json_decref(json);
+    fclose(fp);
+}
+
 int main()
 {
     // ---------------------------------Transform the TOML file to YAML----------------------------------------
@@ -121,30 +145,9 @@ int main()
     // fclose(outfile);
     // ---------------------------------Transform the TOML file to YAML----------------------------------------
     // Only do this once
+    
     // ---------------------------------Transform the TOML file to JSON----------------------------------------
-    FILE *fp = fopen("static/toml/test.toml", "r");
-    if (!fp)
-    {
-        error("Failed to open file: ", strerror(errno));
-    }
-
-    char errbuf[256];
-    toml_table_t *toml = toml_parse_file(fp, errbuf, sizeof(errbuf));
-    if (!toml)
-    {
-        error("Failed to parse TOML: ", errbuf);
-    }
-
-    json_t *json = toml_to_json(toml);
-    json_dump_file(json, "static/json/output.json", JSON_INDENT(4));
-
-    toml_free(toml);
-    json_decref(json);
-    fclose(fp);
-    // ---------------------------------Transform the TOML file to JSON----------------------------------------
-
-
-
-
+    process_toml_file("static/toml/eddie.toml", "static/json/output1.json");
     return 0;
+    // ---------------------------------Transform the TOML file to JSON----------------------------------------
 }
