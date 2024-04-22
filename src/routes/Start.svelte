@@ -15,7 +15,7 @@
     }
 
     function startDialogue() {
-        const dialogues = 'Character Dialogue';
+        const dialogues = 'First line of dialogue\nSecond line of dialogue';
         intervalId = setInterval(() => {
             if (dialogueIndex < dialogues.length) {
                 characterDialogue += dialogues[dialogueIndex];
@@ -57,10 +57,12 @@
 
 {#if !showContainer}
 <div class="dialogue-box">
-    <div class="character-name">{ playerName }</div>
+    <div class="character-info"> <!-- Add this line -->
+        <div class="character-avatar">
+            <img src="head/avatar.jpeg" alt="Character Avatar">
+        </div>
+        <div class="character-name">{ playerName }</div>
+    </div> <!-- Add this line -->
     <div class="character-dialogue">{ characterDialogue }</div>
-    <div class="character-avatar">
-        <img src="head/avatar.jpeg" alt="Character Avatar">
-    </div>
 </div>
 {/if}
