@@ -1,0 +1,91 @@
+name = "The Mage's Journey"
+author = "eddie"
+
+[player]
+starter = "start"
+inventory = [
+    "magic-wand",
+]
+
+[scene.forest]
+name = "Enchanted Forest"
+background = "static/scenes/forest.jpeg"
+
+[scene.castle]
+name = "Dark Castle"
+background = "static/scenes/castle.jpeg"
+
+[character.mage]
+name = "Mage (you)"
+avatar = "static/character/frieren/avatar.jpeg"
+tachie = "static/character/frieren/tachie.png"
+
+[character.dragon]
+location = "castle"
+name = "Dragon"
+avatar = "static/character/dragon/avatar.jpeg"
+tachie = "static/character/dragon/tachie.jpeg"
+
+[item.magic-wand]
+name = "Magic Wand"
+description = "A wand that channels your magic power"
+icon = "static/item/magic-wand.jpeg"
+
+[event.start]
+scene = "forest"
+dialogue = "beginning"
+
+[dialogue.beginning]
+character = "mage"
+text = "I must find and defeat a dragon in this different world to return to my own."
+
+[[dialogue.beginning.options]]
+text = "Start the adventure"
+next = "forest_exploration"
+
+[dialogue.forest_exploration]
+character = "mage"
+text = "I am exploring the forest, looking for the way to the castle."
+
+[[dialogue.forest_exploration.options]]
+text = "Keep searching"
+event = "change_scene_to_castle"
+
+[event.change_scene_to_castle]
+scene = "castle"
+dialogue = "castle_arrival"
+
+[dialogue.castle_arrival]
+character = "mage"
+text = "I have arrived at the castle, the dragon is inside."
+
+[[dialogue.castle_arrival.options]]
+text = "Enter the castle"
+next = "dragon_encounter"
+
+[dialogue.dragon_encounter]
+character = "dragon"
+text = "Who are you? Why have you come to my castle?"
+
+[[dialogue.dragon_encounter.options]]
+text = "I am here to defeat you and return to my world."
+next = "dragon_battle"
+
+[dialogue.dragon_battle]
+character = "mage"
+text = "I wave my magic wand and engage in a fierce battle with the dragon."
+
+[[dialogue.dragon_battle.options]]
+text = "Use the strongest magic attack"
+event = "battle_outcome"
+
+[event.battle_outcome]
+scene = "forest"
+dialogue = "return_home"
+
+[dialogue.return_home]
+character = "mage"
+text = "I defeated the dragon and successfully returned to my world."
+
+[[dialogue.return_home.options]]
+text = "End the adventure"
