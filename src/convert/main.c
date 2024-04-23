@@ -185,7 +185,6 @@ void process_toml_file(const char *input_file, const char *output_file)
 
 int main()
 {
-    printf("Hello, World!\n");
     // ---------------------------------Transform the TOML file to YAML----------------------------------------
     // convert_toml_to_yaml("static/toml/test.toml", "output.yaml");
     // ---------------------------------Transform the TOML file to YAML----------------------------------------

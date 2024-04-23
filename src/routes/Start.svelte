@@ -34,6 +34,7 @@
             characterDialogue = 'Character Dialogue';
         }
     }
+
     // onMount(() => {
     //     const dialogueBoxes = document.getElementsByClassName('dialogue-box');
     //     for (let i = 0; i < dialogueBoxes.length; i++) {
@@ -44,11 +45,24 @@
     //         dialogueBoxes[i].setAttribute('tabindex', '0');
     //     }
     // });
+//------------------- HANDLE DATA -------------------
+
+// import { onMount } from 'svelte';
+
+// let gameData = null;
+
+// onMount(async () => {
+//     const response = await fetch('output.json');
+//     gameData = await response.json();
+// });
+//------------------- HANDLE DATA -------------------
+
 </script>
 
 <head>
     <link rel="stylesheet" href="src/routes/start.css">
 </head>
+
 
 {#if showContainer}
 <div class="container">
@@ -70,3 +84,46 @@
     <div class="character-dialogue">{ characterDialogue }</div>
 </div>
 {/if}
+
+<!-- {#if gameData}
+<div class="game-data">
+    <h2>{gameData.name} by {gameData.author}</h2>
+    <h3>Player</h3>
+    <p>Starter: {gameData.player.starter}</p>
+    <p>Inventory: {gameData.player.inventory.join(', ')}</p>
+
+    <h3>Scenes</h3>
+    {#each Object.entries(gameData.scene) as [key, value]}
+    <div>
+        <strong>{value.name}:</strong>
+        <img src={value.background} alt={value.name} />
+    </div>
+    {/each}
+
+    <h3>Characters</h3>
+    {#each Object.entries(gameData.character) as [key, value]}
+    <div>
+        <strong>{value.name}:</strong>
+        <img src={value.avatar} alt={value.name} />
+    </div>
+    {/each}
+
+    <h3>Items</h3>
+    {#each Object.entries(gameData.item) as [key, value]}
+    <div>
+        <strong>{value.name}:</strong>
+        <img src={value.icon} alt={value.name} />
+        <p>{value.description}</p>
+    </div>
+    {/each}
+
+    <h3>Events</h3>
+    {#each Object.entries(gameData.event) as [key, value]}
+    <div>
+        <strong>{key}:</strong>
+        <p>Scene: {value.scene}</p>
+        <p>Dialogue: {gameData.dialogue[value.dialogue].text}</p>
+    </div>
+    {/each}
+</div>
+{/if} -->
