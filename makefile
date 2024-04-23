@@ -1,8 +1,8 @@
 all:
-	emcc -O3 \
+	emcc -Oz \
 	-s WASM=1 \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap"]' \
-	-s TOTAL_MEMORY=2147483648 \
+	-s TOTAL_MEMORY=4294967296 \
 	-I./libs/jansson/src \
 	-I./libs/libyaml/include \
 	-I./libs/tomlc99 \

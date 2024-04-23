@@ -37,6 +37,7 @@
 		"@sveltejs/adapter-static": "^3.0.1",
 		"fs": "^0.0.1-security",
 		"github-markdown-css": "^5.5.1",
+		"js-yaml": "^4.1.0",
 		"svelte-routing": "^2.12.0"
 	}
 }
