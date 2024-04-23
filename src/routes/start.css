@@ -93,3 +93,26 @@ body {
     margin: 0;
     /* white-space: pre-wrap; */
 }
+
+.character-backpack {
+    /* 這裡新增你想要的背包樣式 */
+    width: 500px; /* 格子的寬度 */
+    height: 100px; 
+    margin-top: 10px;
+    font-size: 14px;
+    position: absolute; /* 將元素的定位設定為絕對定位 */
+    bottom: 280px; 
+    right: 20px;
+    background-color: rgba(210,180,140, 0.815);
+    color: rgb(0, 0, 0);
+   
+}
+
+.character-mana {
+    /* 這裡新增你想要的魔力值樣式 */
+    width: 300px; /* 格子的寬度 */
+    height: 50px; /* 格子的高度 */
+    border: 1px solid black; /* 格子的邊框 */
+    position: absolute; /* 將元素的定位設定為絕對定位 */
+    bottom: 280px; 
+}

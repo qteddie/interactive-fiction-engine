@@ -4,6 +4,8 @@
     let characterDialogue = ''; // Add this line
     let dialogueIndex = 0; // Add this line
     let intervalId = null; // Add this line
+    let backpack = {}; // 新增這行
+    let mana = 10; // 新增這行
 
     function startGame() {
         if (playerName != null && playerName != '') {
@@ -56,6 +58,8 @@
 {/if}
 
 {#if !showContainer}
+<div class="character-mana">Mana: { mana }</div> <!-- 新增這行 -->
+<div class="character-backpack">Backpack: { backpack }</div> <!-- 新增這行 -->
 <div class="dialogue-box">
     <div class="character-info"> <!-- Add this line -->
         <div class="character-avatar">
