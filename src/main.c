@@ -3,7 +3,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <toml.h>
-// #include <yaml.h>
+#include <yaml.h>
 #include <jansson.h>
 #include <unistd.h>
 
@@ -13,40 +13,40 @@ static void error(const char* msg, const char* msg1)
     exit(1);
 }
 
-// void toml_to_yaml(toml_table_t *toml, yaml_document_t *document, int node)
-// {
-//     const char *key;
-//     toml_table_t *tab;
-//     toml_array_t *arr;
-//     char *raw;
-//     for (int i = 0; 0 != (key = toml_key_in(toml, i)); i++)
-//     {
-//         if ((tab = toml_table_in(toml, key)))
-//         {
-//             int new_node_id = yaml_document_add_mapping(document, NULL, YAML_BLOCK_MAPPING_STYLE);
-//             toml_to_yaml(tab, document, new_node_id);  // Recursively process the table
-//             yaml_document_append_mapping_pair(document, node, yaml_document_add_scalar(document, NULL, (yaml_char_t *)key, -1, YAML_PLAIN_SCALAR_STYLE), new_node_id);
-//         }
-//         else if ((arr = toml_array_in(toml, key)))
-//         {
-//             int new_node_id = yaml_document_add_sequence(document, NULL, YAML_BLOCK_SEQUENCE_STYLE);
-//             for (int j = 0; j < toml_array_nelem(arr); j++)
-//             {
-//                 if (toml_rtos(toml_raw_at(arr, j), &raw) == 0)
-//                 {
-//                     yaml_document_append_sequence_item(document, new_node_id, yaml_document_add_scalar(document, NULL, (yaml_char_t *)raw, -1, YAML_PLAIN_SCALAR_STYLE));
-//                     free(raw);
-//                 }
-//             }
-//             yaml_document_append_mapping_pair(document, node, yaml_document_add_scalar(document, NULL, (yaml_char_t *)key, -1, YAML_PLAIN_SCALAR_STYLE), new_node_id);
-//         }
-//         else if (toml_rtos(toml_raw_in(toml, key), &raw) == 0)
-//         {
-//             yaml_document_append_mapping_pair(document, node, yaml_document_add_scalar(document, NULL, (yaml_char_t *)key, -1, YAML_PLAIN_SCALAR_STYLE), yaml_document_add_scalar(document, NULL, (yaml_char_t *)raw, -1, YAML_PLAIN_SCALAR_STYLE));
-//             free(raw);
-//         }
-//     }
-// }
+void toml_to_yaml(toml_table_t *toml, yaml_document_t *document, int node)
+{
+    const char *key;
+    toml_table_t *tab;
+    toml_array_t *arr;
+    char *raw;
+    for (int i = 0; 0 != (key = toml_key_in(toml, i)); i++)
+    {
+        if ((tab = toml_table_in(toml, key)))
+        {
+            int new_node_id = yaml_document_add_mapping(document, NULL, YAML_BLOCK_MAPPING_STYLE);
+            toml_to_yaml(tab, document, new_node_id);  // Recursively process the table
+            yaml_document_append_mapping_pair(document, node, yaml_document_add_scalar(document, NULL, (yaml_char_t *)key, -1, YAML_PLAIN_SCALAR_STYLE), new_node_id);
+        }
+        else if ((arr = toml_array_in(toml, key)))
+        {
+            int new_node_id = yaml_document_add_sequence(document, NULL, YAML_BLOCK_SEQUENCE_STYLE);
+            for (int j = 0; j < toml_array_nelem(arr); j++)
+            {
+                if (toml_rtos(toml_raw_at(arr, j), &raw) == 0)
+                {
+                    yaml_document_append_sequence_item(document, new_node_id, yaml_document_add_scalar(document, NULL, (yaml_char_t *)raw, -1, YAML_PLAIN_SCALAR_STYLE));
+                    free(raw);
+                }
+            }
+            yaml_document_append_mapping_pair(document, node, yaml_document_add_scalar(document, NULL, (yaml_char_t *)key, -1, YAML_PLAIN_SCALAR_STYLE), new_node_id);
+        }
+        else if (toml_rtos(toml_raw_in(toml, key), &raw) == 0)
+        {
+            yaml_document_append_mapping_pair(document, node, yaml_document_add_scalar(document, NULL, (yaml_char_t *)key, -1, YAML_PLAIN_SCALAR_STYLE), yaml_document_add_scalar(document, NULL, (yaml_char_t *)raw, -1, YAML_PLAIN_SCALAR_STYLE));
+            free(raw);
+        }
+    }
+}
 json_t *toml_to_json(toml_table_t *toml)
 {
     json_t *json = json_object();
@@ -108,46 +108,46 @@ void process_toml_file(const char *input_file, const char *output_file)
 int main()
 {
     // ---------------------------------Transform the TOML file to YAML----------------------------------------
-    // FILE *fp = fopen("static/toml/test.toml", "r");
-    // if (!fp)
-    // {
-    //     error("Failed to open file: ", strerror(errno));
-    // }
+    FILE *fp = fopen("static/toml/test.toml", "r");
+    if (!fp)
+    {
+        error("Failed to open file: ", strerror(errno));
+    }
 
-    // char errbuf[256];
-    // toml_table_t *toml = toml_parse_file(fp, errbuf, sizeof(errbuf));
-    // if (!toml)
-    // {
-    //     error("Failed to parse TOML: ", errbuf);
-    // }
+    char errbuf[256];
+    toml_table_t *toml = toml_parse_file(fp, errbuf, sizeof(errbuf));
+    if (!toml)
+    {
+        error("Failed to parse TOML: ", errbuf);
+    }
 
-    // yaml_document_t document;
-    // yaml_document_initialize(&document, NULL, NULL, NULL, 1, 1);
+    yaml_document_t document;
+    yaml_document_initialize(&document, NULL, NULL, NULL, 1, 1);
 
-    // int root = yaml_document_add_mapping(&document, NULL, YAML_BLOCK_MAPPING_STYLE);
-    // toml_to_yaml(toml, &document, root);
+    int root = yaml_document_add_mapping(&document, NULL, YAML_BLOCK_MAPPING_STYLE);
+    toml_to_yaml(toml, &document, root);
 
-    // FILE *outfile = fopen("output.yaml", "w");
-    // if (!outfile)
-    // {
-    //     error("Failed to open output file: ", strerror(errno));
-    // }
+    FILE *outfile = fopen("output.yaml", "w");
+    if (!outfile)
+    {
+        error("Failed to open output file: ", strerror(errno));
+    }
 
-    // yaml_emitter_t emitter;
-    // yaml_emitter_initialize(&emitter);
-    // yaml_emitter_set_output_file(&emitter, outfile);
-    // yaml_emitter_dump(&emitter, &document);
+    yaml_emitter_t emitter;
+    yaml_emitter_initialize(&emitter);
+    yaml_emitter_set_output_file(&emitter, outfile);
+    yaml_emitter_dump(&emitter, &document);
 
-    // toml_free(toml);
-    // yaml_document_delete(&document);
-    // yaml_emitter_delete(&emitter);
-    // fclose(fp);
-    // fclose(outfile);
+    toml_free(toml);
+    yaml_document_delete(&document);
+    yaml_emitter_delete(&emitter);
+    fclose(fp);
+    fclose(outfile);
     // ---------------------------------Transform the TOML file to YAML----------------------------------------
     // Only do this once
     
     // ---------------------------------Transform the TOML file to JSON----------------------------------------
-    process_toml_file("static/toml/eddie.toml", "static/json/output1.json");
+    // process_toml_file("static/toml/eddie.toml", "static/json/output1.json");
     return 0;
     // ---------------------------------Transform the TOML file to JSON----------------------------------------
 }
