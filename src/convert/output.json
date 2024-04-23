@@ -1,0 +1,86 @@
+{
+    "name": "The Mage's Journey",
+    "author": "eddie",
+    "player": {
+        "starter": "start",
+        "inventory": [
+            "magic-wand"
+        ]
+    },
+    "scene": {
+        "forest": {
+            "name": "Enchanted Forest",
+            "background": "static/scenes/forest.jpeg"
+        },
+        "castle": {
+            "name": "Dark Castle",
+            "background": "static/scenes/castle.jpeg"
+        }
+    },
+    "character": {
+        "mage": {
+            "name": "Mage (you)",
+            "avatar": "static/character/frieren/avatar.jpeg",
+            "tachie": "static/character/frieren/tachie.png"
+        },
+        "dragon": {
+            "location": "castle",
+            "name": "Dragon",
+            "avatar": "static/character/dragon/avatar.jpeg",
+            "tachie": "static/character/dragon/tachie.jpeg"
+        }
+    },
+    "item": {
+        "magic-wand": {
+            "name": "Magic Wand",
+            "description": "A wand that channels your magic power",
+            "icon": "static/item/magic-wand.jpeg"
+        }
+    },
+    "event": {
+        "start": {
+            "scene": "forest",
+            "dialogue": "beginning"
+        },
+        "change_scene_to_castle": {
+            "scene": "castle",
+            "dialogue": "castle_arrival"
+        },
+        "battle_outcome": {
+            "scene": "forest",
+            "dialogue": "return_home"
+        }
+    },
+    "dialogue": {
+        "beginning": {
+            "character": "mage",
+            "text": "I must find and defeat a dragon in this different world to return to my own.",
+            "options": []
+        },
+        "forest_exploration": {
+            "character": "mage",
+            "text": "I am exploring the forest, looking for the way to the castle.",
+            "options": []
+        },
+        "castle_arrival": {
+            "character": "mage",
+            "text": "I have arrived at the castle, the dragon is inside.",
+            "options": []
+        },
+        "dragon_encounter": {
+            "character": "dragon",
+            "text": "Who are you? Why have you come to my castle?",
+            "options": []
+        },
+        "dragon_battle": {
+            "character": "mage",
+            "text": "I wave my magic wand and engage in a fierce battle with the dragon.",
+            "options": []
+        },
+        "return_home": {
+            "character": "mage",
+            "text": "I defeated the dragon and successfully returned to my world.",
+            "options": []
+        }
+    }
+}
