@@ -1,71 +1,77 @@
 <script>
-    
+    import { pushState, replaceState } from '$app/navigation';
+
+    // Use pushState to add a new entry to the history stack
+    // pushState('/', { replace: true, keepfocus: true });
     //------------------- HANDLE DATA -------------------
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     
+    let divElement;
+
+    function handleKeydown(event) {
+        if (event.key === ' ') {
+            nextDialogue();
+        }
+    }
+    function handleClick() {
+        // window.alert('Hello');
+        nextDialogue();
+    }
+
+    onDestroy(() => {
+        if (divElement) {
+            divElement.removeEventListener('keydown', handleKeydown);
+        }
+    });
     let gameData = null;
+    let currentScene = null;
+    let currentCharacter = null;
+    let currentItem = null;
+    let dialogueKeys = null;
+    let intervalId; // Add this line
+    let currentDialogueIndex = 0;
+    let currentDialogue = '';
+    let playerName = '';
+    let showContainer = true;
+    let backpack = {}; // 新增這行
+    let mana = 10; // 新增這行
+    
     
     onMount(async () => {
         const response = await fetch('/json/output.json');
         gameData = await response.json();
+
+        console.log(gameData);
+
+        // Set the initial values after the data is fetched
+        currentScene = gameData.scene.forest;
+        currentCharacter = gameData.character.mage;
+        currentItem = gameData.item.magic_wand;
+        dialogueKeys = Object.keys(gameData.dialogue); // Get the keys of the dialogue object
+        currentDialogue = gameData.dialogue[dialogueKeys[currentDialogueIndex]];
+
     });
     //------------------- HANDLE DATA -------------------
-    let playerName = '';
-    let showContainer = true;
-    let characterDialogue = ''; // Add this line
-    let dialogueIndex = 0; // Add this line
-    let intervalId = null; // Add this line
-    let backpack = {}; // 新增這行
-    let mana = 10; // 新增這行
-
-    let currentScene = null;
-    let currentCharacter = null;
-    let currentItem = null;
-    let currentEvent = null;
+    function nextDialogue() {
+        currentDialogueIndex++;
+        intervalId = setInterval(() => {
+            if (currentDialogueIndex < dialogueKeys.length) {
+                currentDialogue = gameData.dialogue[dialogueKeys[currentDialogueIndex]];
+            } else {
+                clearInterval(intervalId);
+                // Reset the dialogue index or do something else when all dialogues have been shown
+                currentDialogueIndex = 0;
+            }
+        }, 100);
+    }
 
     function startGame() {
         if (playerName != null && playerName != '') {
             const playerData = { name: playerName };
             localStorage.setItem('playerData', JSON.stringify(playerData));
             showContainer = false;
-            
-            currentScene = gameData.scene.forest;
-            currentCharacter = gameData.character.mage;
-            currentItem = gameData.item.magic_wand;
-            currentEvent = gameData.event.start;
-
-            startDialogue(); // Add this line
         }
     }
-
-    function startDialogue() {
-        const dialogues = '';
-        intervalId = setInterval(() => {
-            if (dialogueIndex < dialogues.length) {
-                characterDialogue += dialogues[dialogueIndex];
-                dialogueIndex++;
-            } else {
-                clearInterval(intervalId);
-            }
-        }, 100); // Change this value to adjust the speed of the text display
-    }
-
-    function showAllText() { // Add this function
-        if (intervalId) {
-            clearInterval(intervalId);
-            characterDialogue = 'Character Dialogue';
-        }
-    }
-    function triggerEvent(eventName) {
-        currentEvent = gameData.event[eventName];
-        currentScene = gameData.scene[currentEvent.scene];
-        startDialogue(gameData.dialogue[currentEvent.dialogue].text);
-    }
-
-
-
-
-
 
 
 
@@ -76,87 +82,41 @@
     <link rel="stylesheet" href="src/routes/start.css">
 </head>
 
-
-{#if showContainer}
-<div class="container">
-    <input bind:value={playerName} placeholder="Please enter player name" />
-    <button on:click={startGame}>Start</button>
-</div>
-{/if}
-
-{#if !showContainer}
-<div class="scene">
-    <img src={currentScene.background} alt={currentScene.name} />
-</div>
-<!-- <div class="character">
-    <img src={currentCharacter.avatar} alt={currentCharacter.name} />
-</div> -->
-<div class="item">
-    <img src={currentItem.icon} alt={currentItem.name} />
-</div>
-<div class="event">
-    <p>{currentEvent.dialogue}</p>
-</div>
-{/if}
-
-
-
-{#if !showContainer}
-<div class="character-mana">Mana: { mana }</div> <!-- 新增這行 -->
-<div class="character-backpack">Backpack: { backpack }</div> <!-- 新增這行 -->
-<div class="dialogue-box">
-    <div class="character-info"> <!-- Add this line -->
-        <div class="character-avatar">
-            <img src={currentCharacter.avatar} alt={currentCharacter.name} />
-        </div>
-        <div class="character-name">{ playerName }</div>
-    </div> <!-- Add this line -->
-    <div class="character-dialogue">{ characterDialogue }</div>
-</div>
-{/if}
-
-<!-- {#if gameData}
-    <div class="game-data">
-        <h2>{gameData.name} by {gameData.author}</h2>
-        <h3>Player</h3>
-        <p>Starter: {gameData.player.starter}</p>
-        <p>Inventory: {gameData.player.inventory.join(', ')}</p>
-        
-        <h3>Scenes</h3>
-        {#each Object.entries(gameData.scene) as [key, value]}
-        <div>
-            <strong>{value.name}:</strong>
-            <img src={value.background} alt={value.name} />
-        </div>
-        {/each}
-        
-        <h3>Characters</h3>
-        {#each Object.entries(gameData.character) as [key, value]}
-        <div>
-            <strong>{value.name}:</strong>
-            <img src={value.avatar} alt={value.name} />
-        </div>
-        {/each}
-        
-        <h3>Items</h3>
-        {#each Object.entries(gameData.item) as [key, value]}
-        <div>
-            <strong>{value.name}:</strong>
-            <img src={value.icon} alt={value.name} />
-            <p>{value.description}</p>
-        </div>
-        {/each}
-        
-        <h3>Events</h3>
-        {#each Object.entries(gameData.event) as [key, value]}
-        <div>
-            <strong>{key}:</strong>
-            <p>Scene: {value.scene}</p>
-            <p>Dialogue: {gameData.dialogue[value.dialogue].text}</p>
-        </div>
-        {/each}
+<!-- on:click={handleClick}  -->
+<div     
+    on:keydown={handleKeydown}
+    role="button" 
+    tabindex="0"
+>
+    {#if showContainer}
+    <div class="container">
+        <input bind:value={playerName} placeholder="Please enter player name" />
+        <button on:click={startGame}>Start</button>
     </div>
     {/if}
-
- -->
- 
+    {#if !showContainer}
+    <div class="scene">
+        <img src={currentScene.background} alt={currentScene.name} />
+    </div>
+    <div class="event">
+    </div>
+    <div class="character-mana">Mana: { mana }</div> <!-- 新增這行 -->
+    <div class="character-backpack"> <!-- 新增這行 -->
+        Backpack: { backpack }
+        <div class="item">
+            <img src={currentItem.icon} alt={currentItem.name} />
+        </div>
+    </div>
+    <div class="dialogue-box">
+        <div class="character-info"> <!-- Add this line -->
+            <div class="character-avatar">
+                <img src={currentCharacter.avatar} alt={currentCharacter.name} />
+            </div>
+            <div class="character-name">{ playerName }</div>
+        </div> <!-- Add this line -->
+        <div class="character-dialogue">
+            <p>{currentDialogue.text}</p>
+        </div>
+    </div>
+    {/if}
+</div>

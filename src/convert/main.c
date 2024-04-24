@@ -104,7 +104,12 @@ json_t *toml_to_json(toml_table_t *toml)
             json_t *json_arr = json_array();
             for (int j = 0; j < toml_array_nelem(arr); j++)
             {
-                if (toml_rtos(toml_raw_at(arr, j), &raw) == 0)
+                toml_table_t *arr_tab;
+                if ((arr_tab = toml_table_at(arr, j)))
+                {
+                    json_array_append_new(json_arr, toml_to_json(arr_tab));
+                }
+                else if (toml_rtos(toml_raw_at(arr, j), &raw) == 0)
                 {
                     json_array_append_new(json_arr, json_string(raw));
                     free(raw);

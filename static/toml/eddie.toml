@@ -9,27 +9,27 @@ inventory = [
 
 [scene.forest]
 name = "Enchanted Forest"
-background = "static/scenes/forest.jpeg"
+background = "/scene/forest.jpeg"
 
 [scene.castle]
 name = "Dark Castle"
-background = "static/scenes/castle.jpeg"
+background = "/scene/castle.jpeg"
 
 [character.mage]
 name = "Mage (you)"
-avatar = "static/character/frieren/avatar.jpeg"
-tachie = "static/character/frieren/tachie.png"
+avatar = "/character/frieren/avatar.jpeg"
+tachie = "/character/frieren/tachie.png"
 
 [character.dragon]
 location = "castle"
 name = "Dragon"
-avatar = "static/character/dragon/avatar.jpeg"
-tachie = "static/character/dragon/tachie.jpeg"
+avatar = "/character/dragon/avatar.jpeg"
+tachie = "/character/dragon/tachie.jpeg"
 
 [item.magic-wand]
 name = "Magic Wand"
 description = "A wand that channels your magic power"
-icon = "static/item/magic-wand.jpeg"
+icon = "/item/magic-wand.jpeg"
 
 [event.start]
 scene = "forest"
