@@ -4,37 +4,37 @@
     "player": {
         "starter": "start",
         "inventory": [
-            "magic-wand"
+            "magic_wand"
         ]
     },
     "scene": {
         "forest": {
             "name": "Enchanted Forest",
-            "background": "static/scenes/forest.jpeg"
+            "background": "/scene/forest.jpeg"
         },
         "castle": {
             "name": "Dark Castle",
-            "background": "static/scenes/castle.jpeg"
+            "background": "/scene/forest.jpeg"
         }
     },
     "character": {
         "mage": {
             "name": "Mage (you)",
-            "avatar": "static/character/frieren/avatar.jpeg",
-            "tachie": "static/character/frieren/tachie.png"
+            "avatar": "/character/frieren/avatar.jpeg",
+            "tachie": "/character/frieren/tachie.png"
         },
         "dragon": {
             "location": "castle",
             "name": "Dragon",
-            "avatar": "static/character/dragon/avatar.jpeg",
-            "tachie": "static/character/dragon/tachie.jpeg"
+            "avatar": "/character/dragon/avatar.jpeg",
+            "tachie": "/character/dragon/tachie.jpeg"
         }
     },
     "item": {
-        "magic-wand": {
-            "name": "Magic Wand",
+        "magic_wand": {
+            "name": "magic_wand",
             "description": "A wand that channels your magic power",
-            "icon": "static/item/magic-wand.jpeg"
+            "icon": "/item/magic-wand.jpeg"
         }
     },
     "event": {

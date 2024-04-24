@@ -5,7 +5,8 @@ const config = {
     kit: {
         adapter: adapter({
             // options
-        })
+        }),
+        
     }
 };
 
