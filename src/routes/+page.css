@@ -1,11 +1,14 @@
 /* src/styles.css */
+body {
+    font-family: 'Arial', sans-serif;
+}
+
 .menu {
     position: fixed;
     bottom: 0;
     width: 100%;
     display: flex;
     justify-content: space-around;
-    padding: 20px;
     background-color: #f8f8f8; /* Add a background color to make the menu stand out */
 }
 
@@ -26,4 +29,14 @@
 
 .menu button:hover {
     background-color: #45a049;
+}
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* 確保 header 總是在其他元素之上 */
+    text-align: center;
+    background-color: rgba(196, 196, 196, 0.5); /* 使用 rgba 來設定透明度 */
+    padding: 10px 0;
 }

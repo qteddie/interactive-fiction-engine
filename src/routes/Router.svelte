@@ -5,6 +5,8 @@
     import Load from './Load.svelte';
     import Settings from './Settings.svelte';
     import Help from './Help.svelte';
+    import Test from './Test.svelte'; // Add this line
+
     // import 'github-markdown-css/github-markdown.css';
 </script>
 
@@ -16,4 +18,6 @@
     <Route path="/load" component={Load} />
     <Route path="/settings" component={Settings} />
     <Route path="/help" component={Help} />
+    <Route path="/test" component={Test} /> <!-- Add this line -->
+
 </Router>
