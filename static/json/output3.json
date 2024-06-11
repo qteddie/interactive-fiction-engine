@@ -32,7 +32,7 @@
             "location": "castle",
             "name": "Dragon",
             "avatar": "/character/dragon/avatar.jpeg",
-            "tachie": "/character/dragon/tachie.jpeg"
+            "tachie": "/character/dragon/tachie.png"
         },
         "elf": {
             "location": "forest",
@@ -92,11 +92,11 @@
             "options": [
                 {
                     "text": "繼續尋找",
-                    "next": "castle_arrival"
+                    "event": "change_scene_to_castle"
                 },
                 {
                     "text": "使用神秘藥劑",
-                    "next": "direct_to_dragon_lair"
+                    "event": "mysterious_potion_effect"
                 }
             ]
         },

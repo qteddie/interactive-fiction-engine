@@ -8,6 +8,7 @@
     border-radius: 10px;
 }
 .content button {
+    border-radius: 10px;
     background-color: #4CAF50; /* Green */
     border: none;
     color: white;

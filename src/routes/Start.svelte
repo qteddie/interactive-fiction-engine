@@ -16,10 +16,17 @@
     let divElement;
 
     function handleKeydown(event) {
-        if (event.key === ' ') {
-            nextDialogue();
+    if (event.key === ' ') {
+        // 檢查當前對話是否有多於一個的選項
+        if (currentDialogue.options && currentDialogue.options.length > 1) {
+            // 如果有多於一個的選項，則不處理空白鍵事件
+            return;
         }
+
+        // 如果只有一個選項或沒有選項，則處理空白鍵事件
+        nextDialogue();
     }
+}
     function handleClick() {
         // window.alert('Hello');
         nextDialogue();
@@ -43,7 +50,6 @@
     let showContainer = true;
     let backpack = {}; // 新增這行
     let mana = 10; // 新增這行
-    let currentOptions = []; // Add this line
     let showEndScreen = false;
     let audio;
 
@@ -71,7 +77,6 @@
 
         dialogueKeys = Object.keys(gameData.dialogue); // Get the keys of the dialogue object
         currentDialogue = gameData.dialogue[dialogueKeys[currentDialogueIndex]]; // 根據 currentDialogueIndex 設定 currentDialogue
-        currentOptions = gameData.dialogue[dialogueKeys[currentDialogueIndex]].options; // 根據 currentDialogueIndex 設定 currentOptions
     });
 // ------------------------ Music ------------------------
 
@@ -90,14 +95,16 @@
             playerName,
             backpack,
             mana,
-            currentOptions,
-            showEndScreen
+            showEndScreen,
+            saveTime: new Date().toISOString(), // 新增存檔時間
         };
         try {
             console.log('Game saved');
-            localStorage.setItem('game', JSON.stringify(game));
+            const blob = new Blob([JSON.stringify(game, null, 2)], {type : 'application/json'});
+            const url = URL.createObjectURL(blob);
+            // window.open(url, '_blank');
         } catch (error) {
-            console.error('Error saving to localStorage', error);
+            console.error('Error saving to file', error);
         }
         isSave = true;
 
@@ -111,37 +118,48 @@
         localStorage.removeItem('game');
         showEndScreen = true; 
         
+    }
+    function goToStartScreen() {
+        showEndScreen = false;
+        navigate('/');
         }
-        function goToStartScreen() {
-            showEndScreen = false;
-            navigate('/');
-            }
-        function startGame() {
-            if (playerName != null && playerName != '') {
-                const playerData = { name: playerName };
-                localStorage.setItem('playerData', JSON.stringify(playerData));
-                showContainer = false;
-                isTransitioning = true; // 新增這行
-                setTimeout(() => { // 新增這行
-                    showContainer = false;
-                    isTransitioning = false; // 新增這行
-                }, 1000); // 新增這行
-            }
+    function startGame() {
+        if (playerName != null && playerName != '') {
+            const playerData = { name: playerName };
+            localStorage.setItem('playerData', JSON.stringify(playerData));
+            showContainer = false;
         }
+    }
     function nextDialogue(option) {
         clearInterval(intervalId);
         console.log(option);
         console.log(currentDialogue.options);
         if (option) {
-            if (!gameData.dialogue.hasOwnProperty(option.next)) {
-                console.error(`Error: Dialogue "${option.next}" does not exist.`);
-                endGame();
-                return;
+            // if (!gameData.dialogue.hasOwnProperty(option.next)) {
+            //     console.error(`Error: Dialogue "${option.next}" does not exist.`);
+            //     endGame();
+            //     return;
+            // }
+            if(option.next){
+                console.log(option.next);
+                currentDialogue = gameData.dialogue[option.next];
+                currentDialogueIndex = dialogueKeys.indexOf(option.next);
             }
-            currentDialogue = gameData.dialogue[option.next];
-            // 更新 currentDialogueIndex 以指向 option.next 對應的對話
-            currentDialogueIndex = dialogueKeys.indexOf(option.next);
-        } 
+            if (option.event) {
+                console.log(option.event);
+                const event = gameData.event[option.event];
+                console.log(event);
+                currentDialogue = gameData.dialogue[event.dialogue];
+                currentDialogueIndex = dialogueKeys.indexOf(event.dialogue);
+                if (event) {
+                    isTransitioning = true;
+                    setTimeout(() => {
+                        currentScene = gameData.scene[event.scene];
+                        isTransitioning = false;
+                    }, 1000); // Wait for 1 second before changing the scene
+                }
+            }
+        }
         else {
             currentDialogue.options.forEach(option => {
                 if (option.next) {
