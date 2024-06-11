@@ -1,0 +1,226 @@
+{
+    "name": "未來世界",
+    "author": "yoyolo87",
+    "player": {
+        "starter": "start",
+        "inventory": []
+    },
+    "scene": {
+        "night_city": {
+            "name": "Night City",
+            "background": "/scene/night_city.jpeg"
+        },
+        "underground_base": {
+            "name": "Underground Base",
+            "background": "/scene/underground_base.jpeg"
+        },
+        "corporate_headquarters": {
+            "name": "Corporate Headquarters",
+            "background": "/scene/corporate_headquarters.jpeg"
+        }
+    },
+    "character": {
+        "主角": {
+            "name": "主角 (你)",
+            "avatar": "/character/protagonist/avatar.jpeg",
+            "tachie": "/character/protagonist/tachie.png"
+        },
+        "反抗組織領袖": {
+            "location": "underground_base",
+            "name": "反抗組織領袖",
+            "avatar": "/character/leader/avatar.jpeg",
+            "tachie": "/character/leader/tachie.png"
+        },
+        "企業巨頭代理人": {
+            "location": "corporate_headquarters",
+            "name": "企業巨頭代理人",
+            "avatar": "/character/agent/avatar.jpeg",
+            "tachie": "/character/agent/tachie.png"
+        }
+    },
+    "item": {
+        "機器狗": {
+            "name": "機器狗",
+            "description": "智能化的機器狗，可以讓企業派出的維安機器人識別主角是企業主，從而不能攻擊他。",
+            "icon": "/item/dog.png"
+        },
+        "強化針": {
+            "name": "強化針",
+            "description": "一種能夠暫時提升身體機能的針劑。",
+            "icon": "/item/booster.png"
+        }
+    },
+    "event": {
+        "start": {
+            "scene": "night_city",
+            "dialogue": "beginning"
+        },
+        "join_resistance": {
+            "scene": "underground_base",
+            "dialogue": "join_resistance"
+        },
+        "discover_truth": {
+            "scene": "corporate_headquarters",
+            "dialogue": "discover_truth"
+        },
+        "final_battle": {
+            "scene": "corporate_headquarters",
+            "dialogue": "final_battle"
+        },
+        "escape_city": {
+            "scene": "night_city",
+            "dialogue": "escape_city"
+        },
+        "destroy_corporation": {
+            "scene": "night_city",
+            "dialogue": "destroy_corporation"
+        }
+    },
+    "dialogue": {
+        "beginning": {
+            "character": "主人公",
+            "text": "這是哪裡，你們是誰。",
+            "options": [
+                {
+                    "text": "探索城市",
+                    "next": "join_resistance"
+                }
+            ]
+        },
+        "join_resistance": {
+            "character": "反抗組織領袖",
+            "text": "你昏倒很久了，要不要加入我們團隊啊。",
+            "options": [
+                {
+                    "text": "接受並加入",
+                    "next": "mission_briefing"
+                },
+                {
+                    "text": "拒絕並離開",
+                    "next": "explore_city"
+                }
+            ]
+        },
+        "mission_briefing": {
+            "character": "反抗組織領袖",
+            "text": "最近我們接到一個大任務，要癱瘓機器人保衛系統，你要加緊訓練一下。",
+            "options": [
+                {
+                    "text": "出門探索",
+                    "next": "explore_city"
+                }
+                {
+                    "text": "開始訓練",
+                    "next": "discover_truth"
+                }
+            ]
+        },
+        "explore_city": {
+            "character": "主人公",
+            "text": "我決定獨自探索這座城市，也許我能找回一些記憶。",
+            "options": [
+                {
+                    "text": "繼續探索",
+                    "next": "encounter_dog"
+                }
+                
+            ]
+        },
+        "encounter_dog": {
+            "character": "機器狗",
+            "text": "wohf。",
+            "options": [
+                {
+                    "text": "接受幫助並讓機器狗跟隨",
+                    "next": "dog_follows"
+                },
+                {
+                    "text": "不需要幫助",
+                    "next": "discover_truth"
+                }
+            ]
+        },
+        "dog_follows": {
+            "character": "機器狗",
+            "text": "我將跟隨你，幫助你揭露真相。",
+            "options": [
+                {
+                    "text": "繼續",
+                    "next": "discover_truth"
+                }
+            ]
+        },
+        "discover_truth": {
+            "character": "企業巨頭代理人",
+            "text": "你是誰？為什麼來到這裡？",
+            "options": [
+                {
+                    "text": "我來這裡是為了揭露企業的陰謀。",
+                    "next": "final_battle"
+                },
+                {
+                    "text": "我只是路過，沒有惡意。",
+                    "next": "peaceful_resolution"
+                }
+            ]
+        },
+        "final_battle": {
+            "character": "主人公",
+            "text": "我必須揭露企業的陰謀，這是唯一的選擇。",
+            "options": [
+                {
+                    "text": "戰鬥",
+                    "next": "choose_ending"
+                }
+            ]
+        },
+        "choose_ending": {
+            "character": "主人公",
+            "text": "我揭露了真相，現在該做出選擇。",
+            "options": [
+                {
+                    "text": "黑化並統治企業",
+                    "next": "dark_ruler"
+                },
+                {
+                    "text": "帶領反抗小隊逃離城市",
+                    "next": "escape_city"
+                },
+                {
+                    "text": "摧毀企業統治",
+                    "next": "destroy_corporation"
+                }
+            ]
+        },
+        "dark_ruler": {
+            "character": "主人公",
+            "text": "我坦承了自己的企業主身份，回到企業並且說服反抗組織成為自己企業的一員並且獲得權力，讓他們成為當初最討厭的樣子，世界照常運轉。",
+            "options": [
+                {
+                    "text": "結束冒險",
+                    "next": "end"
+                }
+            ]
+        },
+        "escape_city": {
+            "character": "主人公",
+            "text": "我帶領反抗小隊逃離這座城市，拋棄這座城市的人。",
+            "options": [
+                {
+                    "text": "結束冒險",
+                    "next": "end"
+                }
+            ]
+        },
+        "destroy_corporation": {
+            "character": "主人公",
+            "text": "我和反抗組織一起摧毀了企業，成功推翻企業統治，但世界秩序變得更加混亂。",
+            "options": [
+                {
+                    "text": "結束冒險",
+                    
+                }
+            ]
+
+    }
+}
