@@ -1,0 +1,182 @@
+{
+    "name": "Magician's Journey",
+    "author": "eddie",
+    "player": {
+        "starter": "start",
+        "inventory": [
+            "magic_wand",
+            "mysterious_potion"
+        ]
+    },
+    "scene": {
+        "forest": {
+            "name": "Enchanted Forest",
+            "background": "/scene/forest.jpeg"
+        },
+        "castle": {
+            "name": "Dark Castle",
+            "background": "/scene/castle.jpeg"
+        },
+        "dragon_lair": {
+            "name": "Dragon's Lair",
+            "background": "/scene/dragon_lair.jpeg"
+        }
+    },
+    "character": {
+        "mage": {
+            "name": "Mage (you)",
+            "avatar": "/character/mage/avatar.jpeg",
+            "tachie": "/character/mage/tachie3.png"
+        },
+        "dragon": {
+            "location": "castle",
+            "name": "Dragon",
+            "avatar": "/character/dragon/avatar.jpeg",
+            "tachie": "/character/dragon/tachie.jpeg"
+        },
+        "elf": {
+            "location": "forest",
+            "name": "Elf",
+            "avatar": "/character/elf/avatar.jpeg",
+            "tachie": "/character/elf/tachie.png"
+        }
+    },
+    "item": {
+        "magic_wand": {
+            "name": "Magic Wand",
+            "description": "A wand that can channel your magical power",
+            "icon": "/item/magic_wand.png"
+        },
+        "mysterious_potion": {
+            "name": "Mysterious Potion",
+            "description": "A mysterious potion, who knows what it will do",
+            "icon": "/item/mysterious_potion.png"
+        }
+    },
+    "event": {
+        "start": {
+            "scene": "forest",
+            "dialogue": "beginning"
+        },
+        "change_scene_to_castle": {
+            "scene": "castle",
+            "dialogue": "castle_arrival"
+        },
+        "mysterious_potion_effect": {
+            "scene": "dragon_lair",
+            "dialogue": "direct_to_dragon_lair"
+        },
+        "battle_outcome": {
+            "scene": "forest",
+            "dialogue": "return_home"
+        },
+        "peace_outcome": {
+            "scene": "forest",
+            "dialogue": "return_home_peace"
+        }
+    },
+    "dialogue": {
+        "beginning": {
+            "character": "mage",
+            "text": "我必須在這個不同的世界找到並打敗一條龍，才能回到我的世界。",
+            "options": [
+                {
+                    "text": "開始冒險",
+                    "next": "forest_exploration"
+                }
+            ]
+        },
+        "forest_exploration": {
+            "character": "mage",
+            "text": "我正在探索森林，尋找通往城堡的路。",
+            "options": [
+                {
+                    "text": "繼續尋找",
+                    "next": "castle_arrival"
+                },
+                {
+                    "text": "使用神秘藥劑",
+                    "next": "direct_to_dragon_lair"
+                }
+            ]
+        },
+        "castle_arrival": {
+            "character": "mage",
+            "text": "我已經到達城堡，龍就在裡面。",
+            "options": [
+                {
+                    "text": "進入城堡",
+                    "next": "dragon_encounter"
+                }
+            ]
+        },
+        "direct_to_dragon_lair": {
+            "character": "mage",
+            "text": "我使用了神秘藥劑，直接到達了龍的巢穴。",
+            "options": [
+                {
+                    "text": "進入龍的巢穴",
+                    "next": "dragon_encounter"
+                }
+            ]
+        },
+        "dragon_encounter": {
+            "character": "dragon",
+            "text": "你是誰？為什麼來到我的巢穴？",
+            "options": [
+                {
+                    "text": "我來這裡是為了打敗你，回到我的世界。",
+                    "next": "dragon_battle"
+                },
+                {
+                    "text": "我只是路過，沒有惡意。",
+                    "next": "dragon_peace"
+                }
+            ]
+        },
+        "dragon_battle": {
+            "character": "mage",
+            "text": "我揮舞我的魔杖，與龍進行激烈的戰鬥。",
+            "options": [
+                {
+                    "text": "使用最強的魔法攻擊",
+                    "next": "return_home"
+                }
+            ]
+        },
+        "dragon_peace": {
+            "character": "mage",
+            "text": "我試圖與龍和解，希望它能幫我回到我的世界。",
+            "options": [
+                {
+                    "text": "請求龍的幫助",
+                    "next": "return_home_peace"
+                }
+            ]
+        },
+        "return_home": {
+            "character": "mage",
+            "text": "我打敗了龍，成功回到了我的世界。",
+            "options": [
+                {
+                    "text": "結束冒險",
+                    "next": "end"
+                }
+            ]
+        },
+        "return_home_peace": {
+            "character": "mage",
+            "text": "我與龍和解，成功回到了我的世界。",
+            "options": [
+                {
+                    "text": "結束冒險",
+                    "next": "end"
+                }
+            ]
+        },
+        "end": {
+            "character": "mage",
+            "text": "我的冒險結束了，我已經回到了我的世界。"
+        }
+    }
+}

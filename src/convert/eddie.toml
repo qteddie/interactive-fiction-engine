@@ -1,35 +1,51 @@
-name = "The Mage's Journey"
+name = "Magician's Journey"
 author = "eddie"
 
 [player]
 starter = "start"
 inventory = [
-    "magic-wand",
+    "magic_wand",
+    "mysterious_potion",
 ]
 
 [scene.forest]
 name = "Enchanted Forest"
-background = "static/scenes/forest.jpeg"
+background = "/scene/forest.jpeg"
 
 [scene.castle]
 name = "Dark Castle"
-background = "static/scenes/castle.jpeg"
+background = "/scene/castle.jpeg"
+
+[scene.dragon_lair]
+name = "Dragon's Lair"
+background = "/scene/dragon_lair.jpeg"
 
 [character.mage]
 name = "Mage (you)"
-avatar = "static/character/frieren/avatar.jpeg"
-tachie = "static/character/frieren/tachie.png"
+avatar = "/character/mage/avatar.jpeg"
+tachie = "/character/mage/tachie3.png"
 
 [character.dragon]
 location = "castle"
 name = "Dragon"
-avatar = "static/character/dragon/avatar.jpeg"
-tachie = "static/character/dragon/tachie.jpeg"
+avatar = "/character/dragon/avatar.jpeg"
+tachie = "/character/dragon/tachie.jpeg"
 
-[item.magic-wand]
+[character.elf]
+location = "forest"
+name = "Elf"
+avatar = "/character/elf/avatar.jpeg"
+tachie = "/character/elf/tachie.png"
+
+[item.magic_wand]
 name = "Magic Wand"
-description = "A wand that channels your magic power"
-icon = "static/item/magic-wand.jpeg"
+description = "A wand that can channel your magical power"
+icon = "/item/magic_wand.jpeg"
+
+[item.mysterious_potion]
+name = "Mysterious Potion"
+description = "A mysterious potion, who knows what it will do"
+icon = "/item/mysterious_potion.png"
 
 [event.start]
 scene = "forest"
@@ -37,55 +53,100 @@ dialogue = "beginning"
 
 [dialogue.beginning]
 character = "mage"
-text = "I must find and defeat a dragon in this different world to return to my own."
+text = "我必須在這個不同的世界找到並打敗一條龍，才能回到我的世界。"
 
 [[dialogue.beginning.options]]
-text = "Start the adventure"
+text = "開始冒險"
 next = "forest_exploration"
 
 [dialogue.forest_exploration]
 character = "mage"
-text = "I am exploring the forest, looking for the way to the castle."
+text = "我正在探索森林，尋找通往城堡的路。"
 
 [[dialogue.forest_exploration.options]]
-text = "Keep searching"
+text = "繼續尋找"
 event = "change_scene_to_castle"
+
+[[dialogue.forest_exploration.options]]
+text = "使用神秘藥劑"
+event = "mysterious_potion_effect"
 
 [event.change_scene_to_castle]
 scene = "castle"
 dialogue = "castle_arrival"
 
+[event.mysterious_potion_effect]
+scene = "dragon_lair"
+dialogue = "direct_to_dragon_lair"
+
 [dialogue.castle_arrival]
 character = "mage"
-text = "I have arrived at the castle, the dragon is inside."
+text = "我已經到達城堡，龍就在裡面。"
 
 [[dialogue.castle_arrival.options]]
-text = "Enter the castle"
+text = "進入城堡"
+next = "dragon_encounter"
+
+[dialogue.direct_to_dragon_lair]
+character = "mage"
+text = "我使用了神秘藥劑，直接到達了龍的巢穴。"
+
+[[dialogue.direct_to_dragon_lair.options]]
+text = "進入龍的巢穴"
 next = "dragon_encounter"
 
 [dialogue.dragon_encounter]
 character = "dragon"
-text = "Who are you? Why have you come to my castle?"
+text = "你是誰？為什麼來到我的巢穴？"
 
 [[dialogue.dragon_encounter.options]]
-text = "I am here to defeat you and return to my world."
+text = "我來這裡是為了打敗你，回到我的世界。"
 next = "dragon_battle"
+
+[[dialogue.dragon_encounter.options]]
+text = "我只是路過，沒有惡意。"
+next = "dragon_peace"
 
 [dialogue.dragon_battle]
 character = "mage"
-text = "I wave my magic wand and engage in a fierce battle with the dragon."
+text = "我揮舞我的魔杖，與龍進行激烈的戰鬥。"
 
 [[dialogue.dragon_battle.options]]
-text = "Use the strongest magic attack"
+text = "使用最強的魔法攻擊"
 event = "battle_outcome"
+
+[dialogue.dragon_peace]
+character = "mage"
+text = "我試圖與龍和解，希望它能幫我回到我的世界。"
+
+[[dialogue.dragon_peace.options]]
+text = "請求龍的幫助"
+event = "peace_outcome"
 
 [event.battle_outcome]
 scene = "forest"
 dialogue = "return_home"
 
+[event.peace_outcome]
+scene = "forest"
+dialogue = "return_home_peace"
+
 [dialogue.return_home]
 character = "mage"
-text = "I defeated the dragon and successfully returned to my world."
+text = "我打敗了龍，成功回到了我的世界。"
 
 [[dialogue.return_home.options]]
-text = "End the adventure"
+text = "結束冒險"
+next = "end"
+
+[dialogue.return_home_peace]
+character = "mage"
+text = "我與龍和解，成功回到了我的世界。"
+
+[[dialogue.return_home_peace.options]]
+text = "結束冒險"
+next = "end"
+
+[dialogue.end]
+character = "mage"
+text = "我的冒險結束了，我已經回到了我的世界。"

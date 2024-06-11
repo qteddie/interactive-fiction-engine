@@ -17,6 +17,15 @@
 
 /* 2. Place the item inside the backpack */
 /* Assuming the backpack is a container with class 'character-backpack' */
+.character-backpack {
+    display: flex; /* 將物品排列在一行 */
+    flex-wrap: wrap; /* 如果一行放不下，則換行 */
+}
+
+.character-backpack .item {
+    margin: 5px; /* 為每個物品添加一些外部空間 */
+}
+
 .character-backpack .item img {
     width: 50px; /* Adjust as needed */
     height: 50px; /* Adjust as needed */
@@ -127,42 +136,31 @@ body {
 }
 .character-dialogue {
     margin: 0;
-    /* white-space: pre-wrap; */
 }
 
 .character-backpack {
-    /* 這裡新增你想要的背包樣式 */
-    width: 500px; /* 格子的寬度 */
-    height: 100px; 
+    width: 500px;
+    height: 50px; 
     margin-top: 10px;
     font-size: 14px;
-    position: absolute; /* 將元素的定位設定為絕對定位 */
+    position: absolute; 
     bottom: 280px; 
     right: 20px;
-    background-color: rgba(210,180,140, 0.815);
-    color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255, 0.5);
     border-radius: 10px;
    
 }
 
 .character-mana {
-    /* 這裡新增你想要的魔力值樣式 */
-    width: 300px; /* 格子的寬度 */
-    height: 50px; /* 格子的高度 */
-    border: 1px solid rgb(255, 255, 255); /* 格子的邊框 */
-    position: absolute; /* 將元素的定位設定為絕對定位 */
+    width: 300px; 
+    height: 50px; 
+    position: absolute; 
     bottom: 280px; 
     color: rgb(255, 255, 255);
     border-radius: 10px;
-    background: linear-gradient(to right, #00f 0%, #fff 0%);
+    background: linear-gradient(to right, rgb(255, 255, 255) 0%, #fff 0%);
 
 }
-/* Hide the dialogue box, backpack, and mana when the event dialogue is shown */
-/* .event ~ .dialogue-box,
-.event ~ .character-backpack,
-.event ~ .character-mana {
-    display: none;
-} */
 
 .character-tachie img {
     position: fixed;
@@ -276,4 +274,11 @@ body {
     font-size: 3em;
     margin-bottom: 20px;
     
+}
+
+.dialogue-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
 }

@@ -48,7 +48,7 @@
     let audio;
 
     onMount(async () => {
-        const response = await fetch('/json/output_option2.json');
+        const response = await fetch('/json/output3.json');
         gameData = await response.json();
 
         console.log(gameData);
@@ -57,7 +57,6 @@
         if ($gameState) { // 如果 gameState 的值不為 null
             currentScene = $gameState.currentScene; // 使用 gameState 的值設定當前場景
             currentCharacter = $gameState.currentCharacter; // 使用 gameState 的值設定當前角色
-            currentItem = $gameState.currentItem; // 使用 gameState 的值設定當前物品
             currentDialogueIndex = $gameState.currentDialogueIndex; // 使用 gameState 的值設定當前對話索引
             playerName = $gameState.playerName; // 使用 gameState 的值設定玩家名稱
             mana = $gameState.mana; // 使用 gameState 的值設定當前 mana
@@ -67,7 +66,7 @@
         } else {
             currentScene = gameData.scene.forest;
             currentCharacter = gameData.character.mage;
-            currentItem = gameData.item.magic_wand;
+            backpack = gameData.item;
         }
 
         dialogueKeys = Object.keys(gameData.dialogue); // Get the keys of the dialogue object
@@ -75,31 +74,6 @@
         currentOptions = gameData.dialogue[dialogueKeys[currentDialogueIndex]].options; // 根據 currentDialogueIndex 設定 currentOptions
     });
 // ------------------------ Music ------------------------
-    let musicFiles = ['1.mp3', '2.mp3', '3.mp3']; // 你的音樂檔名
-
-    onMount(() => {
-        musicFiles.forEach(file => {
-            let audio = new Audio(`/music/bgm/${file}`);
-            audio.loop = true;
-            // 將音樂添加到 music store 中
-            music.update(musicArray => [...musicArray, audio]);
-        });
-        // 播放第一首音樂
-        music.update(musicArray => {
-            musicArray[1].play();
-            return musicArray;
-        });
-    });
-
-    onDestroy(() => {
-        // 停止所有正在播放的音樂
-        music.update(musicArray => {
-            for (let i = 0; i < musicArray.length; i++) {
-                musicArray[i].pause();
-            }
-            return musicArray;
-        });
-    });
 
     onDestroy(() => {
         // 自動存檔
@@ -136,21 +110,52 @@
         // gameState = null; // 將 gameState 設定為 null
         localStorage.removeItem('game');
         showEndScreen = true; 
-
-    }
-    function goToStartScreen() {
-        showEndScreen = false;
-        navigate('/');
-    }
-
-    function nextDialogue() {
-        currentDialogueIndex++;
-        intervalId = setInterval(() => {
-            if (currentDialogueIndex < dialogueKeys.length) {
-                currentDialogue = gameData.dialogue[dialogueKeys[currentDialogueIndex]];
-                // 檢查當前對話是否有事件
-                if (currentDialogue.options && currentDialogue.options.event) {
-                    const event = gameData.event[currentDialogue.options.event];
+        
+        }
+        function goToStartScreen() {
+            showEndScreen = false;
+            navigate('/');
+            }
+        function startGame() {
+            if (playerName != null && playerName != '') {
+                const playerData = { name: playerName };
+                localStorage.setItem('playerData', JSON.stringify(playerData));
+                showContainer = false;
+                isTransitioning = true; // 新增這行
+                setTimeout(() => { // 新增這行
+                    showContainer = false;
+                    isTransitioning = false; // 新增這行
+                }, 1000); // 新增這行
+            }
+        }
+    function nextDialogue(option) {
+        clearInterval(intervalId);
+        console.log(option);
+        console.log(currentDialogue.options);
+        if (option) {
+            if (!gameData.dialogue.hasOwnProperty(option.next)) {
+                console.error(`Error: Dialogue "${option.next}" does not exist.`);
+                endGame();
+                return;
+            }
+            currentDialogue = gameData.dialogue[option.next];
+            // 更新 currentDialogueIndex 以指向 option.next 對應的對話
+            currentDialogueIndex = dialogueKeys.indexOf(option.next);
+        } 
+        else {
+            currentDialogue.options.forEach(option => {
+                if (option.next) {
+                    if (!gameData.dialogue.hasOwnProperty(option.next)) {
+                        console.error(`Error: Dialogue "${option.next}" does not exist.`);
+                        endGame();
+                        return;
+                    }
+                    currentDialogue = gameData.dialogue[option.next];
+                    // 更新 currentDialogueIndex 以指向 option.next 對應的對話
+                    currentDialogueIndex = dialogueKeys.indexOf(option.next);
+                }
+                if (option.event) {
+                    const event = gameData.event[option.event];
                     if (event) {
                         isTransitioning = true;
                         setTimeout(() => {
@@ -159,34 +164,21 @@
                         }, 1000); // Wait for 1 second before changing the scene
                     }
                 }
-                // 查找對應的角色數據
-                const character = gameData.character[currentDialogue.character];
-                if (character) {
-                    // 更新頭像和立繪
-                    currentCharacter = character;
-                }
-            } else {
-                endGame();
-                // Reset the dialogue index or do something else when all dialogues have been shown
-            }
-        }, 100);
-    }
+            });
+        }
+        if (!currentDialogue.options) {
+            endGame();
+            return;
+        }
 
-    function startGame() {
-        if (playerName != null && playerName != '') {
-            const playerData = { name: playerName };
-            localStorage.setItem('playerData', JSON.stringify(playerData));
-            showContainer = false;
-            isTransitioning = true; // 新增這行
-            setTimeout(() => { // 新增這行
-                showContainer = false;
-                isTransitioning = false; // 新增這行
-            }, 1000); // 新增這行
+        // 查找對應的角色數據
+        const character = gameData.character[currentDialogue.character];
+        if (character) {
+            // 更新頭像和立繪
+            currentCharacter = character;
         }
     }
-    
-    
-    
+
     
 </script>
 
@@ -231,12 +223,13 @@
     </div> 
     <div class="event">
     </div>
-    <div class="character-mana" style="background: linear-gradient(to right, #00f 0%, #00f {mana * 10}%, #fff {mana * 10}%, #fff 100%)">Mana: { mana }</div>    
-    <div class="character-backpack"> 
-        Backpack: { backpack }
-        <div class="item">
-            <img src={currentItem.icon} alt={currentItem.name} />
-        </div>
+    <div class="character-mana" style="background: linear-gradient(to right, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.5) {mana * 10}%, rgba(255, 255, 255, 0.5) {mana * 10}%, rgba(255, 255, 255, 0.5) 100%)">Mana: { mana }</div>
+    <div class="character-backpack">
+        {#each Object.values(backpack) as item (item.name)}
+          <div class="item">
+            <img src={item.icon} alt={item.name} />
+          </div>
+        {/each}
     </div>
     <div class="dialogue-box">
         <div class="character-info"> <!-- Add this line -->
@@ -247,6 +240,13 @@
         </div> <!-- Add this line -->
         <div class="character-dialogue">
             <p>{currentDialogue.text}</p>
+            {#if Array.isArray(currentDialogue.options) && currentDialogue.options.length > 1}
+                <div class="dialogue-options">
+                    {#each currentDialogue.options as option (option.text)}
+                        <button on:click={() => nextDialogue(option)}>{option.text}</button>
+                    {/each}
+                </div>
+            {/if}
         </div>
     </div>
     <div class="save-button">
