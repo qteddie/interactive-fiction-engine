@@ -1,4 +1,5 @@
 <script>
+    
     import { pushState, replaceState } from '$app/navigation';
 
     // Use pushState to add a new entry to the history stack
@@ -10,8 +11,24 @@
 
     let isTransitioning = false;
     
+    // let result = 0;
 
 
+    // onMount(async () => {
+    //     const wasmUrl = '/c/main.wasm';
+    //     const response = await fetch(wasmUrl);
+    //     const { instance } = await WebAssembly.instantiateStreaming(response);
+    //     console.log(instance.exports); 
+    // });
+    // $: console.log(result);
+
+    // "mage": {
+    //         "name": "Mage (you)",
+    //         "avatar": ["/character/mage/avatar.jpeg", "/character/mage/avatar2.jpeg", "/character/mage/avatar3.jpeg"],
+    //         "tachie": ["/character/mage/tachie3.png", "/character/mage/tachie2.png", "/character/mage/tachie.png"]
+    //     },
+
+    // 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
 
     let divElement;
 
