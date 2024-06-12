@@ -2,6 +2,7 @@
     "cmake.sourceDirectory": "/Users/eddie/Documents/GitHub/interactive-fiction-engine/libs/jansson",
     "files.associations": {
         "*.embeddedhtml": "html",
-        "jansson.h": "c"
+        "jansson.h": "c",
+        "emscripten.h": "c"
     }
 }

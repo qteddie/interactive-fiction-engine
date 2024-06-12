@@ -10,25 +10,6 @@
     import { gameState} from './store.js';
 
     let isTransitioning = false;
-    
-    // let result = 0;
-
-
-    // onMount(async () => {
-    //     const wasmUrl = '/c/main.wasm';
-    //     const response = await fetch(wasmUrl);
-    //     const { instance } = await WebAssembly.instantiateStreaming(response);
-    //     console.log(instance.exports); 
-    // });
-    // $: console.log(result);
-
-    // "mage": {
-    //         "name": "Mage (you)",
-    //         "avatar": ["/character/mage/avatar.jpeg", "/character/mage/avatar2.jpeg", "/character/mage/avatar3.jpeg"],
-    //         "tachie": ["/character/mage/tachie3.png", "/character/mage/tachie2.png", "/character/mage/tachie.png"]
-    //     },
-
-    // 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
 
     let divElement;
 
@@ -98,12 +79,7 @@
         dialogueKeys = Object.keys(gameData.dialogue); // Get the keys of the dialogue object
         currentDialogue = gameData.dialogue[dialogueKeys[currentDialogueIndex]]; // 根據 currentDialogueIndex 設定 currentDialogue
     });
-// ------------------------ Music ------------------------
 
-    // onDestroy(() => {
-    //     // 自動存檔
-    //     saveGame();
-    // });
     //------------------- HANDLE DATA -------------------
     let isSave = false;
     function saveGame() {
