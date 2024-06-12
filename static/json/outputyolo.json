@@ -20,18 +20,18 @@
         }
     },
     "character": {
-        "主角": {
-            "name": "主角 (你)",
+        "you": {
+            "name": "主角",
             "avatar": "/character/protagonist/avatar.jpeg",
             "tachie": "/character/protagonist/tachie.png"
         },
-        "反抗組織領袖": {
+        "Lucy": {
             "location": "underground_base",
             "name": "反抗組織領袖",
             "avatar": "/character/leader/avatar.jpeg",
             "tachie": "/character/leader/tachie.png"
         },
-        "企業巨頭代理人": {
+        "": {
             "location": "corporate_headquarters",
             "name": "企業巨頭代理人",
             "avatar": "/character/agent/avatar.jpeg",
@@ -217,7 +217,7 @@
             "text": "我和反抗組織一起摧毀了企業，成功推翻企業統治，但世界秩序變得更加混亂。",
             "options": [
                 {
-                    "text": "結束冒險",
+                    "text": "結束冒險"
                     
                 }
             ]
