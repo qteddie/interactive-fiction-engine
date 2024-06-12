@@ -48,7 +48,7 @@
     let audio;
 
     onMount(async () => {
-        const response = await fetch('/json/output3.json');
+        const response = await fetch('/json/outputyolo.json');
         gameData = await response.json();
         console.log('gameState before: ',$gameState);
         
