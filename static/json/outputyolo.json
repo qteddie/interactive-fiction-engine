@@ -1,9 +1,11 @@
 {
-    "name": "未來世界",
+    "name": "7702",
     "author": "yoyolo87",
     "player": {
         "starter": "start",
-        "inventory": []
+        "inventory": [
+            "watch"
+        ]
     },
     "scene": {
         "night_city": {
@@ -17,37 +19,55 @@
         "corporate_headquarters": {
             "name": "Corporate Headquarters",
             "background": "/scene/corporate_headquarters.jpeg"
+        },
+        "fighting_arena": {
+            "name": "Fighting Arena",
+            "background": "/scene/fighting_arena.jpeg"
+        },
+        "moon": {
+            "name": "Moon",
+            "background": "/scene/moon.jpeg"
         }
     },
     "character": {
-        "you": {
+        "David": {
             "name": "主角",
-            "avatar": "/character/protagonist/avatar.jpeg",
-            "tachie": "/character/protagonist/tachie.png"
+            "avatar": "/character/david/avatar.jpeg",
+            "tachie": "/character/david/david.png"
         },
         "Lucy": {
             "location": "underground_base",
-            "name": "反抗組織領袖",
-            "avatar": "/character/leader/avatar.jpeg",
-            "tachie": "/character/leader/tachie.png"
+            "name": "反抗小隊領袖",
+            "avatar": "/character/Lucy/avatar.jpeg",
+            "tachie": "/character/lucy/lucy.png"
         },
-        "": {
+        "Ironman": {
             "location": "corporate_headquarters",
-            "name": "企業巨頭代理人",
-            "avatar": "/character/agent/avatar.jpeg",
-            "tachie": "/character/agent/tachie.png"
+            "name": "企業代理人",
+            "avatar": "/character/Ironman/avatar.jpeg",
+            "tachie": "/character/Ironman/ironman.png"
+        },
+        "mechine_dog": {
+            "name": "機器狗",
+            "avatar": "/character/dog/avatar.jpeg",
+            "tachie": "/character/dog/dog.png"
         }
     },
     "item": {
-        "機器狗": {
+        "mechine_dog": {
             "name": "機器狗",
             "description": "智能化的機器狗，可以讓企業派出的維安機器人識別主角是企業主，從而不能攻擊他。",
-            "icon": "/item/dog.png"
+            "icon": "/item/doge.png"
         },
-        "強化針": {
+        "Booster_shot": {
             "name": "強化針",
             "description": "一種能夠暫時提升身體機能的針劑。",
             "icon": "/item/booster.png"
+        },
+        "watch": {
+            "name": "手錶",
+            "description": "上面有刻著和機器人企業相同的縮寫，錶盤上是機器狗的造型。",
+            "icon": "/item/watch.png"
         }
     },
     "event": {
@@ -56,7 +76,7 @@
             "dialogue": "beginning"
         },
         "join_resistance": {
-            "scene": "underground_base",
+            "scene": "night_city",
             "dialogue": "join_resistance"
         },
         "discover_truth": {
@@ -64,7 +84,7 @@
             "dialogue": "discover_truth"
         },
         "final_battle": {
-            "scene": "corporate_headquarters",
+            "scene": "fighting_arena",
             "dialogue": "final_battle"
         },
         "escape_city": {
@@ -72,23 +92,92 @@
             "dialogue": "escape_city"
         },
         "destroy_corporation": {
-            "scene": "night_city",
+            "scene": "corporate_headquarters",
             "dialogue": "destroy_corporation"
+        },
+        "robot_encounter": {
+            "scene": "corporate_headquarters",
+            "dialogue": "robot_encounter"
+        },
+        "training": {
+            "scene": "underground_base",
+            "dialogue": "training"
+        },
+        "get_boost": {
+            "scene": "underground_base",
+            "dialogue": "get_boost"
+        },
+        "mission_start": {
+            "scene": "underground_base",
+            "dialogue": "mission_start"
+        },
+        "mission_briefing": {
+            "scene": "underground_base",
+            "dialogue": "mission_briefing"
+        },
+        "explore_city": {
+            "scene": "night_city",
+            "dialogue": "explore_city"
+        },
+        "encounter_dog": {
+            "scene": "night_city",
+            "dialogue": "encounter_dog"
+        },
+        "dog_follows": {
+            "scene": "night_city",
+            "dialogue": "dog_follows"
+        },
+
+        "battle": {
+            "scene": "fighting_arena",
+            "dialogue": "battle"
+        },
+        "battle2": {
+            "scene": "fighting_arena",
+            "dialogue": "battle2"
+        },
+        "battle3": {
+            "scene": "fighting_arena",
+            "dialogue": "battle3"
+        },
+        "battle4": {
+            "scene": "fighting_arena",
+            "dialogue": "battle4"
+        },
+        "battle5": {
+            "scene": "fighting_arena",
+            "dialogue": "battle5"
+        },
+        "choose_ending": {
+            "scene": "fighting_arena",
+            "dialogue": "choose_ending"
+        },
+        "dark_ruler": {
+            "scene": "corporate_headquarters",
+            "dialogue": "dark_ruler"
+        },
+        "moon": {
+            "scene": "moon",
+            "dialogue": "end"
+        },
+        "fimal_battle": {
+            "scene": "fighting_arena",
+            "dialogue": "fimal_battle"
         }
     },
     "dialogue": {
         "beginning": {
-            "character": "主人公",
+            "character": "David",
             "text": "這是哪裡，你們是誰。",
             "options": [
                 {
-                    "text": "探索城市",
+                    "text": "問問身邊的人",
                     "next": "join_resistance"
                 }
             ]
         },
         "join_resistance": {
-            "character": "反抗組織領袖",
+            "character": "Lucy",
             "text": "你昏倒很久了，要不要加入我們團隊啊。",
             "options": [
                 {
@@ -97,104 +186,170 @@
                 },
                 {
                     "text": "拒絕並離開",
-                    "next": "explore_city"
+                    "next": "reject"
+                }
+            ]
+        },
+        "reject": {
+            "character": "Lucy",
+            "text": "似乎你沒辦法拒絕。",
+            "options": [
+                {
+                    "text": "接受並加入",
+                    "next": "mission_briefing"
                 }
             ]
         },
         "mission_briefing": {
-            "character": "反抗組織領袖",
-            "text": "最近我們接到一個大任務，要癱瘓機器人保衛系統，你要加緊訓練一下。",
+            "character": "Lucy",
+            "text": "我們任務目標是，要癱瘓機器人保衛系統，你要加緊訓練一下。",
             "options": [
                 {
                     "text": "出門探索",
                     "next": "explore_city"
-                }
+                },
                 {
                     "text": "開始訓練",
-                    "next": "discover_truth"
+                    "next": "training"
                 }
             ]
         },
         "explore_city": {
-            "character": "主人公",
+            "character": "David",
             "text": "我決定獨自探索這座城市，也許我能找回一些記憶。",
             "options": [
                 {
                     "text": "繼續探索",
                     "next": "encounter_dog"
                 }
-                
             ]
         },
         "encounter_dog": {
-            "character": "機器狗",
-            "text": "wohf。",
+            "character": "mechine_dog",
+            "text": "凹凹凹凹。",
             "options": [
                 {
-                    "text": "接受幫助並讓機器狗跟隨",
+                    "text": "似乎機器狗和你有某種聯繫並讓機器狗跟隨，繼續探索",
                     "next": "dog_follows"
                 },
                 {
-                    "text": "不需要幫助",
-                    "next": "discover_truth"
+                    "text": "這機器狗真醜，被嚇到回去訓練",
+                    "next": "training"
                 }
             ]
         },
         "dog_follows": {
-            "character": "機器狗",
-            "text": "我將跟隨你，幫助你揭露真相。",
+            "character": "mechine_dog",
+            "text": "旺旺（似乎很熟悉的樣子）。",
             "options": [
                 {
-                    "text": "繼續",
-                    "next": "discover_truth"
+                    "text": "遭遇機器人大軍",
+                    "next": "robot_encounter"
                 }
             ]
         },
-        "discover_truth": {
-            "character": "企業巨頭代理人",
-            "text": "你是誰？為什麼來到這裡？",
+
+        "training": {
+            "character": "David",
+            "text": "(瘋狂訓練）。",
             "options": [
                 {
-                    "text": "我來這裡是為了揭露企業的陰謀。",
-                    "next": "final_battle"
+                    "text": "LUCY走過來",
+                    "next": "get_boost"
+                }
+            ]
+        },
+        "get_boost": {
+            "character": "Lucy",
+            "text": "這是強化針，有危險可以使用。",
+            "options": [
+                {
+                    "text": "拿著",
+                    "next": "mission_start"
+                }
+            ]
+        },
+        "mission_start": {
+            "character": "Lucy",
+            "text": "機器人們又在執行“保衛”任務了,等等你跟在後面，我們來阻止它們。",
+            "options": [
+                {
+                    "text": "跟著小隊出發",
+                    "next": "battle"
+                }
+            ]
+        },
+        "battle": {
+            "character": "Lucy",
+            "text": "機器人們來給我們練手的是吧,如此輕鬆！",
+            "options": [
+                {
+                    "text": "笑著打機器人",
+                    "next": "battle2"
+                }
+            ]
+        },
+        "battle2": {
+            "character": "Ironman",
+            "text": "你們這群該死的蟲子怎麼又來搗亂",
+            "options": [
+                {
+                    "text": "迎戰",
+                    "next": "battle3"
+                }
+            ]
+        },
+        "battle3": {
+            "character": "Lucy",
+            "text": "他也是機器人嗎？怎麼這麼強",
+            "options": [
+                {
+                    "text": "繼續觀望",
+                    "next": "battle4"
                 },
                 {
-                    "text": "我只是路過，沒有惡意。",
-                    "next": "peaceful_resolution"
+                    "text": "使用強化針",
+                    "next": "battle5"
                 }
             ]
         },
-        "final_battle": {
-            "character": "主人公",
-            "text": "我必須揭露企業的陰謀，這是唯一的選擇。",
+        "battle4": {
+            "character": "David",
+            "text": "經過激烈打鬥後，目睹小隊為了救自己整隊覆滅",
             "options": [
                 {
-                    "text": "戰鬥",
+                    "text": "崩潰痛哭，離開夜城",
+                    "next": "moon"
+                }
+            ]
+        },
+        "battle5": {
+            "character": "David",
+            "text": "使用強化針，能力增強後衝過去加入戰鬥",
+            "options": [
+                {
+                    "text": "解決Ironman後,隨之而來的副作用是記憶永久消失了",
                     "next": "choose_ending"
                 }
             ]
         },
         "choose_ending": {
-            "character": "主人公",
-            "text": "我揭露了真相，現在該做出選擇。",
+            "character": "Ironman",
+            "text": "（在結束運轉前，用沙沙機器音說）你可是創辦人啊。",
             "options": [
                 {
-                    "text": "黑化並統治企業",
-                    "next": "dark_ruler"
-                },
-                {
-                    "text": "帶領反抗小隊逃離城市",
+                    "text": "覺得疑惑，但想追問時，他已經停止運轉，永遠沒有機會問了",
                     "next": "escape_city"
                 },
                 {
-                    "text": "摧毀企業統治",
-                    "next": "destroy_corporation"
+                    "text": "覺得可笑，多踹了他一腳",
+                    "next": "escape_city"
                 }
             ]
         },
         "dark_ruler": {
-            "character": "主人公",
-            "text": "我坦承了自己的企業主身份，回到企業並且說服反抗組織成為自己企業的一員並且獲得權力，讓他們成為當初最討厭的樣子，世界照常運轉。",
+            "character": "David",
+            "text": "我和反抗小組坦承了自己的企業主身份，回到企業，讓成為當初自己最討厭的樣子，世界照常運轉。",
             "options": [
                 {
                     "text": "結束冒險",
@@ -203,8 +358,8 @@
             ]
         },
         "escape_city": {
-            "character": "主人公",
-            "text": "我帶領反抗小隊逃離這座城市，拋棄這座城市的人。",
+            "character": "David",
+            "text": "帶領著反抗小隊離開這座城市，繼續幫著下一座城市推翻管控。",
             "options": [
                 {
                     "text": "結束冒險",
@@ -213,14 +368,60 @@
             ]
         },
         "destroy_corporation": {
-            "character": "主人公",
-            "text": "我和反抗組織一起摧毀了企業，成功推翻企業統治，但世界秩序變得更加混亂。",
+            "character": "David",
+            "text": "你將機器狗格式化，走向反抗小隊，城市秩序變得更加混亂。",
             "options": [
                 {
-                    "text": "結束冒險"
-                    
+                    "text": "結束冒險",
+                    "next": "end"
                 }
             ]
+        },
+        "moon": {
+            "character": "David",
+            "text": "帶著LUCY意志上月球。",
+            "options": [
+                {
+                    "text": "好美",
+                    "next": "end"
+                }
+            ]
+        },
+        "robot_encounter": {
+            "character": "David",
+            "text": "機器人看到機器狗後，在你面前整齊列隊。趕過來的反抗小隊也搞不清楚什麼情況",
+            "options": [
+                {
+                    "text": "跟隨機器狗前往總部",
+                    "next": "discover_truth"
+                }
+                
+            ]
+        },
 
+        "discover_truth": {
+            "character": "Ironman",
+            "text": "主人你回來了，你應該知道這個世界的真相（使用機器狗回復記憶）機器狗是如同魔戒般的存在，所有機器人都聽從它的指揮，你則是機器的創造者。",
+            "options": [
+                {
+                    "text": "真假，這些機器人是我管的?",
+                    "next": "dark_truth"
+                },
+                {
+                    "text": "不能接受這是自己一手打造的",
+                    "next": "final_battle"
+                }
+            ]
+        },
+        "fimal_battle": {
+            "character": "David",
+            "text": "想要毀掉這萬惡之源，於是你指揮機器人和亞當打起來",
+            "options": [
+                {
+                    "text": "雙方都受到重傷，而企業的統治力也不復存在",
+                    "next": "destroy_corporation"
+                }
+            ]
+        }
     }
 }
