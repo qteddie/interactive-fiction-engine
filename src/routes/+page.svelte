@@ -7,6 +7,11 @@
     function startGame() {
         navigate('/start');
     }
+    
+    function startStory() {
+        navigate('/story');
+    }
+    
 
     function loadGame() {
         navigate('/load');
@@ -71,6 +76,7 @@
 </div>
 <div class="menu">
     <button on:click={startGame}>Start Example Game</button>
+    <button on:click={startStory}>Start Story</button>
     <button on:click={loadGame}>Load</button>
     <button on:click={openSettings}>Settings</button>
     <button on:click={openHelp}>Help</button>
