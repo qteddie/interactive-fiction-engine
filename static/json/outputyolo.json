@@ -20,7 +20,7 @@
         }
     },
     "character": {
-        "you": {
+        "David": {
             "name": "主角",
             "avatar": "/character/protagonist/avatar.jpeg",
             "tachie": "/character/protagonist/tachie.png"
@@ -218,7 +218,6 @@
             "options": [
                 {
                     "text": "結束冒險"
-                    
                 }
             ]
 

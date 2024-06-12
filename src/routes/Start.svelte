@@ -40,10 +40,10 @@
         nextDialogue();
     }
 }
-    function handleClick() {
-        // window.alert('Hello');
-        nextDialogue();
-    }
+    // function handleClick() {
+    //     // window.alert('Hello');
+    //     nextDialogue();
+    // }
 
     onDestroy(() => {
         if (divElement) {
@@ -64,7 +64,10 @@
     let backpack = {}; // 新增這行
     let mana = 10; // 新增這行
     let showEndScreen = false;
-    let audio;
+    
+    let displayText = '';
+    let displayIndex = 0;
+    let typingSpeed = 50; // 调整显示速度，单位为毫秒
 
     onMount(async () => {
         const response = await fetch('/json/output3.json');
@@ -97,6 +100,7 @@
 
         dialogueKeys = Object.keys(gameData.dialogue); // Get the keys of the dialogue object
         currentDialogue = gameData.dialogue[dialogueKeys[currentDialogueIndex]]; // 根據 currentDialogueIndex 設定 currentDialogue
+        showDialogue(currentDialogue.text);
     });
 // ------------------------ Music ------------------------
 
@@ -144,7 +148,6 @@
     };
     function endGame() {
         localStorage.removeItem('game');
-        // 重置遊戲存檔
         localStorage.setItem('game', JSON.stringify(initialGameState));
         showEndScreen = true;
     }
@@ -152,6 +155,7 @@
         showEndScreen = false;
         navigate('/');
         }
+
     function startGame() {
         if (playerName != null && playerName != '') {
             const playerData = { name: playerName };
@@ -161,23 +165,14 @@
     }
     function nextDialogue(option) {
         clearInterval(intervalId);
-        // console.log(option);
-        // console.log(currentDialogue.options);
+
         if (option) {
-            // if (!gameData.dialogue.hasOwnProperty(option.next)) {
-            //     console.error(`Error: Dialogue "${option.next}" does not exist.`);
-            //     endGame();
-            //     return;
-            // }
             if(option.next){
-                // console.log(option.next);
                 currentDialogue = gameData.dialogue[option.next];
                 currentDialogueIndex = dialogueKeys.indexOf(option.next);
             }
             if (option.event) {
-                // console.log(option.event);
                 const event = gameData.event[option.event];
-                // console.log(event);
                 currentDialogue = gameData.dialogue[event.dialogue];
                 currentDialogueIndex = dialogueKeys.indexOf(event.dialogue);
                 if (event) {
@@ -188,8 +183,7 @@
                     }, 1000); // Wait for 1 second before changing the scene
                 }
             }
-        }
-        else {
+        } else {
             currentDialogue.options.forEach(option => {
                 if (option.next) {
                     if (!gameData.dialogue.hasOwnProperty(option.next)) {
@@ -198,7 +192,6 @@
                         return;
                     }
                     currentDialogue = gameData.dialogue[option.next];
-                    // 更新 currentDialogueIndex 以指向 option.next 對應的對話
                     currentDialogueIndex = dialogueKeys.indexOf(option.next);
                 }
                 if (option.event) {
@@ -213,19 +206,35 @@
                 }
             });
         }
+
         if (!currentDialogue.options) {
             endGame();
             return;
         }
 
-        // 查找對應的角色數據
         const character = gameData.character[currentDialogue.character];
         if (character) {
-            // 更新頭像和立繪
             currentCharacter = character;
         }
+
+        // 调用 showDialogue 函数逐字显示对话文本
+        showDialogue(currentDialogue.text);
     }
 
+
+    function showDialogue(text) {
+        displayText = '';
+        displayIndex = 0;
+
+        intervalId = setInterval(() => {
+            if (displayIndex < text.length) {
+                displayText += text.charAt(displayIndex);
+                displayIndex++;
+            } else {
+                clearInterval(intervalId);
+            }
+        }, typingSpeed);
+    }
     
 </script>
 
@@ -279,14 +288,14 @@
         {/each}
     </div>
     <div class="dialogue-box">
-        <div class="character-info"> <!-- Add this line -->
+        <div class="character-info">
             <div class="character-avatar">
                 <img src={currentCharacter.avatar} alt={currentCharacter.name} />
             </div>
             <div class="character-name">{ playerName }</div>
-        </div> <!-- Add this line -->
+        </div>
         <div class="character-dialogue">
-            <p>{currentDialogue.text}</p>
+            <p>{displayText}</p>
             {#if Array.isArray(currentDialogue.options) && currentDialogue.options.length > 1}
                 <div class="dialogue-options">
                     {#each currentDialogue.options as option (option.text)}
