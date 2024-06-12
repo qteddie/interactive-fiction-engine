@@ -6,7 +6,7 @@
     //------------------- HANDLE DATA -------------------
     import { onMount, onDestroy } from 'svelte';
     import { navigate } from 'svelte-routing';
-    import { gameState, music } from './store.js';
+    import { gameState} from './store.js';
 
     let isTransitioning = false;
     
@@ -17,13 +17,9 @@
 
     function handleKeydown(event) {
     if (event.key === ' ') {
-        // 檢查當前對話是否有多於一個的選項
         if (currentDialogue.options && currentDialogue.options.length > 1) {
-            // 如果有多於一個的選項，則不處理空白鍵事件
             return;
         }
-
-        // 如果只有一個選項或沒有選項，則處理空白鍵事件
         nextDialogue();
     }
 }
@@ -56,11 +52,10 @@
     onMount(async () => {
         const response = await fetch('/json/output3.json');
         gameData = await response.json();
-
-        console.log(gameData);
-
-        // Set the initial values after the data is fetched
-        if ($gameState) { // 如果 gameState 的值不為 null
+        console.log('gameState before: ',$gameState);
+        
+        // 如果 gameState 的值不為 null，則表示從 startLoadedGame 導航過來
+        if ($gameState) {
             currentScene = $gameState.currentScene; // 使用 gameState 的值設定當前場景
             currentCharacter = $gameState.currentCharacter; // 使用 gameState 的值設定當前角色
             currentDialogueIndex = $gameState.currentDialogueIndex; // 使用 gameState 的值設定當前對話索引
@@ -69,10 +64,18 @@
             backpack = $gameState.backpack; // 使用 gameState 的值設定背包
             showEndScreen = $gameState.showEndScreen; // 使用 gameState 的值設定是否顯示結束畫面
             showContainer = false; // 使用 gameState 的值設定是否顯示開始畫面
+            $gameState = null; // 清空 $gameState
+            console.log('gameState after clear: ',$gameState);
         } else {
+            // 如果 gameState 的值為 null，則表示需要重新開始遊戲
             currentScene = gameData.scene.forest;
             currentCharacter = gameData.character.mage;
-            backpack = gameData.item;
+            currentDialogueIndex = 0; // 將對話索引重設為 0
+            playerName = ''; // 將玩家名稱重設為空字串
+            mana = 10; // 將 mana 重設為 100
+            backpack = gameData.item; // 將背包重設為初始物品
+            showEndScreen = false; // 將是否顯示結束畫面重設為 false
+            showContainer = true; // 將是否顯示開始畫面重設為 true
         }
 
         dialogueKeys = Object.keys(gameData.dialogue); // Get the keys of the dialogue object
@@ -80,10 +83,10 @@
     });
 // ------------------------ Music ------------------------
 
-    onDestroy(() => {
-        // 自動存檔
-        saveGame();
-    });
+    // onDestroy(() => {
+    //     // 自動存檔
+    //     saveGame();
+    // });
     //------------------- HANDLE DATA -------------------
     let isSave = false;
     function saveGame() {
@@ -96,13 +99,13 @@
             backpack,
             mana,
             showEndScreen,
+            showContainer,
             saveTime: new Date().toISOString(), // 新增存檔時間
         };
         try {
             console.log('Game saved');
-            const blob = new Blob([JSON.stringify(game, null, 2)], {type : 'application/json'});
-            const url = URL.createObjectURL(blob);
-            // window.open(url, '_blank');
+            localStorage.setItem('game', JSON.stringify(game));
+            console.log(game);
         } catch (error) {
             console.error('Error saving to file', error);
         }
@@ -112,12 +115,21 @@
             isSave = false;
         }, 1000);
     }
-
+    let initialGameState = {
+        currentScene: null,
+        currentCharacter: null,
+        currentItem: null,
+        currentDialogueIndex: 0,
+        playerName: '',
+        backpack: {},
+        mana: 10,
+        showEndScreen: false,
+    };
     function endGame() {
-        // gameState = null; // 將 gameState 設定為 null
         localStorage.removeItem('game');
-        showEndScreen = true; 
-        
+        // 重置遊戲存檔
+        localStorage.setItem('game', JSON.stringify(initialGameState));
+        showEndScreen = true;
     }
     function goToStartScreen() {
         showEndScreen = false;
@@ -132,8 +144,8 @@
     }
     function nextDialogue(option) {
         clearInterval(intervalId);
-        console.log(option);
-        console.log(currentDialogue.options);
+        // console.log(option);
+        // console.log(currentDialogue.options);
         if (option) {
             // if (!gameData.dialogue.hasOwnProperty(option.next)) {
             //     console.error(`Error: Dialogue "${option.next}" does not exist.`);
@@ -141,14 +153,14 @@
             //     return;
             // }
             if(option.next){
-                console.log(option.next);
+                // console.log(option.next);
                 currentDialogue = gameData.dialogue[option.next];
                 currentDialogueIndex = dialogueKeys.indexOf(option.next);
             }
             if (option.event) {
-                console.log(option.event);
+                // console.log(option.event);
                 const event = gameData.event[option.event];
-                console.log(event);
+                // console.log(event);
                 currentDialogue = gameData.dialogue[event.dialogue];
                 currentDialogueIndex = dialogueKeys.indexOf(event.dialogue);
                 if (event) {
