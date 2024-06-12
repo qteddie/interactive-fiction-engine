@@ -12,14 +12,15 @@
     let isTransitioning = false;
     
     // let result = 0;
+    let wasmModule;
 
-
-    // onMount(async () => {
-    //     const wasmUrl = '/c/main.wasm';
-    //     const response = await fetch(wasmUrl);
-    //     const { instance } = await WebAssembly.instantiateStreaming(response);
-    //     console.log(instance.exports); 
-    // });
+    onMount(async () => {
+        const wasmUrl = '/c/main.wasm';
+        const response = await fetch(wasmUrl);
+        const { instance } = await WebAssembly.instantiateStreaming(response);
+        // console.log(instance.exports); 
+        wasmModule = instance.exports;
+    });
     // $: console.log(result);
 
     // "mage": {
@@ -164,62 +165,67 @@
         }
     }
     function nextDialogue(option) {
-        clearInterval(intervalId);
-
-        if (option) {
-            if(option.next){
-                currentDialogue = gameData.dialogue[option.next];
-                currentDialogueIndex = dialogueKeys.indexOf(option.next);
-            }
-            if (option.event) {
-                const event = gameData.event[option.event];
-                currentDialogue = gameData.dialogue[event.dialogue];
-                currentDialogueIndex = dialogueKeys.indexOf(event.dialogue);
-                if (event) {
-                    isTransitioning = true;
-                    setTimeout(() => {
-                        currentScene = gameData.scene[event.scene];
-                        isTransitioning = false;
-                    }, 1000); // Wait for 1 second before changing the scene
-                }
-            }
-        } else {
-            currentDialogue.options.forEach(option => {
-                if (option.next) {
-                    if (!gameData.dialogue.hasOwnProperty(option.next)) {
-                        console.error(`Error: Dialogue "${option.next}" does not exist.`);
-                        endGame();
-                        return;
-                    }
-                    currentDialogue = gameData.dialogue[option.next];
-                    currentDialogueIndex = dialogueKeys.indexOf(option.next);
-                }
-                if (option.event) {
-                    const event = gameData.event[option.event];
-                    if (event) {
-                        isTransitioning = true;
-                        setTimeout(() => {
-                            currentScene = gameData.scene[event.scene];
-                            isTransitioning = false;
-                        }, 1000); // Wait for 1 second before changing the scene
-                    }
-                }
-            });
-        }
-
-        if (!currentDialogue.options) {
-            endGame();
-            return;
-        }
-
-        const character = gameData.character[currentDialogue.character];
-        if (character) {
-            currentCharacter = character;
-        }
-
-        // 调用 showDialogue 函数逐字显示对话文本
+        const optionNext = option ? option.next : '';
+        const optionEvent = option ? option.event : '';
+        wasmModule._nextDialogue(optionNext, optionEvent);
         showDialogue(currentDialogue.text);
-    }
+    // }
+    // function nextDialogue(option) {
+    //     clearInterval(intervalId);
+
+    //     if (option) {
+    //         if(option.next){
+    //             currentDialogue = gameData.dialogue[option.next];
+    //             currentDialogueIndex = dialogueKeys.indexOf(option.next);
+    //         }
+    //         if (option.event) {
+    //             const event = gameData.event[option.event];
+    //             currentDialogue = gameData.dialogue[event.dialogue];
+    //             currentDialogueIndex = dialogueKeys.indexOf(event.dialogue);
+    //             if (event) {
+    //                 isTransitioning = true;
+    //                 setTimeout(() => {
+    //                     currentScene = gameData.scene[event.scene];
+    //                     isTransitioning = false;
+    //                 }, 1000); // Wait for 1 second before changing the scene
+    //             }
+    //         }
+    //     } else {
+    //         currentDialogue.options.forEach(option => {
+    //             if (option.next) {
+    //                 if (!gameData.dialogue.hasOwnProperty(option.next)) {
+    //                     console.error(`Error: Dialogue "${option.next}" does not exist.`);
+    //                     endGame();
+    //                     return;
+    //                 }
+    //                 currentDialogue = gameData.dialogue[option.next];
+    //                 currentDialogueIndex = dialogueKeys.indexOf(option.next);
+    //             }
+    //             if (option.event) {
+    //                 const event = gameData.event[option.event];
+    //                 if (event) {
+    //                     isTransitioning = true;
+    //                     setTimeout(() => {
+    //                         currentScene = gameData.scene[event.scene];
+    //                         isTransitioning = false;
+    //                     }, 1000); // Wait for 1 second before changing the scene
+    //                 }
+    //             }
+    //         });
+    //     }
+
+    //     if (!currentDialogue.options) {
+    //         endGame();
+    //         return;
+    //     }
+
+    //     const character = gameData.character[currentDialogue.character];
+    //     if (character) {
+    //         currentCharacter = character;
+    //     }
+
+    //     showDialogue(currentDialogue.text);
+    // }
 
 
     function showDialogue(text) {
