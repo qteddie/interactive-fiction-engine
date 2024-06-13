@@ -12,55 +12,87 @@
     let isTransitioning = false;
     // ------------------------------- EMCC START ------------------------------
     let wasmModule;
-    let wasmLoaded = false; 
+let wasmLoaded = false;
+let fdWriteCallCount = 0;
+const FD_WRITE_CALL_LIMIT = 100; // 設定一個限制次數
 
-    function print_string(ptr) {
-        const memory = new Uint8Array(wasmModule.memory.buffer);
-        let str = "";
-        for (let i = ptr; memory[i] !== 0; i++) {
-            str += String.fromCharCode(memory[i]);
+function print_string(ptr) {
+    const memory = new Uint8Array(wasmModule.memory.buffer);
+    let str = "";
+    for (let i = ptr; memory[i] !== 0; i++) {
+        str += String.fromCharCode(memory[i]);
+    }
+    console.log(str);
+}
+
+async function emscripten_sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function emscripten_memcpy_js(dest, src, num) {
+    const memory = new Uint8Array(wasmModule.memory.buffer);
+    memory.set(memory.subarray(src, src + num), dest);
+}
+
+function emscripten_resize_heap(requestedSize) {
+    const memory = wasmModule.memory;
+    const oldSize = memory.buffer.byteLength;
+    if (requestedSize > oldSize) {
+        const maxSize = 64 * 1024 * 1024; // 64 MB
+        if (requestedSize > maxSize) {
+            console.error('Requested memory size exceeds maximum limit');
+            return 0;
         }
-        console.log(str);
-    }
-    async function emscripten_sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-    function emscripten_memcpy_js(dest, src, num) {
-        const memory = new Uint8Array(wasmModule.memory.buffer);
-        memory.set(memory.subarray(src, src + num), dest);
-    }
-    function emscripten_resize_heap(requestedSize) {
-        const memory = wasmModule.memory;
-        const oldSize = memory.buffer.byteLength;
-        if (requestedSize > oldSize) {
-            const pagesNeeded = Math.ceil((requestedSize - oldSize) / 65536);
-            try {
-                memory.grow(pagesNeeded);
-                return 1;
-            } catch (e) {
-                return 0;
-            }
+        const pagesNeeded = Math.ceil((requestedSize - oldSize) / 65536);
+        try {
+            memory.grow(pagesNeeded);
+            return 1;
+        } catch (e) {
+            console.error('Memory growth failed:', e);
+            return 0;
         }
-        return 1;
     }
-    onMount(async () => {
+    return 1;
+}
+
+function fd_write(fd, iov, iovcnt, pnum) {
+    fdWriteCallCount++;
+    if (fdWriteCallCount > FD_WRITE_CALL_LIMIT) {
+        throw new Error('fd_write call limit exceeded');
+    }
+    console.log(`fd_write called with fd: ${fd}, iov: ${iov}, iovcnt: ${iovcnt}, pnum: ${pnum}`);
+    return 0;
+}
+
+onMount(async () => {
+    try {
         const wasmUrl = '/c/main.wasm';
         const importObject = {
             env: {
-                memory: new WebAssembly.Memory({ initial: 256 }),
+                memory: new WebAssembly.Memory({ initial: 32, maximum: 64 }), // 設置最大內存限制
                 table: new WebAssembly.Table({ initial: 0, element: 'anyfunc' }),
                 emscripten_sleep,
                 emscripten_memcpy_js,
                 emscripten_resize_heap,
                 print_string: print_string
+            },
+            wasi_snapshot_preview1: {
+                fd_write: fd_write // 提供 fd_write 的虛擬實現
             }
         };
+
+        console.log('Fetching WebAssembly module from:', wasmUrl);
         const wasmResponse = await fetch(wasmUrl);
         const { instance } = await WebAssembly.instantiateStreaming(wasmResponse, importObject);
-        wasmModule = instance.exports;
-        wasmLoaded = true;  // 设置加载标志
-    });
+        console.log('WebAssembly module instantiated.');
 
+        wasmModule = instance.exports;
+        wasmLoaded = true; // 设置加载标志
+        console.log('WebAssembly module loaded and ready.');
+    } catch (error) {
+        console.error('Error loading WebAssembly module:', error);
+    }
+});
     // ------------------------------- EMCC END ------------------------------
 
     // "mage": {

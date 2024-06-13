@@ -229,7 +229,7 @@
 </script>
 
 <head>
-    <link rel="stylesheet" href="src/routes/start.css">
+    <link rel="stylesheet" href="src/routes/story.css">
 </head>
 
 <!-- on:click={handleClick}  -->

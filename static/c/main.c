@@ -87,13 +87,13 @@ void nextDialogue(const char* optionNext, const char* optionEvent) {
     if (eventIndex != -1) {
         currentDialogue = gameData.dialogues[findDialogueIndexByName(gameData.events[eventIndex].dialogue)];
         currentDialogueIndex = findDialogueIndexByName(gameData.events[eventIndex].dialogue);
+        printf("Set currentDialogue to (from event): %s\n", currentDialogue.text);
         if (eventIndex != -1) {
             isTransitioning = true;
             emscripten_sleep(1000);
             strcpy(currentScene, gameData.scenes[eventIndex]);
             isTransitioning = false;
         }
-        printf("Set currentDialogue to: %s\n", currentDialogue.text);
     }
 
     if (!currentDialogue.optionCount) {
@@ -104,6 +104,7 @@ void nextDialogue(const char* optionNext, const char* optionEvent) {
     if (characterIndex != -1) {
         currentCharacter = gameData.characters[characterIndex];
     }
+    printf("currentCharacter set to: %s\n", currentCharacter.avatar);
 }
 
 EMSCRIPTEN_KEEPALIVE
