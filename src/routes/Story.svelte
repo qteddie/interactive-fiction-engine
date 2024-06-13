@@ -245,12 +245,12 @@
         {/each}
     </div>
     <div class="dialogue-box">
-        <div class="character-info"> <!-- Add this line -->
+        <div class="character-info"> 
             <div class="character-avatar">
                 <img src={currentCharacter.avatar} alt={currentCharacter.name} />
             </div>
             <div class="character-name">{ playerName }</div>
-        </div> <!-- Add this line -->
+        </div> 
         <div class="character-dialogue">
             <p>{displayText}</p>
             {#if Array.isArray(currentDialogue.options)}
