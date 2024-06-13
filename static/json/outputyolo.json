@@ -55,6 +55,16 @@
             "name": "機器狗",
             "avatar": "/character/dog/avatar.jpeg",
             "tachie": "/character/dog/dog.png"
+        },
+        "fight_david": {
+            "name": "戰鬥主角",
+            "avatar": "/character/fight_david/avatar.jpeg",
+            "tachie": "/character/fight_david/fight_david.png"
+        },
+        "angry_lucy": {
+            "name": "憤怒的Lucy",
+            "avatar": "/character/angry_lucy/avatar.jpeg",
+            "tachie": "/character/angry_lucy/angry_lucy.png"
         }
     },
     "item": {
@@ -218,7 +228,7 @@
             ]
         },
         "sleep": {
-            "character": "Lucy",
+            "character": "angry_lucy",
             "text": "（搖搖頭）",
             "options": [
                 {
@@ -343,7 +353,7 @@
             ]
         },
         "battle4": {
-            "character": "Lucy",
+            "character": "angry_lucy",
             "text": "我們沒辦法打贏他，你快逃！",
             "options": [
                 {
@@ -363,7 +373,7 @@
             ]
         },
         "battle6": {
-            "character": "David",
+            "character": "fight_david",
             "text": "靠著隊友造成的傷害加上強化針，將敵人打倒後，低頭望著隊友的屍體，心情很複雜",
             "options": [
                 {
@@ -374,7 +384,7 @@
         },
 
         "battle5": {
-            "character": "David",
+            "character": "fight_david",
             "text": "使用強化針，能力增強後衝過去加入戰鬥",
             "options": [
                 {
@@ -384,7 +394,7 @@
             ]
         },
         "losememory": {
-            "character": "David",
+            "character": "fight_david",
             "text": "（從昏迷中醒來）這又是哪裡，你們是誰。",
             "options": [
                 {
