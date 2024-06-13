@@ -47,6 +47,10 @@
     let showEndScreen = false;
     let audio;
 
+    let displayText = '';
+    let displayIndex = 0;
+    let typingSpeed = 50;
+
     onMount(async () => {
         const response = await fetch('/json/outputyolo.json');
         gameData = await response.json();
@@ -78,6 +82,8 @@
 
         dialogueKeys = Object.keys(gameData.dialogue); // Get the keys of the dialogue object
         currentDialogue = gameData.dialogue[dialogueKeys[currentDialogueIndex]]; // 根據 currentDialogueIndex 設定 currentDialogue
+        showDialogue(currentDialogue.text);
+
     });
 
     //------------------- HANDLE DATA -------------------
@@ -200,9 +206,26 @@
             // 更新頭像和立繪
             currentCharacter = character;
         }
+
+
+        showDialogue(currentDialogue.text);
+
     }
 
-    
+
+    function showDialogue(text) {
+        displayText = '';
+        displayIndex = 0;
+
+        intervalId = setInterval(() => {
+            if (displayIndex < text.length) {
+                displayText += text.charAt(displayIndex);
+                displayIndex++;
+            } else {
+                clearInterval(intervalId);
+            }
+        }, typingSpeed);
+    }
 </script>
 
 <head>
@@ -262,8 +285,8 @@
             <div class="character-name">{ playerName }</div>
         </div> <!-- Add this line -->
         <div class="character-dialogue">
-            <p>{currentDialogue.text}</p>
-            {#if Array.isArray(currentDialogue.options) && currentDialogue.options.length > 1}
+            <p>{displayText}</p>
+            {#if Array.isArray(currentDialogue.options)}
                 <div class="dialogue-options">
                     {#each currentDialogue.options as option (option.text)}
                         <button on:click={() => nextDialogue(option)}>{option.text}</button>
