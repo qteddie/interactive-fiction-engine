@@ -154,6 +154,10 @@
         "Moon": {
             "scene": "moon",
             "dialogue": "moon"
+        },
+        "End": {
+            "scene": "moon",
+            "dialogue": "End"
         }
     },
     "dialogue": {
@@ -401,7 +405,8 @@
             "text": "我和反抗小組坦承了自己的企業主身份，回到企業，讓成為當初自己最討厭的樣子，世界照常運轉。",
             "options": [
                 {
-                    "text": "結束冒險"
+                    "text": "結束冒險",
+                    "event": "End"
                     
                 }
             ]
@@ -411,7 +416,8 @@
             "text": "跟著反抗小隊離開這座城市，繼續幫著下一座城市推翻管控。",
             "options": [
                 {
-                    "text": "結束冒險"
+                    "text": "結束冒險",
+                    "event": "End"
                     
                     
                 }
@@ -422,7 +428,8 @@
             "text": "你將機器狗格式化，走向反抗小隊，城市秩序變得更加混亂。",
             "options": [
                 {
-                    "text": "結束冒險"
+                    "text": "結束冒險",
+                    "event": "End"
                 }
             ]
         },
@@ -431,7 +438,8 @@
             "text": "帶著lucy意志上月球。",
             "options": [
                 {
-                    "text": "好美,結束冒險"
+                    "text": "好美,結束冒險",
+                    "event": "End"
                 }
             ]
         },
@@ -467,6 +475,15 @@
                 {
                     "text": "雙方都受到重傷，而企業的統治力也不復存在",
                     "event": "Destroy_corporation"
+                }
+            ]
+        },
+        "End": {
+            "character": "David",
+            "text": "遊戲結束，感謝遊玩",
+            "options": [
+                {
+                    "text": "請點我結束遊戲"
                 }
             ]
         }
