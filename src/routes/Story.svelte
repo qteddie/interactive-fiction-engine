@@ -15,7 +15,7 @@
 
     function handleKeydown(event) {
     if (event.key === ' ') {
-        if (currentDialogue.options && currentDialogue.options.length > 1) {
+        if (currentDialogue.options) {
             return;
         }
         nextDialogue();
