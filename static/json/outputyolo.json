@@ -38,7 +38,7 @@
         "Lucy": {
             "location": "underground_base",
             "name": "反抗小隊領袖",
-            "avatar": "/character/Lucy/avatar.jpeg",
+            "avatar": "/character/lucy/avatar.jpeg",
             "tachie": "/character/lucy/lucy.png"
         },
         "Ironman": {
@@ -61,7 +61,7 @@
         },
         "Booster_shot": {
             "name": "強化針",
-            "description": "一種能夠暫時提升身體機能的針劑。",
+            "description": "一種能夠暫時提升身體機能的針劑(有副作用）。",
             "icon": "/item/booster.png"
         },
         "watch": {
