@@ -54,11 +54,6 @@
         }
     },
     "item": {
-        "mechine_dog": {
-            "name": "機器狗",
-            "description": "智能化的機器狗，可以讓企業派出的維安機器人識別主角是企業主，從而不能攻擊他。",
-            "icon": "/item/doge.png"
-        },
         "Booster_shot": {
             "name": "強化針",
             "description": "一種能夠暫時提升身體機能的針劑(有副作用）。",
@@ -75,94 +70,90 @@
             "scene": "night_city",
             "dialogue": "beginning"
         },
-        "join_resistance": {
+        "Join_resistance": {
             "scene": "night_city",
             "dialogue": "join_resistance"
         },
-        "discover_truth": {
+        "Discover_truth": {
             "scene": "corporate_headquarters",
             "dialogue": "discover_truth"
         },
-        "final_battle": {
+        "Final_battle": {
             "scene": "fighting_arena",
             "dialogue": "final_battle"
         },
-        "escape_city": {
+        "Escape_city": {
             "scene": "night_city",
             "dialogue": "escape_city"
         },
-        "destroy_corporation": {
+        "Destroy_corporation": {
             "scene": "corporate_headquarters",
             "dialogue": "destroy_corporation"
         },
-        "robot_encounter": {
-            "scene": "corporate_headquarters",
+        "Robot_encounter": {
+            "scene": "night_city",
             "dialogue": "robot_encounter"
         },
-        "training": {
+        "Training": {
             "scene": "underground_base",
             "dialogue": "training"
         },
-        "get_boost": {
+        "Get_boost": {
             "scene": "underground_base",
             "dialogue": "get_boost"
         },
-        "mission_start": {
+        "Mission_start": {
             "scene": "underground_base",
             "dialogue": "mission_start"
         },
-        "mission_briefing": {
+        "Mission_briefing": {
             "scene": "underground_base",
             "dialogue": "mission_briefing"
         },
-        "explore_city": {
+        "Explore_city": {
             "scene": "night_city",
             "dialogue": "explore_city"
         },
-        "encounter_dog": {
+        "Encounter_dog": {
             "scene": "night_city",
             "dialogue": "encounter_dog"
         },
-        "dog_follows": {
+        "Dog_follows": {
             "scene": "night_city",
             "dialogue": "dog_follows"
         },
 
-        "battle": {
+        "Battle": {
             "scene": "fighting_arena",
             "dialogue": "battle"
         },
-        "battle2": {
+        "Battle2": {
             "scene": "fighting_arena",
             "dialogue": "battle2"
         },
-        "battle3": {
+        "Battle3": {
             "scene": "fighting_arena",
             "dialogue": "battle3"
         },
-        "battle4": {
+        "Battle4": {
             "scene": "fighting_arena",
             "dialogue": "battle4"
         },
-        "battle5": {
+        "Battle5": {
             "scene": "fighting_arena",
             "dialogue": "battle5"
         },
-        "choose_ending": {
+        "Choose_ending": {
             "scene": "fighting_arena",
             "dialogue": "choose_ending"
         },
-        "dark_ruler": {
+        "Dark_ruler": {
             "scene": "corporate_headquarters",
             "dialogue": "dark_ruler"
         },
-        "moon": {
+        "Moon": {
             "scene": "moon",
-            "dialogue": "end"
-        },
-        "fimal_battle": {
-            "scene": "fighting_arena",
-            "dialogue": "fimal_battle"
+            "dialogue": "moon"
         }
     },
     "dialogue": {
@@ -182,21 +173,21 @@
             "options": [
                 {
                     "text": "接受並加入",
-                    "next": "mission_briefing"
+                    "event": "Mission_briefing"
                 },
                 {
-                    "text": "拒絕並離開",
+                    "text": "拒絕並試圖離開",
                     "next": "reject"
                 }
             ]
         },
         "reject": {
             "character": "Lucy",
-            "text": "似乎你沒辦法拒絕。",
+            "text": "（攔住）你似乎沒辦法拒絕。",
             "options": [
                 {
                     "text": "接受並加入",
-                    "next": "mission_briefing"
+                    "event": "Mission_briefing"
                 }
             ]
         },
@@ -205,15 +196,30 @@
             "text": "我們任務目標是，要癱瘓機器人保衛系統，你要加緊訓練一下。",
             "options": [
                 {
-                    "text": "出門探索",
-                    "next": "explore_city"
+                    "text": "先讓我出門了解一下這座城市",
+                    "event": "Explore_city"
                 },
                 {
                     "text": "開始訓練",
                     "next": "training"
+                },
+                {
+                    "text": "直接開睡",
+                    "next": "sleep"
                 }
             ]
         },
+        "sleep": {
+            "character": "Lucy",
+            "text": "（搖搖頭）",
+            "options": [
+                {
+                    "text": "（被踹醒）",
+                    "next": "training"
+                }
+            ]
+        },
+
         "explore_city": {
             "character": "David",
             "text": "我決定獨自探索這座城市，也許我能找回一些記憶。",
@@ -234,7 +240,7 @@
                 },
                 {
                     "text": "這機器狗真醜，被嚇到回去訓練",
-                    "next": "training"
+                    "event": "Training"
                 }
             ]
         },
@@ -244,7 +250,7 @@
             "options": [
                 {
                     "text": "遭遇機器人大軍",
-                    "next": "robot_encounter"
+                    "event": "Robot_encounter"
                 }
             ]
         },
@@ -261,7 +267,7 @@
         },
         "get_boost": {
             "character": "Lucy",
-            "text": "這是強化針，有危險可以使用。",
+            "text": "這是強化針，有副作用，到緊急時刻再使用。",
             "options": [
                 {
                     "text": "拿著",
@@ -275,13 +281,13 @@
             "options": [
                 {
                     "text": "跟著小隊出發",
-                    "next": "battle"
+                    "event": "Battle"
                 }
             ]
         },
         "battle": {
             "character": "Lucy",
-            "text": "機器人們來給我們練手的是吧,如此輕鬆！",
+            "text": "這些保衛機器人們來給我們練手的是吧,如此輕鬆！",
             "options": [
                 {
                     "text": "笑著打機器人",
@@ -301,10 +307,10 @@
         },
         "battle3": {
             "character": "Lucy",
-            "text": "他也是機器人嗎？怎麼這麼強",
+            "text": "他也是保衛機器人嗎？怎麼這麼強",
             "options": [
                 {
-                    "text": "繼續觀望",
+                    "text": "（不知所措）繼續觀望",
                     "next": "battle4"
                 },
                 {
@@ -314,36 +320,79 @@
             ]
         },
         "battle4": {
-            "character": "David",
-            "text": "經過激烈打鬥後，目睹小隊為了救自己整隊覆滅",
+            "character": "Lucy",
+            "text": "我們沒辦法打贏他，你快逃！",
             "options": [
                 {
-                    "text": "崩潰痛哭，離開夜城",
-                    "next": "moon"
+                    "text": "在逃跑途中，目睹反抗小隊被轟成碎片",
+                    "next": "battlend"
                 }
             ]
         },
+        "battlend":{
+            "character": "David",
+            "text": "看不下去隊友被這樣攻擊",
+            "options": [
+                {
+                    "text": "使用強化針（副作用是記憶永久消失了）",
+                    "next": "battle6"
+                }
+            ]
+        },
+        "battle6": {
+            "character": "David",
+            "text": "靠著隊友造成的傷害加上強化針，將敵人打倒後，低頭望著隊友的屍體，心情很複雜",
+            "options": [
+                {
+                    "text": "決定離開這座城市",
+                    "event": "Moon"
+                }
+            ]
+        },
+
         "battle5": {
             "character": "David",
             "text": "使用強化針，能力增強後衝過去加入戰鬥",
             "options": [
                 {
-                    "text": "解決Ironman後,隨之而來的副作用是記憶永久消失了",
+                    "text": "解決Ironman後 感受到（副作用是記憶永久消失了）",
                     "next": "choose_ending"
                 }
             ]
         },
+        "losememory": {
+            "character": "David",
+            "text": "（從昏迷中醒來）這又是哪裡，你們是誰。",
+            "options": [
+                {
+                    "text": "問問身邊的人",
+                    "next": "join_resistance2"
+                }
+            ]
+        },
+        "join_resistance2": {
+            "character": "Lucy",
+            "text": "哈哈，要不要『再』加入我們團隊啊。",
+            "options": [
+                {
+                    "text": "接受並加入",
+                    "event": "Escape_city"
+                }
+                
+            ]
+        },
+
         "choose_ending": {
             "character": "Ironman",
             "text": "（在結束運轉前，用沙沙機器音說）你可是創辦人啊。",
             "options": [
                 {
-                    "text": "覺得疑惑，但想追問時，他已經停止運轉，永遠沒有機會問了",
-                    "next": "escape_city"
+                    "text": "覺得疑惑，但想追問時，他已經停止運轉，永遠沒有機會問了,同時你也體力不支昏倒了",
+                    "next": "losememory"
                 },
                 {
-                    "text": "覺得可笑，多踹了他一腳",
-                    "next": "escape_city"
+                    "text": "覺得可笑再補踹了一腳，之後體力不支也昏倒了",
+                    "next": "losememory"
                 }
             ]
         },
@@ -359,10 +408,11 @@
         },
         "escape_city": {
             "character": "David",
-            "text": "帶領著反抗小隊離開這座城市，繼續幫著下一座城市推翻管控。",
+            "text": "跟著反抗小隊離開這座城市，繼續幫著下一座城市推翻管控。",
             "options": [
                 {
                     "text": "結束冒險"
+                    
                     
                 }
             ]
@@ -378,10 +428,10 @@
         },
         "moon": {
             "character": "David",
-            "text": "帶著LUCY意志上月球。",
+            "text": "帶著lucy意志上月球。",
             "options": [
                 {
-                    "text": "好美"
+                    "text": "好美,結束冒險"
                 }
             ]
         },
@@ -391,33 +441,32 @@
             "options": [
                 {
                     "text": "跟隨機器狗前往總部",
-                    "next": "discover_truth"
+                    "event": "Discover_truth"
                 }
-                
             ]
         },
 
         "discover_truth": {
             "character": "Ironman",
-            "text": "主人你回來了，你應該知道這個世界的真相（使用機器狗回復記憶）機器狗是如同魔戒般的存在，所有機器人都聽從它的指揮，你則是機器的創造者。",
+            "text": "主人你回來了，你應該知道這個世界的真相（使用機器狗回復記憶）機器狗只聽從手錶主人的命令，所有機器人都聽從機器狗的指揮，你則是機器的創造者。",
             "options": [
                 {
                     "text": "真假，這些機器人是我管的?",
-                    "next": "dark_truth"
+                    "next": "dark_ruler"
                 },
                 {
                     "text": "不能接受這是自己一手打造的",
-                    "next": "final_battle"
+                    "event": "Final_battle"
                 }
             ]
         },
-        "fimal_battle": {
+        "final_battle": {
             "character": "David",
             "text": "想要毀掉這萬惡之源，於是你指揮機器人和亞當打起來",
             "options": [
                 {
                     "text": "雙方都受到重傷，而企業的統治力也不復存在",
-                    "next": "destroy_corporation"
+                    "event": "Destroy_corporation"
                 }
             ]
         }
