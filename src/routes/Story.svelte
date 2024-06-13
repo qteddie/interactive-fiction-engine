@@ -89,7 +89,7 @@
     //------------------- HANDLE DATA -------------------
     let isSave = false;
     function saveGame() {
-        const game = {
+        const story = {
             currentScene,
             currentCharacter,
             currentItem,
@@ -103,8 +103,8 @@
         };
         try {
             console.log('Game saved');
-            localStorage.setItem('game', JSON.stringify(game));
-            console.log(game);
+            localStorage.setItem('story', JSON.stringify(story));
+            console.log(story);
         } catch (error) {
             console.error('Error saving to file', error);
         }
@@ -126,8 +126,8 @@
     };
     function endGame() {
         console.log('Game ended');
-        localStorage.removeItem('game');
-        localStorage.setItem('game', JSON.stringify(initialGameState));
+        localStorage.removeItem('story');
+        localStorage.setItem('story', JSON.stringify(initialGameState));
         showEndScreen = true;
     }
     function goToStartScreen() {
