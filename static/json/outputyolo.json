@@ -27,6 +27,10 @@
         "moon": {
             "name": "Moon",
             "background": "/scene/moon.jpeg"
+        },
+        "highway": {
+            "name": "Highway",
+            "background": "/scene/highway.jpeg"
         }
     },
     "character": {
@@ -83,7 +87,7 @@
             "dialogue": "final_battle"
         },
         "Escape_city": {
-            "scene": "night_city",
+            "scene": "highway",
             "dialogue": "escape_city"
         },
         "Destroy_corporation": {
@@ -218,7 +222,7 @@
             "text": "（搖搖頭）",
             "options": [
                 {
-                    "text": "（被踹醒）",
+                    "text": "（被踹醒)並且趕去訓練",
                     "next": "training"
                 }
             ]
@@ -239,7 +243,7 @@
             "text": "凹凹凹凹。",
             "options": [
                 {
-                    "text": "似乎機器狗和你有某種聯繫並讓機器狗跟隨，繼續探索",
+                    "text": "似乎機器狗和你手錶上的狗有些類似並讓機器狗你蹲下來看它",
                     "next": "dog_follows"
                 },
                 {
@@ -250,14 +254,29 @@
         },
         "dog_follows": {
             "character": "mechine_dog",
-            "text": "旺旺（似乎很熟悉的樣子）。",
+            "text": "旺旺（似乎想告訴你什麼）。",
             "options": [
                 {
-                    "text": "遭遇機器人大軍",
-                    "event": "Robot_encounter"
+                    "text": "繼續看它",
+                    "next": "dog_follows"
+                },
+                {
+                    "text": "站起來回去訓練",
+                    "event": "Training"
                 }
             ]
         },
+        "take_watch": {
+            "character": "David",
+            "text": "（拿起手錶）按下中間表面",
+            "options": [
+                {
+                    "text": "狗狗似乎觸發某種機關，蹲下來開始嚎叫",
+                    "next": "robot_encounter"
+                }
+            ]
+        },
+
 
         "training": {
             "character": "David",
@@ -335,7 +354,7 @@
         },
         "battlend":{
             "character": "David",
-            "text": "看不下去隊友被這樣攻擊",
+            "text": "（看不下去隊友被這樣攻擊）",
             "options": [
                 {
                     "text": "使用強化針（副作用是記憶永久消失了）",
@@ -435,7 +454,7 @@
         },
         "moon": {
             "character": "David",
-            "text": "帶著lucy意志上月球。",
+            "text": "好美，但怎麼感覺心空空的。",
             "options": [
                 {
                     "text": "好美,結束冒險",
@@ -445,15 +464,24 @@
         },
         "robot_encounter": {
             "character": "David",
-            "text": "機器人看到機器狗後，在你面前整齊列隊。趕過來的反抗小隊也搞不清楚什麼情況",
+            "text": "機器人成群趕過來，在你和狗面前整齊列隊。趕過來的反抗小隊也搞不清楚什麼情況",
             "options": [
                 {
-                    "text": "跟隨機器狗前往總部",
+                    "text": "和反抗小隊請教",
+                    "event": "discusstion"
+                }
+            ]
+        },
+        "discusstion":{
+            "character": "Lucy",
+            "text": "我也搞不抬清楚，你看機器狗站起來了好戲要帶領我們去哪",
+            "options": [
+                {
+                    "text": "跟著機器狗走",
                     "event": "Discover_truth"
                 }
             ]
         },
-
         "discover_truth": {
             "character": "Ironman",
             "text": "主人你回來了，你應該知道這個世界的真相（使用機器狗回復記憶）機器狗只聽從手錶主人的命令，所有機器人都聽從機器狗的指揮，你則是機器的創造者。",
