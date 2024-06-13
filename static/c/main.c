@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-// 假设最大对话和事件数量为 100，最大字符数量为 50
 #define MAX_DIALOGUES 100
 #define MAX_CHARACTERS 100
 #define MAX_EVENTS 100
@@ -45,14 +44,13 @@ char currentScene[MAX_STRING_LENGTH];
 Character currentCharacter;
 bool isTransitioning = false;
 
-// 辅助函数来查找字符串在数组中的索引
 int findDialogueIndexByName(const char* name) {
     for (int i = 0; i < MAX_DIALOGUES; ++i) {
         if (strcmp(gameData.dialogues[i].text, name) == 0) {
             return i;
         }
     }
-    return -1; // 未找到
+    return -1;
 }
 
 int findEventIndexByName(const char* name) {
@@ -61,7 +59,7 @@ int findEventIndexByName(const char* name) {
             return i;
         }
     }
-    return -1; // 未找到
+    return -1;
 }
 
 int findCharacterIndexByName(const char* name) {
@@ -70,18 +68,22 @@ int findCharacterIndexByName(const char* name) {
             return i;
         }
     }
-    return -1; // 未找到
+    return -1;
 }
 
 EMSCRIPTEN_KEEPALIVE
 void nextDialogue(const char* optionNext, const char* optionEvent) {
+    printf("nextDialogue called with optionNext: %s, optionEvent: %s\n", optionNext, optionEvent);
+
     int dialogueIndex = findDialogueIndexByName(optionNext);
     int eventIndex = findEventIndexByName(optionEvent);
 
     if (dialogueIndex != -1) {
         currentDialogue = gameData.dialogues[dialogueIndex];
         currentDialogueIndex = dialogueIndex;
+        printf("Set currentDialogue to: %s\n", currentDialogue.text);
     }
+
     if (eventIndex != -1) {
         currentDialogue = gameData.dialogues[findDialogueIndexByName(gameData.events[eventIndex].dialogue)];
         currentDialogueIndex = findDialogueIndexByName(gameData.events[eventIndex].dialogue);
@@ -91,10 +93,10 @@ void nextDialogue(const char* optionNext, const char* optionEvent) {
             strcpy(currentScene, gameData.scenes[eventIndex]);
             isTransitioning = false;
         }
+        printf("Set currentDialogue to: %s\n", currentDialogue.text);
     }
 
     if (!currentDialogue.optionCount) {
-        // endGame();
         return;
     }
 
@@ -102,4 +104,10 @@ void nextDialogue(const char* optionNext, const char* optionEvent) {
     if (characterIndex != -1) {
         currentCharacter = gameData.characters[characterIndex];
     }
+}
+
+EMSCRIPTEN_KEEPALIVE
+const char* getCurrentDialogueText() {
+    printf("getCurrentDialogueText called. Returning: %s\n", currentDialogue.text);
+    return currentDialogue.text;
 }

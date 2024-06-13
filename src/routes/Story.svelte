@@ -66,8 +66,8 @@
             console.log('gameState after clear: ',$gameState);
         } else {
             // 如果 gameState 的值為 null，則表示需要重新開始遊戲
-            currentScene = gameData.scene.forest;
-            currentCharacter = gameData.character.mage;
+            currentScene = gameData.scene.night_city;
+            currentCharacter = gameData.character.David;
             currentDialogueIndex = 0; // 將對話索引重設為 0
             playerName = ''; // 將玩家名稱重設為空字串
             mana = 10; // 將 mana 重設為 100
