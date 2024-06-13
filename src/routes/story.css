@@ -167,7 +167,7 @@ body {
     position: fixed;
     top: 60%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(1.2); /* Add scale() here */
     z-index: 0; /* Ensure the tachie is above the background but below the dialogue */
 }
 
