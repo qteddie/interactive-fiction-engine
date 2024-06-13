@@ -5,10 +5,10 @@
     let isStoryLoaded = false;
     let noGameSavedProgress = false;
     let noStorySavedProgress = false;
-    let loadedGameState = null; // 定義 loadedGameState 變數
-    let loadedStoryState = null; // 定義 loadedStoryState 變數
-    let loadedGameTime = null;  // 新增一個變數來儲存讀取的遊戲進度
-    let loadedStoryTime = null;  // 新增一個變數來儲存讀取的故事進度
+    let loadedGameState = null; 
+    let loadedStoryState = null;
+    let loadedGameTime = null;  
+    let loadedStoryTime = null; 
     let loadedGamePlayerName = null;
     let loadedStoryPlayerName = null;
 
@@ -17,7 +17,7 @@
         if (savedProgress) {
             const savedData = JSON.parse(savedProgress);
             loadedGameState = savedData; // 讀取遊戲進度
-            loadedGameTime = new Date(savedData.saveTime).toLocaleString(); // 讀取遊戲時間並轉換為本地時間格式
+            loadedGameTime = new Date(savedData.saveTime).toLocaleString(); 
             loadedGamePlayerName = savedData.playerName; // 讀取玩家名稱
             isGameLoaded = true;
             noGameSavedProgress = false;
@@ -35,7 +35,7 @@
         if (savedProgress) {
             const savedData = JSON.parse(savedProgress);
             loadedStoryState = savedData; // 讀取故事進度
-            loadedStoryTime = new Date(savedData.saveTime).toLocaleString(); // 讀取故事時間並轉換為本地時間格式
+            loadedStoryTime = new Date(savedData.saveTime).toLocaleString();
             loadedStoryPlayerName = savedData.playerName; // 讀取玩家名稱
             isStoryLoaded = true;
             noStorySavedProgress = false;
@@ -50,7 +50,7 @@
 
     function startLoadedGame() {
         if (loadedGameState) {
-            gameState.set(loadedGameState); // 將 gameState 更新為 loadedGameState
+            gameState.set(loadedGameState); 
             navigate('/start');
         } else {
             console.error('No loaded game state found');
@@ -59,7 +59,7 @@
 
     function startLoadedStory() {
         if (loadedStoryState) {
-            gameState.set(loadedStoryState); // 將 gameState 更新為 loadedStoryState
+            gameState.set(loadedStoryState);
             navigate('/story');
         } else {
             console.error('No loaded story state found');
@@ -75,8 +75,8 @@
     <button on:click={loadGame}>讀取範例遊戲存檔</button>
     {#if isGameLoaded}
         <div class="load-message">已讀取遊戲存檔</div>
-        <div class="load-time">存檔時間：{loadedGameTime}</div> <!-- 顯示存檔時間 -->
-        <div class="load-player-name">玩家名稱：{loadedGamePlayerName}</div> <!-- 顯示玩家名稱 -->
+        <div class="load-time">存檔時間：{loadedGameTime}</div> 
+        <div class="load-player-name">玩家名稱：{loadedGamePlayerName}</div> 
         <button on:click={startLoadedGame}>開始已讀取的遊戲</button>
     {/if}
     {#if noGameSavedProgress}
@@ -86,8 +86,8 @@
     <button on:click={loadStory}>讀取故事存檔</button>
     {#if isStoryLoaded}
         <div class="load-message">已讀取故事存檔</div>
-        <div class="load-time">存檔時間：{loadedStoryTime}</div> <!-- 顯示存檔時間 -->
-        <div class="load-player-name">玩家名稱：{loadedStoryPlayerName}</div> <!-- 顯示玩家名稱 -->
+        <div class="load-time">存檔時間：{loadedStoryTime}</div> 
+        <div class="load-player-name">玩家名稱：{loadedStoryPlayerName}</div> 
         <button on:click={startLoadedStory}>開始已讀取的故事</button>
     {/if}
     {#if noStorySavedProgress}

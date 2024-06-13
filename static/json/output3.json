@@ -73,6 +73,10 @@
         "peace_outcome": {
             "scene": "forest",
             "dialogue": "return_home_peace"
+        },
+        "End": {
+            "scene": "forest",
+            "dialogue": "end"
         }
     },
     "dialogue": {
@@ -176,7 +180,12 @@
         },
         "end": {
             "character": "mage",
-            "text": "我的冒險結束了，我已經回到了我的世界。"
+            "text": "範例遊戲結束，請點選故事開始來開啟正式遊戲",
+            "options": [
+                {
+                    "text": "點我點我！"
+                }
+            ]
         }
     }
 }

@@ -11,88 +11,88 @@
 
     let isTransitioning = false;
     // ------------------------------- EMCC START ------------------------------
-    let wasmModule;
-let wasmLoaded = false;
-let fdWriteCallCount = 0;
-const FD_WRITE_CALL_LIMIT = 100; // 設定一個限制次數
+//     let wasmModule;
+// let wasmLoaded = false;
+// let fdWriteCallCount = 0;
+// const FD_WRITE_CALL_LIMIT = 100; // 設定一個限制次數
 
-function print_string(ptr) {
-    const memory = new Uint8Array(wasmModule.memory.buffer);
-    let str = "";
-    for (let i = ptr; memory[i] !== 0; i++) {
-        str += String.fromCharCode(memory[i]);
-    }
-    console.log(str);
-}
+// function print_string(ptr) {
+//     const memory = new Uint8Array(wasmModule.memory.buffer);
+//     let str = "";
+//     for (let i = ptr; memory[i] !== 0; i++) {
+//         str += String.fromCharCode(memory[i]);
+//     }
+//     console.log(str);
+// }
 
-async function emscripten_sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+// async function emscripten_sleep(ms) {
+//     return new Promise(resolve => setTimeout(resolve, ms));
+// }
 
-function emscripten_memcpy_js(dest, src, num) {
-    const memory = new Uint8Array(wasmModule.memory.buffer);
-    memory.set(memory.subarray(src, src + num), dest);
-}
+// function emscripten_memcpy_js(dest, src, num) {
+//     const memory = new Uint8Array(wasmModule.memory.buffer);
+//     memory.set(memory.subarray(src, src + num), dest);
+// }
 
-function emscripten_resize_heap(requestedSize) {
-    const memory = wasmModule.memory;
-    const oldSize = memory.buffer.byteLength;
-    if (requestedSize > oldSize) {
-        const maxSize = 64 * 1024 * 1024; // 64 MB
-        if (requestedSize > maxSize) {
-            console.error('Requested memory size exceeds maximum limit');
-            return 0;
-        }
-        const pagesNeeded = Math.ceil((requestedSize - oldSize) / 65536);
-        try {
-            memory.grow(pagesNeeded);
-            return 1;
-        } catch (e) {
-            console.error('Memory growth failed:', e);
-            return 0;
-        }
-    }
-    return 1;
-}
+// function emscripten_resize_heap(requestedSize) {
+//     const memory = wasmModule.memory;
+//     const oldSize = memory.buffer.byteLength;
+//     if (requestedSize > oldSize) {
+//         const maxSize = 64 * 1024 * 1024; // 64 MB
+//         if (requestedSize > maxSize) {
+//             console.error('Requested memory size exceeds maximum limit');
+//             return 0;
+//         }
+//         const pagesNeeded = Math.ceil((requestedSize - oldSize) / 65536);
+//         try {
+//             memory.grow(pagesNeeded);
+//             return 1;
+//         } catch (e) {
+//             console.error('Memory growth failed:', e);
+//             return 0;
+//         }
+//     }
+//     return 1;
+// }
 
-function fd_write(fd, iov, iovcnt, pnum) {
-    fdWriteCallCount++;
-    if (fdWriteCallCount > FD_WRITE_CALL_LIMIT) {
-        throw new Error('fd_write call limit exceeded');
-    }
-    console.log(`fd_write called with fd: ${fd}, iov: ${iov}, iovcnt: ${iovcnt}, pnum: ${pnum}`);
-    return 0;
-}
+// function fd_write(fd, iov, iovcnt, pnum) {
+//     fdWriteCallCount++;
+//     if (fdWriteCallCount > FD_WRITE_CALL_LIMIT) {
+//         throw new Error('fd_write call limit exceeded');
+//     }
+//     console.log(`fd_write called with fd: ${fd}, iov: ${iov}, iovcnt: ${iovcnt}, pnum: ${pnum}`);
+//     return 0;
+// }
 
-onMount(async () => {
-    try {
-        const wasmUrl = '/c/main.wasm';
-        const importObject = {
-            env: {
-                memory: new WebAssembly.Memory({ initial: 32, maximum: 64 }), // 設置最大內存限制
-                table: new WebAssembly.Table({ initial: 0, element: 'anyfunc' }),
-                emscripten_sleep,
-                emscripten_memcpy_js,
-                emscripten_resize_heap,
-                print_string: print_string
-            },
-            wasi_snapshot_preview1: {
-                fd_write: fd_write // 提供 fd_write 的虛擬實現
-            }
-        };
+// onMount(async () => {
+//     try {
+//         const wasmUrl = '/c/main.wasm';
+//         const importObject = {
+//             env: {
+//                 memory: new WebAssembly.Memory({ initial: 32, maximum: 64 }), // 設置最大內存限制
+//                 table: new WebAssembly.Table({ initial: 0, element: 'anyfunc' }),
+//                 emscripten_sleep,
+//                 emscripten_memcpy_js,
+//                 emscripten_resize_heap,
+//                 print_string: print_string
+//             },
+//             wasi_snapshot_preview1: {
+//                 fd_write: fd_write // 提供 fd_write 的虛擬實現
+//             }
+//         };
 
-        console.log('Fetching WebAssembly module from:', wasmUrl);
-        const wasmResponse = await fetch(wasmUrl);
-        const { instance } = await WebAssembly.instantiateStreaming(wasmResponse, importObject);
-        console.log('WebAssembly module instantiated.');
+//         console.log('Fetching WebAssembly module from:', wasmUrl);
+//         const wasmResponse = await fetch(wasmUrl);
+//         const { instance } = await WebAssembly.instantiateStreaming(wasmResponse, importObject);
+//         console.log('WebAssembly module instantiated.');
 
-        wasmModule = instance.exports;
-        wasmLoaded = true; // 设置加载标志
-        console.log('WebAssembly module loaded and ready.');
-    } catch (error) {
-        console.error('Error loading WebAssembly module:', error);
-    }
-});
+//         wasmModule = instance.exports;
+//         wasmLoaded = true; // 设置加载标志
+//         console.log('WebAssembly module loaded and ready.');
+//     } catch (error) {
+//         console.error('Error loading WebAssembly module:', error);
+//     }
+// });
     // ------------------------------- EMCC END ------------------------------
 
     // "mage": {
@@ -101,7 +101,6 @@ onMount(async () => {
     //         "tachie": ["/character/mage/tachie3.png", "/character/mage/tachie2.png", "/character/mage/tachie.png"]
     //     },
 
-    // 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
 
     let divElement;
 
@@ -236,144 +235,128 @@ onMount(async () => {
             showContainer = false;
         }
     }
-    function nextDialogue(option) {
-        if (!wasmLoaded) {  // 检查WebAssembly模块是否已加载
-            console.error("WebAssembly module not loaded yet.");
-            return;
-        }
 
-        clearInterval(intervalId); // 清除 intervalId
 
-        let optionNext = '';
-        let optionEvent = '';
-
-        if (option) {
-            if (option.next) {
-                optionNext = option.next;
-            }
-            if (option.event) {
-                optionEvent = option.event;
-            }
-        } else {
-            currentDialogue.options.forEach(opt => {
-                if (opt.next) {
-                    optionNext = opt.next;
-                }
-                if (opt.event) {
-                    optionEvent = opt.event;
-                }
-            });
-        }
-        console.log('optionNext:', optionNext);
-        console.log('optionEvent:', optionEvent);
-
-        wasmModule.nextDialogue(optionNext, optionEvent);
-        console.log('Called nextDialogue with:', optionNext, optionEvent);
-
-        // 打印最新的 currentDialogue 值
-        const memory = new Uint8Array(wasmModule.memory.buffer);
-        const textPtr = wasmModule.getCurrentDialogueText();
-        console.log('textPtr:', textPtr);
-
-        // 确认 textPtr 是否有效
-        if (!textPtr) {
-            console.error('Invalid textPtr:', textPtr);
-            return;
-        }
-
-        // 打印 memory 数组中的部分内容以确认内存是否正确分配
-        console.log('Memory slice:', memory.slice(textPtr, textPtr + 100));
-
-        const text = [];
-        for (let i = textPtr; memory[i] !== 0; i++) {
-            text.push(String.fromCharCode(memory[i]));
-        }
-        console.log('Updated currentDialogue.text:', text.join(''));
-        showDialogue(text.join(''));
-
-        // 如果存在事件，进行场景转换
-        if (optionEvent) {
-            const eventIndex = gameData.events.findIndex(event => event.dialogue === optionEvent);
-            if (eventIndex !== -1) {
-                isTransitioning = true;
-                setTimeout(() => {
-                    currentScene = gameData.scenes[eventIndex];
-                    isTransitioning = false;
-                }, 1000); // 等待 1 秒钟后再改变场景
-            }
-        }
-
-        // 检查并设置当前角色
-        const character = gameData.character[currentDialogue.character];
-        if (character) {
-            currentCharacter = character;
-        }
-
-        // 检查当前对话是否有选项，如果没有，结束游戏
-        if (!currentDialogue.options.length) {
-            endGame();
-            return;
-        }
-    }
-    // }
+    // ------------------------- DIALOGUE -------------------------
     // function nextDialogue(option) {
-    //     clearInterval(intervalId);
-
-    //     if (option) {
-    //         if(option.next){
-    //             currentDialogue = gameData.dialogue[option.next];
-    //             currentDialogueIndex = dialogueKeys.indexOf(option.next);
-    //         }
-    //         if (option.event) {
-    //             const event = gameData.event[option.event];
-    //             currentDialogue = gameData.dialogue[event.dialogue];
-    //             currentDialogueIndex = dialogueKeys.indexOf(event.dialogue);
-    //             if (event) {
-    //                 isTransitioning = true;
-    //                 setTimeout(() => {
-    //                     currentScene = gameData.scene[event.scene];
-    //                     isTransitioning = false;
-    //                 }, 1000); // Wait for 1 second before changing the scene
-    //             }
-    //         }
-    //     } else {
-    //         currentDialogue.options.forEach(option => {
-    //             if (option.next) {
-    //                 if (!gameData.dialogue.hasOwnProperty(option.next)) {
-    //                     console.error(`Error: Dialogue "${option.next}" does not exist.`);
-    //                     endGame();
-    //                     return;
-    //                 }
-    //                 currentDialogue = gameData.dialogue[option.next];
-    //                 currentDialogueIndex = dialogueKeys.indexOf(option.next);
-    //             }
-    //             if (option.event) {
-    //                 const event = gameData.event[option.event];
-    //                 if (event) {
-    //                     isTransitioning = true;
-    //                     setTimeout(() => {
-    //                         currentScene = gameData.scene[event.scene];
-    //                         isTransitioning = false;
-    //                     }, 1000); // Wait for 1 second before changing the scene
-    //                 }
-    //             }
-    //         });
-    //     }
-
-    //     if (!currentDialogue.options) {
-    //         endGame();
+    //     if (!wasmLoaded) {  // 检查WebAssembly模块是否已加载
+    //         console.error("WebAssembly module not loaded yet.");
     //         return;
     //     }
 
+    //     clearInterval(intervalId); // 清除 intervalId
+
+    //     let optionNext = '';
+    //     let optionEvent = '';
+
+    //     if (option) {
+    //         if (option.next) {
+    //             optionNext = option.next;
+    //         }
+    //         if (option.event) {
+    //             optionEvent = option.event;
+    //         }
+    //     } else {
+    //         currentDialogue.options.forEach(opt => {
+    //             if (opt.next) {
+    //                 optionNext = opt.next;
+    //             }
+    //             if (opt.event) {
+    //                 optionEvent = opt.event;
+    //             }
+    //         });
+    //     }
+    //     console.log('optionNext:', optionNext);
+    //     console.log('optionEvent:', optionEvent);
+
+    //     wasmModule.nextDialogue(optionNext, optionEvent);
+    //     console.log('Called nextDialogue with:', optionNext, optionEvent);
+
+    //     // 打印最新的 currentDialogue 值
+    //     const memory = new Uint8Array(wasmModule.memory.buffer);
+    //     const textPtr = wasmModule.getCurrentDialogueText();
+    //     console.log('textPtr:', textPtr);
+
+    //     // 确认 textPtr 是否有效
+    //     if (!textPtr) {
+    //         console.error('Invalid textPtr:', textPtr);
+    //         return;
+    //     }
+
+    //     // 打印 memory 数组中的部分内容以确认内存是否正确分配
+    //     console.log('Memory slice:', memory.slice(textPtr, textPtr + 100));
+
+    //     const text = [];
+    //     for (let i = textPtr; memory[i] !== 0; i++) {
+    //         text.push(String.fromCharCode(memory[i]));
+    //     }
+    //     console.log('Updated currentDialogue.text:', text.join(''));
+    //     showDialogue(text.join(''));
+
+    //     // 如果存在事件，进行场景转换
+    //     if (optionEvent) {
+    //         const eventIndex = gameData.events.findIndex(event => event.dialogue === optionEvent);
+    //         if (eventIndex !== -1) {
+    //             isTransitioning = true;
+    //             setTimeout(() => {
+    //                 currentScene = gameData.scenes[eventIndex];
+    //                 isTransitioning = false;
+    //             }, 1000); // 等待 1 秒钟后再改变场景
+    //         }
+    //     }
+
+    //     // 检查并设置当前角色
     //     const character = gameData.character[currentDialogue.character];
     //     if (character) {
     //         currentCharacter = character;
     //     }
 
-    //     showDialogue(currentDialogue.text);
+    //     // 检查当前对话是否有选项，如果没有，结束游戏
+    //     if (!currentDialogue.options.length) {
+    //         endGame();
+    //         return;
+    //     }
     // }
+    // }
+    function nextDialogue(option) {
+        clearInterval(intervalId);
+        if (option) {
+            if(option.next){
+                currentDialogue = gameData.dialogue[option.next];
+                currentDialogueIndex = dialogueKeys.indexOf(option.next);
+            }
+            else if (option.event) {
+                console.log('option.event: ',option.event);
 
+                const event = gameData.event[option.event];
+                // console.log('event: ',event);
+                currentDialogue = gameData.dialogue[event.dialogue];
+                currentDialogueIndex = dialogueKeys.indexOf(event.dialogue);
+                if (event) {
+                    isTransitioning = true;
+                    setTimeout(() => {
+                        currentScene = gameData.scene[event.scene];
+                        isTransitioning = false;
+                    }, 1000); // Wait for 1 second before changing the scene
+                }
+            }
+            else if (!option.next && !option.event)
+            {
+                endGame();
+                return;
+            }
+        } 
 
+        // 查找對應的角色數據
+        const character = gameData.character[currentDialogue.character];
+        if (character) {
+            // 更新頭像和立繪
+            currentCharacter = character;
+        }
+        showDialogue(currentDialogue.text);
+    }
+
+    // --------------------------------- DIALOGUE ---------------------------------
     function showDialogue(text) {
         displayText = '';
         displayIndex = 0;
@@ -448,7 +431,7 @@ onMount(async () => {
         </div>
         <div class="character-dialogue">
             <p>{displayText}</p>
-            {#if Array.isArray(currentDialogue.options) && currentDialogue.options.length > 1}
+            {#if Array.isArray(currentDialogue.options)}
                 <div class="dialogue-options">
                     {#each currentDialogue.options as option (option.text)}
                         <button on:click={() => nextDialogue(option)}>{option.text}</button>
