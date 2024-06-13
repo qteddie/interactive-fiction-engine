@@ -10,18 +10,58 @@
     import { gameState} from './store.js';
 
     let isTransitioning = false;
-    
-    // let result = 0;
+    // ------------------------------- EMCC START ------------------------------
     let wasmModule;
+    let wasmLoaded = false; 
 
+    function print_string(ptr) {
+        const memory = new Uint8Array(wasmModule.memory.buffer);
+        let str = "";
+        for (let i = ptr; memory[i] !== 0; i++) {
+            str += String.fromCharCode(memory[i]);
+        }
+        console.log(str);
+    }
+    async function emscripten_sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    function emscripten_memcpy_js(dest, src, num) {
+        const memory = new Uint8Array(wasmModule.memory.buffer);
+        memory.set(memory.subarray(src, src + num), dest);
+    }
+    function emscripten_resize_heap(requestedSize) {
+        const memory = wasmModule.memory;
+        const oldSize = memory.buffer.byteLength;
+        if (requestedSize > oldSize) {
+            const pagesNeeded = Math.ceil((requestedSize - oldSize) / 65536);
+            try {
+                memory.grow(pagesNeeded);
+                return 1;
+            } catch (e) {
+                return 0;
+            }
+        }
+        return 1;
+    }
     onMount(async () => {
         const wasmUrl = '/c/main.wasm';
-        const response = await fetch(wasmUrl);
-        const { instance } = await WebAssembly.instantiateStreaming(response);
-        // console.log(instance.exports); 
+        const importObject = {
+            env: {
+                memory: new WebAssembly.Memory({ initial: 256 }),
+                table: new WebAssembly.Table({ initial: 0, element: 'anyfunc' }),
+                emscripten_sleep,
+                emscripten_memcpy_js,
+                emscripten_resize_heap,
+                print_string: print_string
+            }
+        };
+        const wasmResponse = await fetch(wasmUrl);
+        const { instance } = await WebAssembly.instantiateStreaming(wasmResponse, importObject);
         wasmModule = instance.exports;
+        wasmLoaded = true;  // 设置加载标志
     });
-    // $: console.log(result);
+
+    // ------------------------------- EMCC END ------------------------------
 
     // "mage": {
     //         "name": "Mage (you)",
@@ -73,7 +113,7 @@
     onMount(async () => {
         const response = await fetch('/json/output3.json');
         gameData = await response.json();
-        console.log('gameState before: ',$gameState);
+        // console.log('gameState before: ',$gameState);
         
         // 如果 gameState 的值不為 null，則表示從 startLoadedGame 導航過來
         if ($gameState) {
@@ -86,7 +126,7 @@
             showEndScreen = $gameState.showEndScreen; // 使用 gameState 的值設定是否顯示結束畫面
             showContainer = false; // 使用 gameState 的值設定是否顯示開始畫面
             $gameState = null; // 清空 $gameState
-            console.log('gameState after clear: ',$gameState);
+            // console.log('gameState after clear: ',$gameState);
         } else {
             // 如果 gameState 的值為 null，則表示需要重新開始遊戲
             currentScene = gameData.scene.forest;
@@ -165,10 +205,84 @@
         }
     }
     function nextDialogue(option) {
-        const optionNext = option ? option.next : '';
-        const optionEvent = option ? option.event : '';
-        wasmModule._nextDialogue(optionNext, optionEvent);
-        showDialogue(currentDialogue.text);
+        if (!wasmLoaded) {  // 检查WebAssembly模块是否已加载
+            console.error("WebAssembly module not loaded yet.");
+            return;
+        }
+
+        clearInterval(intervalId); // 清除 intervalId
+
+        let optionNext = '';
+        let optionEvent = '';
+
+        if (option) {
+            if (option.next) {
+                optionNext = option.next;
+            }
+            if (option.event) {
+                optionEvent = option.event;
+            }
+        } else {
+            currentDialogue.options.forEach(opt => {
+                if (opt.next) {
+                    optionNext = opt.next;
+                }
+                if (opt.event) {
+                    optionEvent = opt.event;
+                }
+            });
+        }
+        console.log('optionNext:', optionNext);
+        console.log('optionEvent:', optionEvent);
+
+        wasmModule.nextDialogue(optionNext, optionEvent);
+        console.log('Called nextDialogue with:', optionNext, optionEvent);
+
+        // 打印最新的 currentDialogue 值
+        const memory = new Uint8Array(wasmModule.memory.buffer);
+        const textPtr = wasmModule.getCurrentDialogueText();
+        console.log('textPtr:', textPtr);
+
+        // 确认 textPtr 是否有效
+        if (!textPtr) {
+            console.error('Invalid textPtr:', textPtr);
+            return;
+        }
+
+        // 打印 memory 数组中的部分内容以确认内存是否正确分配
+        console.log('Memory slice:', memory.slice(textPtr, textPtr + 100));
+
+        const text = [];
+        for (let i = textPtr; memory[i] !== 0; i++) {
+            text.push(String.fromCharCode(memory[i]));
+        }
+        console.log('Updated currentDialogue.text:', text.join(''));
+        showDialogue(text.join(''));
+
+        // 如果存在事件，进行场景转换
+        if (optionEvent) {
+            const eventIndex = gameData.events.findIndex(event => event.dialogue === optionEvent);
+            if (eventIndex !== -1) {
+                isTransitioning = true;
+                setTimeout(() => {
+                    currentScene = gameData.scenes[eventIndex];
+                    isTransitioning = false;
+                }, 1000); // 等待 1 秒钟后再改变场景
+            }
+        }
+
+        // 检查并设置当前角色
+        const character = gameData.character[currentDialogue.character];
+        if (character) {
+            currentCharacter = character;
+        }
+
+        // 检查当前对话是否有选项，如果没有，结束游戏
+        if (!currentDialogue.options.length) {
+            endGame();
+            return;
+        }
+    }
     // }
     // function nextDialogue(option) {
     //     clearInterval(intervalId);
