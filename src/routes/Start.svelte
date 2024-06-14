@@ -220,7 +220,6 @@
     };
     function endGame() {
         localStorage.removeItem('game');
-        localStorage.setItem('game', JSON.stringify(initialGameState));
         showEndScreen = true;
     }
     function goToStartScreen() {

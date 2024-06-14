@@ -8,3 +8,88 @@
     border-radius: 10px;
     
 }
+
+/* 標籤和滑動條的基本樣式 */
+label {
+    display: block;
+    margin-bottom: 10px;
+    color: #666;
+    font-weight: bold;
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    margin: 10px 0;
+}
+
+/* 滑動條的樣式 */
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #5cb85c;
+    margin-top: -6px; /* 使滑塊垂直居中 */
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+/* 滑動條滑動時的樣式 */
+input[type="range"]:active::-webkit-slider-thumb {
+    background: #449d44;
+}
+
+/* Firefox 的滑動條樣式 */
+input[type="range"]::-moz-range-track {
+    background: #ddd;
+    height: 8px;
+    border: none;
+    border-radius: 3px;
+}
+
+input[type="range"]::-moz-range-thumb {
+    border: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #5cb85c;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+/* IE 的滑動條樣式 */
+input[type="range"]::-ms-track {
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+
+input[type="range"]::-ms-fill-lower {
+    background: #ddd;
+    border-radius: 3px;
+}
+
+input[type="range"]::-ms-fill-upper {
+    background: #ddd;
+    border-radius: 3px;
+}
+
+input[type="range"]::-ms-thumb {
+    border: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #5cb85c;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}

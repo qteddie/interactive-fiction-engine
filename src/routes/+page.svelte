@@ -78,7 +78,7 @@
     <button on:click={startGame}>Start Example Game</button>
     <button on:click={startStory}>Start Story</button>
     <button on:click={loadGame}>Load</button>
-    <button on:click={openSettings}>Settings</button>
-    <button on:click={openHelp}>Help</button>
+    <button on:click={openSettings}>Setting</button>
+    <button on:click={openHelp}>Credit</button>
     <!-- <button on:click={openTest}>Test</button> -->
 </div>

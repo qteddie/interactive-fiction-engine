@@ -127,7 +127,6 @@
     function endGame() {
         console.log('Game ended');
         localStorage.removeItem('story');
-        localStorage.setItem('story', JSON.stringify(initialGameState));
         showEndScreen = true;
     }
     function goToStartScreen() {
@@ -249,7 +248,7 @@
             <div class="character-avatar">
                 <img src={currentCharacter.avatar} alt={currentCharacter.name} />
             </div>
-            <div class="character-name">{ playerName }</div>
+            <div class="character-name">{currentCharacter.name}</div>
         </div> 
         <div class="character-dialogue">
             <p>{displayText}</p>

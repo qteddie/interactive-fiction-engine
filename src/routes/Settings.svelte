@@ -4,7 +4,6 @@
     let volume = localStorage.getItem('volume') || 0.5; // 從 localStorage 讀取音量，如果不存在則預設為 0.5
 
     onMount(() => {
-        // 更新所有音樂的音量
         music.update(musicArray => {
             for (let i = 0; i < musicArray.length; i++) {
                 musicArray[i].volume = volume;
@@ -13,7 +12,6 @@
         });
     });
 
-    // 當滑塊的值改變時，更新音量
     function handleVolumeChange(event) {
         volume = event.target.value;
         // 更新所有音樂的音量
@@ -23,7 +21,6 @@
             }
             return musicArray;
         });
-        // 將音量儲存到 localStorage
         localStorage.setItem('volume', volume);
     }
 </script>
