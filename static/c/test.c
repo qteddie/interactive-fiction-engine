@@ -144,6 +144,7 @@ Dialogue *parse_dialogue(cJSON *dialogue_json) {
     return dialogue;
 }
 
+
 Event parse_event(cJSON *event_json) {
     Event event = {0}; // 初始化為0
     cJSON *sceneItem = cJSON_GetObjectItemCaseSensitive(event_json, "scene");
@@ -153,6 +154,26 @@ Event parse_event(cJSON *event_json) {
     event.dialogue = dialogueItem && cJSON_IsString(dialogueItem) ? strdup(dialogueItem->valuestring) : NULL;
 
     return event;
+}
+Event *parse_events(cJSON *root, int *event_count) {
+    int count = cJSON_GetArraySize(root);
+    *event_count = count;
+    printf("Parsing %d events\n", count);
+
+    Event *events = malloc(sizeof(Event) * count);
+    if (!events) {
+        fprintf(stderr, "Failed to allocate memory for events\n");
+        *event_count = 0;
+        return NULL;
+    }
+
+    for (int i = 0; i < count; i++) {
+        cJSON *event_json = cJSON_GetArrayItem(root, i);
+        // printf("Parsing event %d\n", i + 1);
+        events[i] = parse_event(event_json); // 直接調用 parse_event 並賦值
+    }
+
+    return events;
 }
 
 Item parse_item(cJSON *item_json) {
@@ -166,6 +187,26 @@ Item parse_item(cJSON *item_json) {
     item.icon = iconItem && cJSON_IsString(iconItem) ? strdup(iconItem->valuestring) : NULL;
 
     return item;
+}
+Item *parse_items(cJSON *root, int *item_count) {
+    int count = cJSON_GetArraySize(root);
+    *item_count = count;
+    printf("Parsing %d items\n", count);
+
+    Item *items = malloc(sizeof(Item) * count);
+    if (!items) {
+        fprintf(stderr, "Failed to allocate memory for items\n");
+        *item_count = 0;
+        return NULL;
+    }
+
+    for (int i = 0; i < count; i++) {
+        cJSON *item_json = cJSON_GetArrayItem(root, i);
+        // printf("Parsing item %d\n", i + 1);
+        items[i] = parse_item(item_json); // 直接調用 parse_item 並賦值
+    }
+
+    return items;
 }
 
 Scene parse_scene(cJSON *scene_json) {
@@ -293,47 +334,67 @@ int main() {
     // printf("Dialogue JSON: %s\n", cJSON_Print(dialogue_json));
     int dialogue_count = 0;
     Dialogue *dialogue = parse_dialogues(dialogue_json, &dialogue_count);
-    printf("Character: %s\n", dialogue->character);
-    printf("Text: %s\n", dialogue->text);
-    for (int i = 0; i < dialogue->options_count; i++) {
-        printf("Option %d: %s -> %s\n", i + 1, dialogue->options[i].text, dialogue->options[i].next);
-    }
-
+    // printf("Character: %s\n", dialogue->character);
+    // printf("Text: %s\n", dialogue->text);
+    // for (int i = 0; i < dialogue->options_count; i++) {
+    //     printf("Option %d: %s -> %s\n", i + 1, dialogue->options[i].text, dialogue->options[i].next);
+    // }
     // 解析 item
     cJSON *item_json = cJSON_GetObjectItemCaseSensitive(root, "item");
-    Item item = parse_item(item_json);
-    printf("Item name: %s, description: %s, icon: %s\n", item.name, item.description, item.icon);
+    int item_count = 0;
+    Item *items = parse_items(item_json, &item_count);
+    for (int i = 0; i < item_count; i++) {
+        printf("Item %d name: %s, description: %s, icon: %s\n", i + 1, items[i].name, items[i].description, items[i].icon);
+    }
 
     // 解析 event
     cJSON *event_json = cJSON_GetObjectItemCaseSensitive(root, "event");
-    Event event = parse_event(event_json);
-    printf("Event scene: %s, dialogue: %s\n", event.scene, event.dialogue);
-
-    // Cleanup code with additional checks
+    int event_count = 0;
+    Event *events = parse_events(event_json, &event_count);
+    for (int i = 0; i < event_count; i++) {
+        printf("Event %d scene: %s, dialogue: %s\n", i + 1, events[i].scene, events[i].dialogue);
+    }
+    // Cleanup code with additional checks and setting pointers to NULL after free
     for (size_t i = 0; i < scenes.num_scenes; i++) {
         free(scenes.scenes[i].name);
+        scenes.scenes[i].name = NULL;
         free(scenes.scenes[i].background);
+        scenes.scenes[i].background = NULL;
         free(scenes.scenes[i].id);
+        scenes.scenes[i].id = NULL;
     }
     free(scenes.scenes);
+    scenes.scenes = NULL;
 
     for (size_t i = 0; i < characters.num_characters; i++) {
         free(characters.characters[i].name);
+        characters.characters[i].name = NULL;
         free(characters.characters[i].avatar);
+        characters.characters[i].avatar = NULL;
         free(characters.characters[i].tachie);
+        characters.characters[i].tachie = NULL;
         free(characters.characters[i].location);
+        characters.characters[i].location = NULL;
     }
     free(characters.characters);
+    characters.characters = NULL;
 
     free(dialogue->options);
-    free(item.name);
-    free(item.description);
-    free(item.icon);
-    free(event.scene);
-    free(event.dialogue);
+    dialogue->options = NULL;
+    free(items->name);
+    items->name = NULL;
+    free(items->description);
+    items->description = NULL;
+    free(items->icon);
+    items->icon = NULL;
+    free(events->scene);
+    events->scene = NULL;
+    free(events->dialogue);
+    events->dialogue = NULL;
 
     cJSON_Delete(root);
     free(json_data);
+    json_data = NULL;
 
     return EXIT_SUCCESS;
 }
