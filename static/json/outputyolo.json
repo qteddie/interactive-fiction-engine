@@ -41,7 +41,7 @@
         },
         "Lucy": {
             "location": "underground_base",
-            "name": "反抗小隊領袖",
+            "name": "反抗小隊隊長",
             "avatar": "/character/lucy/avatar.jpeg",
             "tachie": "/character/lucy/lucy.png"
         },
@@ -78,96 +78,160 @@
             "description": "上面有刻著和機器人企業相同的縮寫，錶盤上是機器狗的造型。",
             "icon": "/item/watch.png"
         }
+        
     },
     "event": {
         "start": {
             "scene": "night_city",
-            "dialogue": "beginning"
+            "dialogue": "beginning",
+            "strength": 0
         },
         "Join_resistance": {
             "scene": "night_city",
-            "dialogue": "join_resistance"
+            "dialogue": "join_resistance",
+            "strength": 65
         },
         "Discover_truth": {
             "scene": "corporate_headquarters",
-            "dialogue": "discover_truth"
+            "dialogue": "discover_truth",
+            "strength": 90
         },
         "Final_battle": {
             "scene": "fighting_arena",
-            "dialogue": "final_battle"
+            "dialogue": "final_battle",
+            "strength": 90
         },
         "Escape_city": {
             "scene": "highway",
-            "dialogue": "escape_city"
+            "dialogue": "escape_city",
+            "strength": 0
         },
         "Destroy_corporation": {
             "scene": "corporate_headquarters",
-            "dialogue": "destroy_corporation"
+            "dialogue": "destroy_corporation",
+            "strength": 0
         },
         "Robot_encounter": {
             "scene": "night_city",
-            "dialogue": "robot_encounter"
+            "dialogue": "robot_encounter",
+            "strength": 0
         },
         "Training": {
             "scene": "underground_base",
-            "dialogue": "training"
+            "dialogue": "training",
+            "strength": 30
         },
         "Get_boost": {
             "scene": "underground_base",
-            "dialogue": "get_boost"
+            "dialogue": "get_boost",
+            "strength": 65
         },
         "Mission_start": {
             "scene": "underground_base",
-            "dialogue": "mission_start"
+            "dialogue": "mission_start",
+            "strength": 65
         },
         "Mission_briefing": {
             "scene": "underground_base",
-            "dialogue": "mission_briefing"
+            "dialogue": "mission_briefing",
+            "strength": 65
         },
         "Explore_city": {
             "scene": "night_city",
-            "dialogue": "explore_city"
+            "dialogue": "explore_city",
+            "strength": 0
         },
         "Encounter_dog": {
             "scene": "night_city",
-            "dialogue": "encounter_dog"
+            "dialogue": "encounter_dog",
+            "strength": 0
         },
         "Dog_follows": {
             "scene": "night_city",
-            "dialogue": "dog_follows"
+            "dialogue": "dog_follows",
+            "strength": 0
+        },
+        "Discusstion": {
+            "scene": "fighting_arena",
+            "dialogue": "discusstion",
+            "strength": 0
         },
 
         "Battle": {
             "scene": "fighting_arena",
-            "dialogue": "battle"
+            "dialogue": "battle",
+            "strength": 65
         },
         "Battle2": {
             "scene": "fighting_arena",
-            "dialogue": "battle2"
+            "dialogue": "battle2",
+            "strength": 90
         },
         "Battle3": {
             "scene": "fighting_arena",
-            "dialogue": "battle3"
+            "dialogue": "battle3",
+            "strength": 65
         },
         "Battle4": {
             "scene": "fighting_arena",
-            "dialogue": "battle4"
+            "dialogue": "battle4",
+            "strength": 70
         },
         "Battle5": {
             "scene": "fighting_arena",
-            "dialogue": "battle5"
+            "dialogue": "battle5",
+            "strength": 99
+
+        },
+        "Battle6": {
+            "scene": "fighting_arena",
+            "dialogue": "battle6",
+            "strength": 99
+        },
+        "Battleend": {
+            "scene": "fighting_arena",
+            "dialogue": "battlend",
+            "strength": 30
+        },
+        "Losememory": {
+            "scene": "fighting_arena",
+            "dialogue": "losememory",
+            "strength": 0
+        },
+        "Join_resistance2": {
+            "scene": "fighting_arena",
+            "dialogue": "join_resistance2",
+            "strength": 65
+        },
+        "Sleep": {
+            "scene": "underground_base",
+            "dialogue": "sleep",
+            "strength": 65
+        },
+        "Reject": {
+            "scene": "night_city",
+            "dialogue": "reject",
+            "strength": 65
+        },
+        "Afterbattle": {
+            "scene": "fighting_arena",
+            "dialogue": "afterbattle",
+            "strength": 0
         },
         "Choose_ending": {
             "scene": "fighting_arena",
-            "dialogue": "choose_ending"
+            "dialogue": "choose_ending",
+            "strength": 90
         },
         "Dark_ruler": {
             "scene": "corporate_headquarters",
-            "dialogue": "dark_ruler"
+            "dialogue": "dark_ruler",
+            "strength": 90
         },
         "Moon": {
             "scene": "moon",
-            "dialogue": "moon"
+            "dialogue": "moon",
+            "strength": 0
         },
         "End": {
             "scene": "moon",
@@ -201,7 +265,7 @@
         },
         "reject": {
             "character": "Lucy",
-            "text": "（攔住）你似乎沒辦法拒絕。",
+            "text": "（攔住）你不加入我們很難獨自存活在這城市。",
             "options": [
                 {
                     "text": "接受並加入",
@@ -300,10 +364,10 @@
         },
         "get_boost": {
             "character": "Lucy",
-            "text": "這是強化針，有副作用，到緊急時刻再使用。",
+            "text": "這是強化針，有副作用會喪失記憶力並且對身體傷害很大，到緊急時刻再使用。",
             "options": [
                 {
-                    "text": "拿著",
+                    "text": "拿著(心中想著用了它記憶永遠回不來了吧）",
                     "next": "mission_start"
                 }
             ]
@@ -367,28 +431,38 @@
             "text": "（看不下去隊友被這樣攻擊）",
             "options": [
                 {
-                    "text": "使用強化針（副作用是記憶永久消失了）",
+                    "text": "使用強化針（副作用也慢慢產生了）",
                     "next": "battle6"
                 }
             ]
         },
         "battle6": {
             "character": "fight_david",
-            "text": "(靠著隊友造成的傷害加上強化針，將敵人打倒後，低頭望著隊友的屍體，心情很複雜)",
+            "text": "(靠著隊友造成的傷害加上強化針，能力增強後將敵人打敗)死前聽到隊長說一定要替她去月球看看",
             "options": [
                 {
-                    "text": "決定離開這座城市",
+                    "text": "因為副作用而昏倒了",
+                    "next": "afterbattle"
+                }
+            ]
+        },
+        "afterbattle":{
+            "character": "David",
+            "text": "（醒來後，看著地上似乎有見過但想不起來是誰的屍體，似乎記憶又被抹除了）",
+            "options": [
+                {
+                    "text": "決定離開這座城市,跟著身體本能前往某處",
                     "event": "Moon"
                 }
             ]
         },
-
+        
         "battle5": {
             "character": "fight_david",
-            "text": "使用強化針，能力增強後衝過去加入戰鬥",
+            "text": "(使用強化針，能力增強後衝過去加入戰鬥)",
             "options": [
                 {
-                    "text": "解決Ironman後 感受到（副作用是記憶永久消失了）",
+                    "text": "解決Ironman後 感受到（副作用是也慢慢生效了）",
                     "next": "choose_ending"
                 }
             ]
@@ -464,7 +538,7 @@
         },
         "moon": {
             "character": "David",
-            "text": "好美，但怎麼感覺心空空的。",
+            "text": "好美，好像忘了什麼約定。",
             "options": [
                 {
                     "text": "好美,結束冒險",
@@ -484,7 +558,7 @@
         },
         "discusstion":{
             "character": "Lucy",
-            "text": "我也搞不抬清楚，你看機器狗站起來了好戲要帶領我們去哪",
+            "text": "我也搞不清楚，你看機器狗站起來了好戲要帶領我們去哪",
             "options": [
                 {
                     "text": "跟著機器狗走",
