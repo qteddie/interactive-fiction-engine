@@ -2,12 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "cJSON.h"
-#include <emscripten.h>
+
 typedef struct {
     char *id;
-    char *name; // 已存在
+    char *name;
     char *background;
-    char *sceneName; // 新增字段
 } Scene;
 
 typedef struct {
@@ -16,10 +15,10 @@ typedef struct {
 } Scenes;
 
 typedef struct {
-    char *name; // 已存在
+    char *name;
     char *avatar;
     char *tachie;
-    char *characterName; // 新增字段
+    char *location;
 } Character;
 
 typedef struct {
@@ -31,7 +30,6 @@ typedef struct {
     char *text;
     char *next;
     char *event;
-    char *optionName; // 新增字段
 } Option;
 
 typedef struct {
@@ -39,22 +37,18 @@ typedef struct {
     char *text;
     Option *options; // 假設每個對話最多有 10 個選項
     int options_count;
-    char *dialogueName; // 新增字段
 } Dialogue;
 
 typedef struct {
-    char *name; // 已存在
+    char *name;
     char *description;
     char *icon;
-    char *itemName; // 新增字段
 } Item;
 
 typedef struct {
     char *scene;
     char *dialogue;
-    char *eventName; // 新增字段
 } Event;
-
 // 提前聲明 parse_dialogue 函數
 Dialogue *parse_dialogue(cJSON *dialogue_json);
 // 解析 JSON 並存儲為 Dialogue 物件陣列
@@ -73,14 +67,11 @@ Dialogue *parse_dialogues(cJSON *root, int *dialogue_count) {
     for (int i = 0; i < count; i++) {
         cJSON *dialogue_json = cJSON_GetArrayItem(root, i);
         printf("Parsing dialogue %d\n", i + 1);
+        // 使用指針來接收 parse_dialogue 的返回值
         Dialogue *dialogue_ptr = parse_dialogue(dialogue_json);
         if (dialogue_ptr) {
-            dialogues[i] = *dialogue_ptr;
-            // 為每個對話生成名稱，並存儲到 dialogueName 字段
-            char dialogueName[20]; // 假設名稱不超過 20 個字符
-            sprintf(dialogueName, "Dialogue %d", i + 1);
-            dialogues[i].dialogueName = strdup(dialogueName);
-            free(dialogue_ptr);
+            dialogues[i] = *dialogue_ptr; // 解引用指針來賦值
+            free(dialogue_ptr); // 釋放分配的記憶體
         }
     }
 
@@ -178,12 +169,8 @@ Event *parse_events(cJSON *root, int *event_count) {
 
     for (int i = 0; i < count; i++) {
         cJSON *event_json = cJSON_GetArrayItem(root, i);
+        // printf("Parsing event %d\n", i + 1);
         events[i] = parse_event(event_json); // 直接調用 parse_event 並賦值
-
-        // 為每個事件生成名稱，並存儲到 eventName 字段
-        char eventName[20]; // 假設名稱不超過 20 個字符
-        sprintf(eventName, "Event %d", i + 1);
-        events[i].eventName = strdup(eventName);
     }
 
     return events;
@@ -215,12 +202,8 @@ Item *parse_items(cJSON *root, int *item_count) {
 
     for (int i = 0; i < count; i++) {
         cJSON *item_json = cJSON_GetArrayItem(root, i);
+        // printf("Parsing item %d\n", i + 1);
         items[i] = parse_item(item_json); // 直接調用 parse_item 並賦值
-
-        // 為每個物品生成名稱，並存儲到 itemName 字段
-        char itemName[20]; // 假設名稱不超過 20 個字符
-        sprintf(itemName, "Item %d", i + 1);
-        items[i].itemName = strdup(itemName);
     }
 
     return items;
@@ -239,6 +222,34 @@ Scene parse_scene(cJSON *scene_json) {
     return scene;
 }
 
+Characters parse_characters(cJSON *characters_json) {
+    size_t num_characters = cJSON_GetArraySize(characters_json);
+    Character *characters = malloc(num_characters * sizeof(Character));
+    if (!characters) {
+        // 處理記憶體分配失敗
+        fprintf(stderr, "Failed to allocate memory for characters.\n");
+        exit(1); // 或適當的錯誤處理
+    }
+
+    size_t i = 0;
+    cJSON *character_json = NULL;
+    cJSON_ArrayForEach(character_json, characters_json) {
+        cJSON *nameItem = cJSON_GetObjectItemCaseSensitive(character_json, "name");
+        cJSON *avatarItem = cJSON_GetObjectItemCaseSensitive(character_json, "avatar");
+        cJSON *tachieItem = cJSON_GetObjectItemCaseSensitive(character_json, "tachie");
+        cJSON *locationItem = cJSON_GetObjectItemCaseSensitive(character_json, "location");
+
+        characters[i].name = nameItem ? strdup(nameItem->valuestring) : NULL;
+        characters[i].avatar = avatarItem ? strdup(avatarItem->valuestring) : NULL;
+        characters[i].tachie = tachieItem ? strdup(tachieItem->valuestring) : NULL;
+        // 因為 "location" 鍵可能不存在，所以需要額外檢查
+        characters[i].location = locationItem ? strdup(locationItem->valuestring) : NULL;
+        i++;
+    }
+
+    Characters all_characters = {characters, num_characters};
+    return all_characters;
+}
 Scenes parse_scenes(cJSON *root) {
     cJSON *scenes_json = cJSON_GetObjectItemCaseSensitive(root, "scene");
     if (!scenes_json) {
@@ -263,51 +274,14 @@ Scenes parse_scenes(cJSON *root) {
                 free(scenes[i].name);
                 free(scenes[i].background);
                 free(scenes[i].id);
-                free(scenes[i].sceneName); // Free the newly added sceneName
             }
             free(scenes);
             return (Scenes){NULL, 0};
         }
-        // 為每個場景生成名稱，並存儲到 sceneName 字段
-        char sceneName[20]; // 假設名稱不超過 20 個字符
-        sprintf(sceneName, "Scene %zu", i + 1);
-        scenes[i].sceneName = strdup(sceneName);
         i++;
     }
 
     return (Scenes){scenes, num_scenes};
-}
-
-Characters parse_characters(cJSON *characters_json) {
-    size_t num_characters = cJSON_GetArraySize(characters_json);
-    Character *characters = malloc(num_characters * sizeof(Character));
-    if (!characters) {
-        fprintf(stderr, "Failed to allocate memory for characters.\n");
-        exit(1); // 或適當的錯誤處理
-    }
-
-    size_t i = 0;
-    cJSON *character_json = NULL;
-    cJSON_ArrayForEach(character_json, characters_json) {
-        cJSON *nameItem = cJSON_GetObjectItemCaseSensitive(character_json, "name");
-        cJSON *avatarItem = cJSON_GetObjectItemCaseSensitive(character_json, "avatar");
-        cJSON *tachieItem = cJSON_GetObjectItemCaseSensitive(character_json, "tachie");
-        cJSON *locationItem = cJSON_GetObjectItemCaseSensitive(character_json, "location");
-
-        characters[i].name = nameItem ? strdup(nameItem->valuestring) : NULL;
-        characters[i].avatar = avatarItem ? strdup(avatarItem->valuestring) : NULL;
-        characters[i].tachie = tachieItem ? strdup(tachieItem->valuestring) : NULL;
-
-        // 為每個角色生成名稱，並存儲到 characterName 字段
-        char characterName[20]; // 假設名稱不超過 20 個字符
-        sprintf(characterName, "Character %zu", i + 1);
-        characters[i].characterName = strdup(characterName);
-
-        i++;
-    }
-
-    Characters all_characters = {characters, num_characters};
-    return all_characters;
 }
 
 
@@ -326,86 +300,6 @@ char* read_json_file(const char* filename) {
     }
     fclose(file);
     return data;
-}
-
-EMSCRIPTEN_KEEPALIVE
-char* getGameDataAsJson(Scenes scenes, Characters characters, Dialogue *dialogue, int dialogue_count, Item *items, int item_count, Event *events, int event_count) {
-    cJSON *gameData = cJSON_CreateObject();
-    cJSON *scenesArray = cJSON_CreateArray();
-    cJSON *charactersArray = cJSON_CreateArray();
-    cJSON *dialoguesArray = cJSON_CreateArray();
-    cJSON *itemsArray = cJSON_CreateArray();
-    cJSON *eventsArray = cJSON_CreateArray();
-
-    // 添加 scenes
-    for (size_t i = 0; i < scenes.num_scenes; i++) {
-        cJSON *scene = cJSON_CreateObject();
-        cJSON_AddItemToObject(scene, "name", cJSON_CreateString(scenes.scenes[i].name));
-        cJSON_AddItemToObject(scene, "background", cJSON_CreateString(scenes.scenes[i].background));
-        // 新增 sceneName
-        cJSON_AddItemToObject(scene, "sceneName", cJSON_CreateString(scenes.scenes[i].sceneName));
-        cJSON_AddItemToArray(scenesArray, scene);
-    }
-    cJSON_AddItemToObject(gameData, "scenes", scenesArray);
-
-    // 添加 characters
-    for (size_t i = 0; i < characters.num_characters; i++) {
-        cJSON *character = cJSON_CreateObject();
-        cJSON_AddItemToObject(character, "name", cJSON_CreateString(characters.characters[i].name));
-        cJSON_AddItemToObject(character, "avatar", cJSON_CreateString(characters.characters[i].avatar));
-        cJSON_AddItemToObject(character, "tachie", cJSON_CreateString(characters.characters[i].tachie));
-        // 新增 characterName
-        cJSON_AddItemToObject(character, "characterName", cJSON_CreateString(characters.characters[i].characterName));
-        cJSON_AddItemToArray(charactersArray, character);
-    }
-    cJSON_AddItemToObject(gameData, "characters", charactersArray);
-
-    // 添加 dialogues
-    for (int i = 0; i < dialogue_count; i++) {
-        cJSON *dialogueJson = cJSON_CreateObject();
-        cJSON_AddItemToObject(dialogueJson, "character", cJSON_CreateString(dialogue[i].character));
-        cJSON_AddItemToObject(dialogueJson, "text", cJSON_CreateString(dialogue[i].text));
-        // 假設 options 是一個簡單的字符串數組
-        cJSON *optionsArray = cJSON_CreateArray();
-        for (int j = 0; j < dialogue[i].options_count; j++) {
-            cJSON_AddItemToArray(optionsArray, cJSON_CreateString(dialogue[i].options[j].text));
-        }
-        cJSON_AddItemToObject(dialogueJson, "options", optionsArray);
-        cJSON_AddItemToArray(dialoguesArray, dialogueJson);
-    }
-    cJSON_AddItemToObject(gameData, "dialogue", dialoguesArray);
-
-    // 添加 items
-    for (int i = 0; i < item_count; i++) {
-        cJSON *itemJson = cJSON_CreateObject();
-        cJSON_AddItemToObject(itemJson, "name", cJSON_CreateString(items[i].name));
-        cJSON_AddItemToObject(itemJson, "description", cJSON_CreateString(items[i].description));
-        cJSON_AddItemToObject(itemJson, "icon", cJSON_CreateString(items[i].icon));
-        // 新增 itemName (如果有的話)
-        if (items[i].itemName) {
-            cJSON_AddItemToObject(itemJson, "itemName", cJSON_CreateString(items[i].itemName));
-        }
-        cJSON_AddItemToArray(itemsArray, itemJson);
-    }
-    cJSON_AddItemToObject(gameData, "items", itemsArray);
-
-    // 添加 events
-    for (int i = 0; i < event_count; i++) {
-        cJSON *eventJson = cJSON_CreateObject();
-        cJSON_AddItemToObject(eventJson, "scene", cJSON_CreateString(events[i].scene));
-        cJSON_AddItemToObject(eventJson, "dialogue", cJSON_CreateString(events[i].dialogue));
-        // 新增 eventName (如果有的話)
-        if (events[i].eventName) {
-            cJSON_AddItemToObject(eventJson, "eventName", cJSON_CreateString(events[i].eventName));
-        }
-        cJSON_AddItemToArray(eventsArray, eventJson);
-    }
-    cJSON_AddItemToObject(gameData, "events", eventsArray);
-
-    char *jsonString = cJSON_Print(gameData);
-    cJSON_Delete(gameData);
-
-    return jsonString;
 }
 
 int main() {
@@ -437,8 +331,14 @@ int main() {
 
     // 解析 dialogue
     cJSON *dialogue_json = cJSON_GetObjectItemCaseSensitive(root, "dialogue");
+    // printf("Dialogue JSON: %s\n", cJSON_Print(dialogue_json));
     int dialogue_count = 0;
     Dialogue *dialogue = parse_dialogues(dialogue_json, &dialogue_count);
+    // printf("Character: %s\n", dialogue->character);
+    // printf("Text: %s\n", dialogue->text);
+    // for (int i = 0; i < dialogue->options_count; i++) {
+    //     printf("Option %d: %s -> %s\n", i + 1, dialogue->options[i].text, dialogue->options[i].next);
+    // }
     // 解析 item
     cJSON *item_json = cJSON_GetObjectItemCaseSensitive(root, "item");
     int item_count = 0;
@@ -454,9 +354,6 @@ int main() {
     for (int i = 0; i < event_count; i++) {
         printf("Event %d scene: %s, dialogue: %s\n", i + 1, events[i].scene, events[i].dialogue);
     }
-
-    char *gameDataJson = getGameDataAsJson(scenes, characters, dialogue, dialogue_count, items, item_count, events, event_count);
-    printf("Game data JSON:\n%s\n", gameDataJson);
 
 
     
@@ -479,6 +376,8 @@ int main() {
         characters.characters[i].avatar = NULL;
         free(characters.characters[i].tachie);
         characters.characters[i].tachie = NULL;
+        free(characters.characters[i].location);
+        characters.characters[i].location = NULL;
     }
     free(characters.characters);
     characters.characters = NULL;
@@ -502,5 +401,3 @@ int main() {
 
     return EXIT_SUCCESS;
 }
-
-

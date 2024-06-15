@@ -9,7 +9,9 @@
         "map": "c",
         "set": "c",
         "unordered_map": "c",
-        "unordered_set": "c"
+        "unordered_set": "c",
+        "typeinfo": "c",
+        "*.inc": "c"
     },
     "cmake.ignoreCMakeListsMissing": true
 }

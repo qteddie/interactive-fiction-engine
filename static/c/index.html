@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <title>Emscripten Test</title>
+    <script src="test.js"></script>
+</head>
+<body>
+    <h1>Emscripten Test</h1>
+    <script>
+        // 確保 Module.onRuntimeInitialized 在 Emscripten 模塊加載完成後執行
+        Module.onRuntimeInitialized = function() {
+            // 假設您有一個名為 _get_game_data_response 的函數
+            // 並且這個函數返回一個指向字符串的指針
+            const responsePtr = Module.ccall(
+                'get_game_data_response', // C 函數名
+                'number',                 // 返回類型
+                [],                       // 參數類型
+                []                        // 參數
+            );
+
+            // 使用 Module.UTF8ToString 將指針轉換為 JavaScript 字符串
+            const response = Module.UTF8ToString(responsePtr);
+
+            // 在控制台中輸出結果
+            console.log(response);
+
+            // 如果有釋放內存的函數，記得調用它釋放內存
+            // Module.ccall('free_memory', null, ['number'], [responsePtr]);
+        };
+    </script>
+</body>
+</html>
