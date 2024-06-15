@@ -80,5 +80,5 @@
     <button on:click={loadGame}>Load</button>
     <button on:click={openSettings}>Setting</button>
     <button on:click={openHelp}>Credit</button>
-    <!-- <button on:click={openTest}>Test</button> -->
+    <button on:click={openTest}>Test</button>
 </div>

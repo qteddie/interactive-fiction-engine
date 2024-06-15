@@ -346,7 +346,6 @@
             }
         } 
 
-        // 查找對應的角色數據
         const character = gameData.character[currentDialogue.character];
         if (character) {
             // 更新頭像和立繪
