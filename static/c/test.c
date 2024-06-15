@@ -26,6 +26,148 @@ typedef struct {
     size_t num_characters;
 } Characters;
 
+typedef struct {
+    char *text;
+    char *next;
+    char *event;
+} Option;
+
+typedef struct {
+    char *character;
+    char *text;
+    Option *options; // 假設每個對話最多有 10 個選項
+    int options_count;
+} Dialogue;
+
+typedef struct {
+    char *name;
+    char *description;
+    char *icon;
+} Item;
+
+typedef struct {
+    char *scene;
+    char *dialogue;
+} Event;
+// 提前聲明 parse_dialogue 函數
+Dialogue *parse_dialogue(cJSON *dialogue_json);
+// 解析 JSON 並存儲為 Dialogue 物件陣列
+Dialogue *parse_dialogues(cJSON *root, int *dialogue_count) {
+    int count = cJSON_GetArraySize(root);
+    *dialogue_count = count;
+    printf("Parsing %d dialogues\n", count);
+
+    Dialogue *dialogues = malloc(sizeof(Dialogue) * count);
+    if (!dialogues) {
+        fprintf(stderr, "Failed to allocate memory for dialogues\n");
+        *dialogue_count = 0;
+        return NULL;
+    }
+
+    for (int i = 0; i < count; i++) {
+        cJSON *dialogue_json = cJSON_GetArrayItem(root, i);
+        printf("Parsing dialogue %d\n", i + 1);
+        // 使用指針來接收 parse_dialogue 的返回值
+        Dialogue *dialogue_ptr = parse_dialogue(dialogue_json);
+        if (dialogue_ptr) {
+            dialogues[i] = *dialogue_ptr; // 解引用指針來賦值
+            free(dialogue_ptr); // 釋放分配的記憶體
+        }
+    }
+
+    return dialogues;
+}
+
+Dialogue *parse_dialogue(cJSON *dialogue_json) {
+    Dialogue *dialogue = malloc(sizeof(Dialogue));
+    if (!dialogue) {
+        fprintf(stderr, "Failed to allocate memory for dialogue\n");
+        return NULL;
+    }
+    *dialogue = (Dialogue){0}; // 初始化
+    printf("Initialized dialogue\n");
+
+    cJSON *character_json = cJSON_GetObjectItemCaseSensitive(dialogue_json, "character");
+    if (character_json && cJSON_IsString(character_json)) {
+        dialogue->character = strdup(character_json->valuestring);
+        printf("Character: %s\n", dialogue->character);
+    } else {
+        fprintf(stderr, "Character not found or is not a string\n");
+    }
+
+    cJSON *text_json = cJSON_GetObjectItemCaseSensitive(dialogue_json, "text");
+    if (text_json && cJSON_IsString(text_json)) {
+        dialogue->text = strdup(text_json->valuestring);
+        printf("Text: %s\n", dialogue->text);
+    } else {
+        fprintf(stderr, "Text not found or is not a string\n");
+    }
+
+    cJSON *options_json = cJSON_GetObjectItemCaseSensitive(dialogue_json, "options");
+    if (options_json && cJSON_IsArray(options_json)) {
+        int options_count = cJSON_GetArraySize(options_json);
+        dialogue->options = malloc(sizeof(Option) * options_count);
+        dialogue->options_count = options_count;
+        printf("Parsing %d options\n", options_count);
+
+        for (int i = 0; i < options_count; i++) {
+            cJSON *option_json = cJSON_GetArrayItem(options_json, i);
+            cJSON *text_json = cJSON_GetObjectItemCaseSensitive(option_json, "text");
+            cJSON *next_json = cJSON_GetObjectItemCaseSensitive(option_json, "next");
+            cJSON *event_json = cJSON_GetObjectItemCaseSensitive(option_json, "event");
+
+            if (text_json && cJSON_IsString(text_json)) {
+                dialogue->options[i].text = strdup(text_json->valuestring);
+                printf("Option %d text: %s\n", i + 1, dialogue->options[i].text);
+            } else {
+                fprintf(stderr, "Option text not found or is not a string at index %d\n", i);
+            }
+
+            if (next_json && cJSON_IsString(next_json)) {
+                dialogue->options[i].next = strdup(next_json->valuestring);
+                printf("Option %d next: %s\n", i + 1, dialogue->options[i].next);
+            } else {
+                fprintf(stderr, "Option next not found or is not a string at index %d\n", i);
+            }
+
+            if (event_json && cJSON_IsString(event_json)) {
+                dialogue->options[i].event = strdup(event_json->valuestring);
+                printf("Option %d event: %s\n", i + 1, dialogue->options[i].event);
+            } else {
+                fprintf(stderr, "Option event not found or is not a string at index %d\n", i);
+            }
+        }
+    } else {
+        fprintf(stderr, "Options not found or is not an array\n");
+    }
+
+    return dialogue;
+}
+
+Event parse_event(cJSON *event_json) {
+    Event event = {0}; // 初始化為0
+    cJSON *sceneItem = cJSON_GetObjectItemCaseSensitive(event_json, "scene");
+    cJSON *dialogueItem = cJSON_GetObjectItemCaseSensitive(event_json, "dialogue");
+
+    event.scene = sceneItem && cJSON_IsString(sceneItem) ? strdup(sceneItem->valuestring) : NULL;
+    event.dialogue = dialogueItem && cJSON_IsString(dialogueItem) ? strdup(dialogueItem->valuestring) : NULL;
+
+    return event;
+}
+
+Item parse_item(cJSON *item_json) {
+    Item item = {0}; // 初始化為0
+    cJSON *nameItem = cJSON_GetObjectItemCaseSensitive(item_json, "name");
+    cJSON *descriptionItem = cJSON_GetObjectItemCaseSensitive(item_json, "description");
+    cJSON *iconItem = cJSON_GetObjectItemCaseSensitive(item_json, "icon");
+
+    item.name = nameItem && cJSON_IsString(nameItem) ? strdup(nameItem->valuestring) : NULL;
+    item.description = descriptionItem && cJSON_IsString(descriptionItem) ? strdup(descriptionItem->valuestring) : NULL;
+    item.icon = iconItem && cJSON_IsString(iconItem) ? strdup(iconItem->valuestring) : NULL;
+
+    return item;
+}
+
 Scene parse_scene(cJSON *scene_json) {
     Scene scene = {0}; // 初始化為0
     cJSON *idItem = cJSON_GetObjectItemCaseSensitive(scene_json, "id");
@@ -42,14 +184,25 @@ Scene parse_scene(cJSON *scene_json) {
 Characters parse_characters(cJSON *characters_json) {
     size_t num_characters = cJSON_GetArraySize(characters_json);
     Character *characters = malloc(num_characters * sizeof(Character));
-    size_t i = 0;
+    if (!characters) {
+        // 處理記憶體分配失敗
+        fprintf(stderr, "Failed to allocate memory for characters.\n");
+        exit(1); // 或適當的錯誤處理
+    }
 
+    size_t i = 0;
     cJSON *character_json = NULL;
     cJSON_ArrayForEach(character_json, characters_json) {
-        characters[i].name = strdup(cJSON_GetObjectItemCaseSensitive(character_json, "name")->valuestring);
-        characters[i].avatar = strdup(cJSON_GetObjectItemCaseSensitive(character_json, "avatar")->valuestring);
-        characters[i].tachie = strdup(cJSON_GetObjectItemCaseSensitive(character_json, "tachie")->valuestring);
-        characters[i].location = strdup(cJSON_GetObjectItemCaseSensitive(character_json, "location")->valuestring);
+        cJSON *nameItem = cJSON_GetObjectItemCaseSensitive(character_json, "name");
+        cJSON *avatarItem = cJSON_GetObjectItemCaseSensitive(character_json, "avatar");
+        cJSON *tachieItem = cJSON_GetObjectItemCaseSensitive(character_json, "tachie");
+        cJSON *locationItem = cJSON_GetObjectItemCaseSensitive(character_json, "location");
+
+        characters[i].name = nameItem ? strdup(nameItem->valuestring) : NULL;
+        characters[i].avatar = avatarItem ? strdup(avatarItem->valuestring) : NULL;
+        characters[i].tachie = tachieItem ? strdup(tachieItem->valuestring) : NULL;
+        // 因為 "location" 鍵可能不存在，所以需要額外檢查
+        characters[i].location = locationItem ? strdup(locationItem->valuestring) : NULL;
         i++;
     }
 
@@ -126,7 +279,6 @@ int main() {
 
     Scenes scenes = parse_scenes(root);
     Characters characters = parse_characters(cJSON_GetObjectItemCaseSensitive(root, "character"));
-
     if (scenes.scenes && characters.characters) {
         for (size_t i = 0; i < scenes.num_scenes; i++) {
             printf("Scene name: %s, background: %s\n", scenes.scenes[i].name, scenes.scenes[i].background);
@@ -135,6 +287,27 @@ int main() {
     } else {
         fprintf(stderr, "Failed to parse scenes or characters correctly.\n");
     }
+
+    // 解析 dialogue
+    cJSON *dialogue_json = cJSON_GetObjectItemCaseSensitive(root, "dialogue");
+    // printf("Dialogue JSON: %s\n", cJSON_Print(dialogue_json));
+    int dialogue_count = 0;
+    Dialogue *dialogue = parse_dialogues(dialogue_json, &dialogue_count);
+    printf("Character: %s\n", dialogue->character);
+    printf("Text: %s\n", dialogue->text);
+    for (int i = 0; i < dialogue->options_count; i++) {
+        printf("Option %d: %s -> %s\n", i + 1, dialogue->options[i].text, dialogue->options[i].next);
+    }
+
+    // 解析 item
+    cJSON *item_json = cJSON_GetObjectItemCaseSensitive(root, "item");
+    Item item = parse_item(item_json);
+    printf("Item name: %s, description: %s, icon: %s\n", item.name, item.description, item.icon);
+
+    // 解析 event
+    cJSON *event_json = cJSON_GetObjectItemCaseSensitive(root, "event");
+    Event event = parse_event(event_json);
+    printf("Event scene: %s, dialogue: %s\n", event.scene, event.dialogue);
 
     // Cleanup code with additional checks
     for (size_t i = 0; i < scenes.num_scenes; i++) {
@@ -151,6 +324,13 @@ int main() {
         free(characters.characters[i].location);
     }
     free(characters.characters);
+
+    free(dialogue->options);
+    free(item.name);
+    free(item.description);
+    free(item.icon);
+    free(event.scene);
+    free(event.dialogue);
 
     cJSON_Delete(root);
     free(json_data);

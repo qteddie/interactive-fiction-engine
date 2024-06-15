@@ -3,6 +3,13 @@
     "files.associations": {
         "*.embeddedhtml": "html",
         "jansson.h": "c",
-        "emscripten.h": "c"
-    }
+        "emscripten.h": "c",
+        "__bit_reference": "c",
+        "bitset": "c",
+        "map": "c",
+        "set": "c",
+        "unordered_map": "c",
+        "unordered_set": "c"
+    },
+    "cmake.ignoreCMakeListsMissing": true
 }
