@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "cJSON.h"
+#include <emscripten/emscripten.h>
 
 typedef struct {
     char *next;
@@ -12,10 +13,9 @@ typedef struct {
     size_t option_count;
 } GameData;
 
-typedef struct {
-    char *dialogue;
-    int dialogueIndex;
-} Result;
+Option parse_option(cJSON *json);
+GameData parse_game_data(const char *json_str);
+void free_game_data(GameData *gameData);
 
 Option parse_option(cJSON *json) {
     Option option;
@@ -32,9 +32,8 @@ GameData parse_game_data(const char *json_str) {
     GameData gameData;
     cJSON *json = cJSON_Parse(json_str);
     cJSON *dialogue = cJSON_GetObjectItemCaseSensitive(json, "dialogue");
-
     size_t option_count = cJSON_GetArraySize(dialogue);
-    gameData.options = malloc(option_count * sizeof(Option));
+    gameData.options = (Option*) malloc(option_count * sizeof(Option));
     gameData.option_count = option_count;
 
     for (size_t i = 0; i < option_count; ++i) {
@@ -45,20 +44,31 @@ GameData parse_game_data(const char *json_str) {
     cJSON_Delete(json);
     return gameData;
 }
-Result process_option(GameData gameData, const char *currentKey) {
-    Result result;
-    result.dialogue = NULL;
-    result.dialogueIndex = -1;
+
+char *process_game_data(const char *json_str, const char *currentKey) {
+    GameData gameData = parse_game_data(json_str);
+    cJSON *resultJson = cJSON_CreateObject();
+    int found = 0;
 
     for (size_t i = 0; i < gameData.option_count; ++i) {
         if (strcmp(gameData.options[i].next, currentKey) == 0) {
-            result.dialogue = strdup(gameData.options[i].next);
-            result.dialogueIndex = (int)i;
+            cJSON_AddStringToObject(resultJson, "dialogue", gameData.options[i].next);
+            cJSON_AddNumberToObject(resultJson, "dialogueIndex", i);
+            found = 1;
             break;
         }
     }
 
-    return result;
+    if (!found) {
+        cJSON_AddNullToObject(resultJson, "dialogue");
+        cJSON_AddNumberToObject(resultJson, "dialogueIndex", -1);
+    }
+
+    char *response = cJSON_Print(resultJson);
+    cJSON_Delete(resultJson);
+    free_game_data(&gameData);
+
+    return response;
 }
 
 void free_game_data(GameData *gameData) {
@@ -68,16 +78,12 @@ void free_game_data(GameData *gameData) {
     free(gameData->options);
 }
 
-void free_result(Result *result) {
-    free(result->dialogue);
+EMSCRIPTEN_KEEPALIVE
+char *get_game_data_response(const char *json_str, const char *currentKey) {
+    return process_game_data(json_str, currentKey);
 }
 
-#include <emscripten/emscripten.h>
-
 EMSCRIPTEN_KEEPALIVE
-Result process_game_data(const char *json_str, const char *currentKey) {
-    GameData gameData = parse_game_data(json_str);
-    Result result = process_option(gameData, currentKey);
-    free_game_data(&gameData);
-    return result;
+void free_memory(char *ptr) {
+    free(ptr);
 }

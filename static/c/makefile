@@ -1,9 +1,8 @@
 all:
 	emcc main.c ./cJSON/cJSON.c -o main.js \
-	-s EXPORTED_FUNCTIONS='["_process_game_data"]' \
+	-s EXPORTED_FUNCTIONS='["_get_game_data_response", "_free_memory"]' \
 	-s ASYNCIFY \
-	-s 'ASYNCIFY_IMPORTS=["emscripten_sleep"]' \
 	-I./cJSON
-
+	gcc test.c ./cJSON/cJSON.c -o test -I./cJSON
 clean:
 	rm -f main.js main.wasm

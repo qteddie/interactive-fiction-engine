@@ -54,14 +54,15 @@
     
 
     async function handleNextDialogue(optionNext) {
-        await Module.ready; // 確保模組已經載入和初始化
+        await Module.ready; // Ensure the module is loaded
 
         const gameDataJson = JSON.stringify(gameData);
-        const resultPointer = Module.process_game_data(gameDataJson, optionNext);
-
+        const resultPointer = Module.get_game_data_response(gameDataJson, optionNext);
+        
         const currentDialogueText = UTF8ToString(resultPointer);
-        console.log(currentDialogueText); // 輸出結果或進行下一步操作
-        Module._free(resultPointer); // 釋放分配的記憶體
+        console.log(JSON.parse(currentTimeDialogueText)); // Output the parsed JSON object
+
+        Module.free_memory(resultPointer); // Free the allocated memory
     }
 </script>
 
