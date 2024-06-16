@@ -194,20 +194,19 @@
         }, typingSpeed);
     }
 
-   /* function handleItemUse(item) {
-        if (item.name === 'watch') {
+    function handleItemClick(item) {
+        console.log("Clicked item:", item.name);
+        if (item.name === "watch") {
             triggerWatchEvent();
         }
     }
     function triggerWatchEvent() {
-    console.log('Watch event triggered');
-
-    const event = gameData.events['specialEvent'];
+    const event = gameData.events["Take_watch"];
 
     currentDialogue = gameData.dialogue[event.dialogue];
     showDialogue(currentDialogue.text);
     currentScene = gameData.scene[event.scene];
-    }*/
+    }
 
 </script>
 
@@ -258,9 +257,9 @@
     <div class="character-mana" style="background: linear-gradient(to right, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.5) {mana * 10}%, rgba(255, 255, 255, 0.5) {mana * 10}%, rgba(255, 255, 255, 0.5) 100%)">Strength: { mana }</div>
     <div class="character-backpack">
         {#each Object.values(backpack) as item (item.name)}
-          <div class="item">
-            <img src={item.icon} alt={item.name} />
-          </div>
+            <button class="item" on:click={() => handleItemClick(item)}>
+                <img src={item.icon} alt={item.name} />
+            </button>
         {/each}
     </div>
     <div class="dialogue-box">

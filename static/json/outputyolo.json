@@ -69,12 +69,12 @@
     },
     "item": {
         "Booster_shot": {
-            "name": "強化針",
+            "name": "shot",
             "description": "一種能夠暫時提升身體機能的針劑(有副作用）。",
             "icon": "/item/booster.png"
         },
         "watch": {
-            "name": "手錶",
+            "name": "watch",
             "description": "上面有刻著和機器人企業相同的縮寫，錶盤上是機器狗的造型。",
             "icon": "/item/watch.png"
         }
@@ -114,6 +114,11 @@
         "Robot_encounter": {
             "scene": "night_city",
             "dialogue": "robot_encounter",
+            "strength": 0
+        },
+        "Take_watch": {
+            "scene": "night_city",
+            "dialogue": "take_watch",
             "strength": 0
         },
         "Training": {

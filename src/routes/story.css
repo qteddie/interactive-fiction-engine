@@ -23,13 +23,18 @@
 }
 
 .character-backpack .item {
-    margin: 5px; /* 為每個物品添加一些外部空間 */
+    margin: 10px; /* 為每個物品添加一些外部空間 */
+    background-color:  transparent;
+    
+   /*border: 1px solid black;*/
+
 }
 
 .character-backpack .item img {
-    width: 50px; /* Adjust as needed */
-    height: 50px; /* Adjust as needed */
+    width: 45px; /* Adjust as needed */
+    height: 45px; /* Adjust as needed */
 }
+
 
 /* 3. Center the event dialogue on the screen */
 .event {
@@ -141,7 +146,7 @@ body {
 
 .character-backpack {
     width: 500px;
-    height: 50px; 
+    height: 70px; 
     margin-top: 10px;
     font-size: 14px;
     position: absolute; 
