@@ -76,7 +76,7 @@
             //     console.log('Hello:', UTF8ToString(ptr));
             // }
 
-            const inputString = gameDataJsonString;
+            const inputString = "aaaa";
             const inputPtr = Module.malloc(gameDataJsonString.length + 1); // Allocate memory for string
             // const inputPtr = Module.malloc(inputString.length + 1); // Allocate memory for string
             stringToUTF8(inputString, inputPtr);
