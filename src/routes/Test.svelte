@@ -29,11 +29,15 @@
     const importObject = {
         env: {
             // ...wasi.getImports().env,
-            memory: new WebAssembly.Memory({ initial: 256, maximum: 512 }),
+            memory: new WebAssembly.Memory({ initial: 256, maximum: 2048 }),
             table: new WebAssembly.Table({ initial: 0, element: 'anyfunc' }),
             __wbindgen_add_to_stack_pointer: () => {return 0; },
             emscripten_memcpy_js: function(dest, src, num) {
-                new Uint8Array(importObject.env.memory.buffer).set(new Uint8Array(importObject.env.memory.buffer, src, num), dest);
+                const mem = new Uint8Array(importObject.env.memory.buffer);
+                if (src + num > mem.length || dest + num > mem.length) {
+                    throw new Error("Attempt to access memory outside buffer bounds");
+                }
+                mem.set(mem.subarray(src, src + num), dest);
             },
             emscripten_resize_heap: emscripten_resize_heap,
 
@@ -58,48 +62,15 @@
             gameData = await response.json();
             console.log(gameData);
             const gameDataJsonString = JSON.stringify(gameData);
-            // console.log(gameDataJsonString);
-
-            // if(Module.processData)
-            // {
-            //     const ptr = Module.processData(gameDataJsonString);
-            //     console.log('processData:', UTF8ToString(ptr));
-            // } else {
-            //     console.log('processData not found');
-            // }
-
-            // if (Module.initGame) {
-            //     Module.initGame();
-            // }
-            // if (Module.hello) {
-            //     const ptr = Module.hello("Hello from Svelte");
-            //     console.log('Hello:', UTF8ToString(ptr));
-            // }
-
-            const inputString = "aaaa";
-            const inputPtr = Module.malloc(gameDataJsonString.length + 1); // Allocate memory for string
-            // const inputPtr = Module.malloc(inputString.length + 1); // Allocate memory for string
+       
+            const inputString = "aaaaaaaaaaafiejfieifjiejfabbbbbbbbbbbbb1";
+            const inputPtr = Module.malloc(inputString.length + 1); // Allocate memory for string
             stringToUTF8(inputString, inputPtr);
             console.log('Input string pointer:', inputPtr);
-            const ptr = Module.hello(inputPtr);
+            const ptr = Module.processData(inputPtr);
             console.log('Hello:', UTF8ToString(ptr));
 
             Module.free(inputPtr); 
 
-            // if (Module.getGameDataAsJson) {
-            //     const ptr = Module.getGameDataAsJson();
-            //     console.log('Game data JSON pointer:', ptr);
-            //     const jsonString = UTF8ToString(ptr);
-            //     console.log('Game Data JSON:', jsonString);
-            //     if (!jsonString.trim()) {
-            //         console.error('Game data JSON is empty or invalid.');
-            //         return;
-            //     }
-            //     gameDataJson = jsonString;
-            //     console.log('Game Data JSON:', jsonString);
-            // }
-        // } catch (error) {
-        //     console.error('Error loading WebAssembly module:', error);
-        // }
     });
 </script>

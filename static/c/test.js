@@ -929,8 +929,7 @@ var wasmImports = {
 };
 var wasmExports = createWasm();
 var ___wasm_call_ctors = () => (___wasm_call_ctors = wasmExports['__wasm_call_ctors'])();
-var _processData = Module['_processData'] = () => (_processData = Module['_processData'] = wasmExports['processData'])();
-var _hello = Module['_hello'] = (a0) => (_hello = Module['_hello'] = wasmExports['hello'])(a0);
+var _processData = Module['_processData'] = (a0) => (_processData = Module['_processData'] = wasmExports['processData'])(a0);
 var _malloc = Module['_malloc'] = (a0) => (_malloc = Module['_malloc'] = wasmExports['malloc'])(a0);
 var _free = Module['_free'] = (a0) => (_free = Module['_free'] = wasmExports['free'])(a0);
 var stackSave = () => (stackSave = wasmExports['stackSave'])();
