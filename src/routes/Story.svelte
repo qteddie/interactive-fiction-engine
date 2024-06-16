@@ -199,6 +199,9 @@
         if (item.name === "watch") {
             triggerWatchEvent();
         }
+        if (item.name === "shot") {
+            triggerShotEvent();
+        }
     }
     function triggerWatchEvent() {
     const event = gameData.event["Take_watch"];
@@ -208,6 +211,14 @@
     currentScene = gameData.scene[event.scene];
     currentCharacter = gameData.character[currentDialogue.character];
     }
+    function triggerShotEvent() {
+    const event = gameData.event["Battle5"];
+    currentDialogue = gameData.dialogue[event.dialogue];
+    showDialogue(currentDialogue.text);
+    currentScene = gameData.scene[event.scene];
+    currentCharacter = gameData.character[currentDialogue.character];
+    }
+
 
 </script>
 

@@ -68,7 +68,7 @@
         }
     },
     "item": {
-        "Booster_shot": {
+        "shot": {
             "name": "shot",
             "description": "一種能夠暫時提升身體機能的針劑(有副作用）。",
             "icon": "/item/booster.png"
@@ -373,7 +373,7 @@
             "text": "這是強化針，有副作用會喪失記憶力並且對身體傷害很大，到緊急時刻再使用。",
             "options": [
                 {
-                    "text": "拿著(心中想著用了它記憶永遠回不來了吧）",
+                    "text": "拿著(心中想著用了它，記憶永遠回不來了吧）",
                     "next": "mission_start"
                 }
             ]
@@ -417,8 +417,8 @@
                     "event": "Battle4"
                 },
                 {
-                    "text": "使用強化針",
-                    "event": "Battle5"
+                    "text": "看著手中強化針",
+                    "next": "battle3"
                 }
             ]
         },
@@ -437,7 +437,7 @@
             "text": "（看不下去隊友被這樣攻擊）",
             "options": [
                 {
-                    "text": "使用強化針（副作用也慢慢產生了）",
+                    "text": "奔跑途中跌倒而強化針插進身體",
                     "event": "Battle6"
                 }
             ]
