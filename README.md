@@ -1,4 +1,4 @@
-# Licence
+# License
 MIT License
 
 Copyright (c) [2024] [Lin Tzu Hsuan, Liu Kuan Yu]
