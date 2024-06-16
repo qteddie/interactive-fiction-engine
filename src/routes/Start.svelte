@@ -228,14 +228,14 @@
         if (option) {
             if(option.next){
                 const nextString = processAndLogString(option.next);
-                console.log('nextString: ',nextString);
+                // console.log('nextString: ',nextString);
 
                 currentDialogue = gameData.dialogue[nextString];
                 currentDialogueIndex = dialogueKeys.indexOf(nextString);
                 }
                 else if (option.event) {
                     const eventString = processAndLogString(option.event);
-                    console.log('eventString: ',eventString);
+                    // console.log('eventString: ',eventString);
 
                     // console.log('option.event: ',option.event);
 

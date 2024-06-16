@@ -204,19 +204,20 @@
         }
     }
     function triggerWatchEvent() {
-    const event = gameData.event["Take_watch"];
+        const event = gameData.event["Take_watch"];
 
-    currentDialogue = gameData.dialogue[event.dialogue];
-    showDialogue(currentDialogue.text);
-    currentScene = gameData.scene[event.scene];
-    currentCharacter = gameData.character[currentDialogue.character];
+        currentDialogue = gameData.dialogue[event.dialogue];
+        showDialogue(currentDialogue.text);
+        currentScene = gameData.scene[event.scene];
+        currentCharacter = gameData.character[currentDialogue.character];
     }
+
     function triggerShotEvent() {
-    const event = gameData.event["Battle5"];
-    currentDialogue = gameData.dialogue[event.dialogue];
-    showDialogue(currentDialogue.text);
-    currentScene = gameData.scene[event.scene];
-    currentCharacter = gameData.character[currentDialogue.character];
+        const event = gameData.event["Battle5"];
+        currentDialogue = gameData.dialogue[event.dialogue];
+        showDialogue(currentDialogue.text);
+        currentScene = gameData.scene[event.scene];
+        currentCharacter = gameData.character[currentDialogue.character];
     }
 
 
@@ -266,7 +267,7 @@
     </div> 
     <div class="event">
     </div>
-    <div class="character-mana" style="background: linear-gradient(to right, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.5) {mana * 10}%, rgba(255, 255, 255, 0.5) {mana * 10}%, rgba(255, 255, 255, 0.5) 100%)">Strength: { mana }</div>
+    <div class="character-mana" style="background: linear-gradient(to right, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.5) {`${mana * 10}%`}, rgba(255, 255, 255, 0.5) {`${mana * 10}%`}, rgba(255, 255, 255, 0.5) 100%)">Strength: { mana }</div>
     <div class="character-backpack">
         {#each Object.values(backpack) as item (item.name)}
             <button class="item" on:click={() => handleItemClick(item)}>
