@@ -188,7 +188,7 @@
             "dialogue": "battle6",
             "strength": 99
         },
-        "Battleend": {
+        "Battlend": {
             "scene": "fighting_arena",
             "dialogue": "battlend",
             "strength": 30
