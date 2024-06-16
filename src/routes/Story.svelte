@@ -43,7 +43,7 @@
     let playerName = '';
     let showContainer = true;
     let backpack = {}; // 新增這行
-    let mana = 10; // 新增這行
+    let mana = 0; // 新增這行
     let showEndScreen = false;
     let audio;
 
@@ -121,7 +121,7 @@
         currentDialogueIndex: 0,
         playerName: '',
         backpack: {},
-        mana: 10,
+        mana: 0,
         showEndScreen: false,
     };
     function endGame() {
@@ -151,6 +151,7 @@
                 console.log('option.event: ',option.event);
 
                 const event = gameData.event[option.event];
+                mana = event.strength;
                 // console.log('event: ',event);
                 currentDialogue = gameData.dialogue[event.dialogue];
                 currentDialogueIndex = dialogueKeys.indexOf(event.dialogue);
@@ -192,6 +193,22 @@
             }
         }, typingSpeed);
     }
+
+   /* function handleItemUse(item) {
+        if (item.name === 'watch') {
+            triggerWatchEvent();
+        }
+    }
+    function triggerWatchEvent() {
+    console.log('Watch event triggered');
+
+    const event = gameData.events['specialEvent'];
+
+    currentDialogue = gameData.dialogue[event.dialogue];
+    showDialogue(currentDialogue.text);
+    currentScene = gameData.scene[event.scene];
+    }*/
+
 </script>
 
 <head>
@@ -220,6 +237,9 @@
 {/if}
 
 
+
+
+
 <div id="transition-overlay" class={isTransitioning ? 'active' : ''}></div> 
 <div     
     on:keydown={handleKeydown}
@@ -235,7 +255,7 @@
     </div> 
     <div class="event">
     </div>
-    <div class="character-mana" style="background: linear-gradient(to right, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.5) {mana * 10}%, rgba(255, 255, 255, 0.5) {mana * 10}%, rgba(255, 255, 255, 0.5) 100%)">Mana: { mana }</div>
+    <div class="character-mana" style="background: linear-gradient(to right, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.5) {mana * 10}%, rgba(255, 255, 255, 0.5) {mana * 10}%, rgba(255, 255, 255, 0.5) 100%)">Strength: { mana }</div>
     <div class="character-backpack">
         {#each Object.values(backpack) as item (item.name)}
           <div class="item">

@@ -235,7 +235,8 @@
         },
         "End": {
             "scene": "moon",
-            "dialogue": "End"
+            "dialogue": "End",
+            "strength": 0
         }
     },
     "dialogue": {
@@ -245,7 +246,7 @@
             "options": [
                 {
                     "text": "問問身邊的人",
-                    "next": "join_resistance"
+                    "event": "Join_resistance"
                 }
             ]
         },
@@ -283,7 +284,7 @@
                 },
                 {
                     "text": "開始訓練",
-                    "next": "training"
+                    "event": "Training"
                 },
                 {
                     "text": "直接開睡",
@@ -297,7 +298,7 @@
             "options": [
                 {
                     "text": "（被踹醒)並且趕去訓練",
-                    "next": "training"
+                    "event": "Training"
                 }
             ]
         },
@@ -358,7 +359,7 @@
             "options": [
                 {
                     "text": "LUCY走過來",
-                    "next": "get_boost"
+                    "event": "Get_boost"
                 }
             ]
         },
@@ -388,7 +389,7 @@
             "options": [
                 {
                     "text": "笑著打機器人",
-                    "next": "battle2"
+                    "event": "Battle2"
                 }
             ]
         },
@@ -398,7 +399,7 @@
             "options": [
                 {
                     "text": "迎戰",
-                    "next": "battle3"
+                    "event": "Battle3"
                 }
             ]
         },
@@ -408,11 +409,11 @@
             "options": [
                 {
                     "text": "（不知所措）繼續觀望",
-                    "next": "battle4"
+                    "event": "Battle4"
                 },
                 {
                     "text": "使用強化針",
-                    "next": "battle5"
+                    "event": "Battle5"
                 }
             ]
         },
@@ -422,7 +423,7 @@
             "options": [
                 {
                     "text": "在逃跑途中，目睹反抗小隊被轟成碎片",
-                    "next": "battlend"
+                    "event": "Battlend"
                 }
             ]
         },
@@ -432,7 +433,7 @@
             "options": [
                 {
                     "text": "使用強化針（副作用也慢慢產生了）",
-                    "next": "battle6"
+                    "event": "Battle6"
                 }
             ]
         },
@@ -442,7 +443,7 @@
             "options": [
                 {
                     "text": "因為副作用而昏倒了",
-                    "next": "afterbattle"
+                    "event": "Afterbattle"
                 }
             ]
         },
@@ -463,7 +464,7 @@
             "options": [
                 {
                     "text": "解決Ironman後 感受到（副作用是也慢慢生效了）",
-                    "next": "choose_ending"
+                    "event": "Choose_ending"
                 }
             ]
         },
@@ -473,7 +474,7 @@
             "options": [
                 {
                     "text": "問問身邊的人",
-                    "next": "join_resistance2"
+                    "event": "Join_resistance2"
                 }
             ]
         },
@@ -495,11 +496,11 @@
             "options": [
                 {
                     "text": "覺得疑惑，但想追問時，他已經停止運轉，永遠沒有機會問了,同時你也體力不支昏倒了",
-                    "next": "losememory"
+                    "event": "Losememory"
                 },
                 {
                     "text": "覺得可笑再補踹了一腳，之後體力不支也昏倒了",
-                    "next": "losememory"
+                    "event": "Losememory"
                 }
             ]
         },
