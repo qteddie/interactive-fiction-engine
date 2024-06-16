@@ -338,12 +338,10 @@ Event *events;
 int event_count;
 
 
-EMSCRIPTEN_KEEPALIVE
 char* hello() {
     return "Hello, World!";
 }
 
-EMSCRIPTEN_KEEPALIVE
 char* getGameDataAsJson() {
     cJSON *gameData = cJSON_CreateObject();
     cJSON *scenesObject = cJSON_CreateObject();

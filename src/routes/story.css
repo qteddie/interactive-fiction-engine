@@ -34,6 +34,11 @@
     width: 50px; /* Adjust as needed */
     height: 50px; /* Adjust as needed */
 }
+.character-backpack .item img:hover{
+    transform: scale(1.2); /* Add a hover effect */
+    cursor: pointer;
+    
+}
 
 
 /* 3. Center the event dialogue on the screen */

@@ -11,97 +11,82 @@
 
     let isTransitioning = false;
     // ------------------------------- EMCC START ------------------------------
-//     let wasmModule;
-// let wasmLoaded = false;
-// let fdWriteCallCount = 0;
-// const FD_WRITE_CALL_LIMIT = 100; // 設定一個限制次數
 
-// function print_string(ptr) {
-//     const memory = new Uint8Array(wasmModule.memory.buffer);
-//     let str = "";
-//     for (let i = ptr; memory[i] !== 0; i++) {
-//         str += String.fromCharCode(memory[i]);
-//     }
-//     console.log(str);
-// }
+    let Module = {};
 
-// async function emscripten_sleep(ms) {
-//     return new Promise(resolve => setTimeout(resolve, ms));
-// }
+    function stringToUTF8(str, ptr) {
+        const memory = Module.memory || importObject.env.memory;
+        const data = new Uint8Array(memory.buffer, ptr);
+        for (let i = 0; i < str.length; i++) {
+            data[i] = str.charCodeAt(i);
+        }
+        data[str.length] = 0;  // Null-terminate the string
+    }
 
-// function emscripten_memcpy_js(dest, src, num) {
-//     const memory = new Uint8Array(wasmModule.memory.buffer);
-//     memory.set(memory.subarray(src, src + num), dest);
-// }
+    function UTF8ToString(ptr) {
+        const memory = Module.memory || importObject.env.memory;
+        const data = new Uint8Array(memory.buffer, ptr);
+        let length = 0;
+        while (data[length]) length++;
+        return new TextDecoder('utf-8').decode(data.subarray(0, length));
+    }
 
-// function emscripten_resize_heap(requestedSize) {
-//     const memory = wasmModule.memory;
-//     const oldSize = memory.buffer.byteLength;
-//     if (requestedSize > oldSize) {
-//         const maxSize = 64 * 1024 * 1024; // 64 MB
-//         if (requestedSize > maxSize) {
-//             console.error('Requested memory size exceeds maximum limit');
-//             return 0;
-//         }
-//         const pagesNeeded = Math.ceil((requestedSize - oldSize) / 65536);
-//         try {
-//             memory.grow(pagesNeeded);
-//             return 1;
-//         } catch (e) {
-//             console.error('Memory growth failed:', e);
-//             return 0;
-//         }
-//     }
-//     return 1;
-// }
+    function emscripten_resize_heap(requestedSize) {
+        throw new Error('Heap resize is not supported');
+    }
 
-// function fd_write(fd, iov, iovcnt, pnum) {
-//     fdWriteCallCount++;
-//     if (fdWriteCallCount > FD_WRITE_CALL_LIMIT) {
-//         throw new Error('fd_write call limit exceeded');
-//     }
-//     console.log(`fd_write called with fd: ${fd}, iov: ${iov}, iovcnt: ${iovcnt}, pnum: ${pnum}`);
-//     return 0;
-// }
+    const importObject = {
+        env: {
+            memory: new WebAssembly.Memory({ initial: 256, maximum: 2048 }),
+            table: new WebAssembly.Table({ initial: 0, element: 'anyfunc' }),
+            __wbindgen_add_to_stack_pointer: () => {return 0; },
+            emscripten_memcpy_js: function(dest, src, num) {
+                const mem = new Uint8Array(this.memory.buffer);
+                if (src + num > mem.length || dest + num > mem.length) {
+                    throw new Error("Attempt to access memory outside buffer bounds");
+                }
+                mem.set(mem.subarray(src, src + num), dest);
+            },
+            emscripten_resize_heap: emscripten_resize_heap,
+        },    
+    };
 
-// onMount(async () => {
-//     try {
-//         const wasmUrl = '/c/main.wasm';
-//         const importObject = {
-//             env: {
-//                 memory: new WebAssembly.Memory({ initial: 32, maximum: 64 }), // 設置最大內存限制
-//                 table: new WebAssembly.Table({ initial: 0, element: 'anyfunc' }),
-//                 emscripten_sleep,
-//                 emscripten_memcpy_js,
-//                 emscripten_resize_heap,
-//                 print_string: print_string
-//             },
-//             wasi_snapshot_preview1: {
-//                 fd_write: fd_write // 提供 fd_write 的虛擬實現
-//             }
-//         };
+    function processAndLogString(inputString) {
+        const inputPtr = Module.malloc(inputString.length + 1); // Allocate memory for string
+        stringToUTF8(inputString, inputPtr);
+        const ptr = Module.processData(inputPtr);
+        const result = UTF8ToString(ptr);
+        // console.log('Processed data:', UTF8ToString(ptr));
+        Module.free(inputPtr);
+        return result;
+    }
 
-//         console.log('Fetching WebAssembly module from:', wasmUrl);
-//         const wasmResponse = await fetch(wasmUrl);
-//         const { instance } = await WebAssembly.instantiateStreaming(wasmResponse, importObject);
-//         console.log('WebAssembly module instantiated.');
+    // function getNextString(inputString) {
+    //     const inputPtr = Module.malloc(inputString.length + 1); // Allocate memory for string
+    //     stringToUTF8(inputString, inputPtr);
+    //     const ptr = Module.getNextEncounter(inputPtr);
+    //     // const result = UTF8ToString(ptr);
+    //     console.log('Next data:', UTF8ToString(ptr));
+    //     Module.free(inputPtr);
+    //     // return result;
+    // }
 
-//         wasmModule = instance.exports;
-//         wasmLoaded = true; // 设置加载标志
-//         console.log('WebAssembly module loaded and ready.');
-//     } catch (error) {
-//         console.error('Error loading WebAssembly module:', error);
-//     }
-// });
+    onMount(async () => {
+        const wasmUrl = '/c/test.wasm';
+        const wasmResponse = await fetch(wasmUrl);
+        const { instance } = await WebAssembly.instantiateStreaming(wasmResponse, importObject);
+        Module = instance.exports;
+
+        if (!Module.memory) {
+            Module.memory = importObject.env.memory;
+        }
+        
+        console.log('WebAssembly module loaded and ready.');
+        // getNextString("{'text': '2e�!', 'next': 'dragon_encounter'}");
+        // processAndLogString("28749817834");
+    });
+
     // ------------------------------- EMCC END ------------------------------
-
-    // "mage": {
-    //         "name": "Mage (you)",
-    //         "avatar": ["/character/mage/avatar.jpeg", "/character/mage/avatar2.jpeg", "/character/mage/avatar3.jpeg"],
-    //         "tachie": ["/character/mage/tachie3.png", "/character/mage/tachie2.png", "/character/mage/tachie.png"]
-    //     },
-
-
     let divElement;
 
     function handleKeydown(event) {
@@ -236,98 +221,25 @@
     }
 
 
-    // ------------------------- DIALOGUE -------------------------
-    // function nextDialogue(option) {
-    //     if (!wasmLoaded) {  // 检查WebAssembly模块是否已加载
-    //         console.error("WebAssembly module not loaded yet.");
-    //         return;
-    //     }
-
-    //     clearInterval(intervalId); // 清除 intervalId
-
-    //     let optionNext = '';
-    //     let optionEvent = '';
-
-    //     if (option) {
-    //         if (option.next) {
-    //             optionNext = option.next;
-    //         }
-    //         if (option.event) {
-    //             optionEvent = option.event;
-    //         }
-    //     } else {
-    //         currentDialogue.options.forEach(opt => {
-    //             if (opt.next) {
-    //                 optionNext = opt.next;
-    //             }
-    //             if (opt.event) {
-    //                 optionEvent = opt.event;
-    //             }
-    //         });
-    //     }
-    //     console.log('optionNext:', optionNext);
-    //     console.log('optionEvent:', optionEvent);
-
-    //     wasmModule.nextDialogue(optionNext, optionEvent);
-    //     console.log('Called nextDialogue with:', optionNext, optionEvent);
-
-    //     // 打印最新的 currentDialogue 值
-    //     const memory = new Uint8Array(wasmModule.memory.buffer);
-    //     const textPtr = wasmModule.getCurrentDialogueText();
-    //     console.log('textPtr:', textPtr);
-
-    //     // 确认 textPtr 是否有效
-    //     if (!textPtr) {
-    //         console.error('Invalid textPtr:', textPtr);
-    //         return;
-    //     }
-
-    //     // 打印 memory 数组中的部分内容以确认内存是否正确分配
-    //     console.log('Memory slice:', memory.slice(textPtr, textPtr + 100));
-
-    //     const text = [];
-    //     for (let i = textPtr; memory[i] !== 0; i++) {
-    //         text.push(String.fromCharCode(memory[i]));
-    //     }
-    //     console.log('Updated currentDialogue.text:', text.join(''));
-    //     showDialogue(text.join(''));
-
-    //     // 如果存在事件，进行场景转换
-    //     if (optionEvent) {
-    //         const eventIndex = gameData.events.findIndex(event => event.dialogue === optionEvent);
-    //         if (eventIndex !== -1) {
-    //             isTransitioning = true;
-    //             setTimeout(() => {
-    //                 currentScene = gameData.scenes[eventIndex];
-    //                 isTransitioning = false;
-    //             }, 1000); // 等待 1 秒钟后再改变场景
-    //         }
-    //     }
-
-    //     // 检查并设置当前角色
-    //     const character = gameData.character[currentDialogue.character];
-    //     if (character) {
-    //         currentCharacter = character;
-    //     }
-
-    //     // 检查当前对话是否有选项，如果没有，结束游戏
-    //     if (!currentDialogue.options.length) {
-    //         endGame();
-    //         return;
-    //     }
-    // }
-    // }
     function nextDialogue(option) {
         clearInterval(intervalId);
+        
+        
         if (option) {
             if(option.next){
-                currentDialogue = gameData.dialogue[option.next];
-                currentDialogueIndex = dialogueKeys.indexOf(option.next);
-            }
-            else if (option.event) {
-                console.log('option.event: ',option.event);
+                const nextString = processAndLogString(option.next);
+                // console.log('nextString: ',nextString);
 
-                const event = gameData.event[option.event];
+                currentDialogue = gameData.dialogue[nextString];
+                currentDialogueIndex = dialogueKeys.indexOf(nextString);
+                }
+                else if (option.event) {
+                    const eventString = processAndLogString(option.event);
+                    // console.log('eventString: ',eventString);
+
+                    // console.log('option.event: ',option.event);
+
+                const event = gameData.event[eventString];
                 // console.log('event: ',event);
                 currentDialogue = gameData.dialogue[event.dialogue];
                 currentDialogueIndex = dialogueKeys.indexOf(event.dialogue);

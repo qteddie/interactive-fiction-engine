@@ -1,76 +1,18 @@
 <script>
     import { onMount } from 'svelte';
 
-    let Module = {};
-    let gameDataJson = '';
-
-    function stringToUTF8(str, ptr) {
-        const memory = Module.memory || importObject.env.memory;
-        const data = new Uint8Array(memory.buffer, ptr);
-        for (let i = 0; i < str.length; i++) {
-            data[i] = str.charCodeAt(i);
-        }
-        data[str.length] = 0;  // Null-terminate the string
-    }
-
-    function UTF8ToString(ptr) {
-        // Use the memory from Module directly if available, else use importObject's memory
-        const memory = Module.memory || importObject.env.memory;
-        const data = new Uint8Array(memory.buffer, ptr);
-        let length = 0;
-        while (data[length]) length++;  // Calculate the actual string length
-        return new TextDecoder('utf-8').decode(data.subarray(0, length));
-    }
-
-    function emscripten_resize_heap(requestedSize) {
-        throw new Error('Heap resize is not supported');
-    }
-
-    const importObject = {
-        env: {
-            // ...wasi.getImports().env,
-            memory: new WebAssembly.Memory({ initial: 256, maximum: 2048 }),
-            table: new WebAssembly.Table({ initial: 0, element: 'anyfunc' }),
-            __wbindgen_add_to_stack_pointer: () => {return 0; },
-            emscripten_memcpy_js: function(dest, src, num) {
-                const mem = new Uint8Array(importObject.env.memory.buffer);
-                if (src + num > mem.length || dest + num > mem.length) {
-                    throw new Error("Attempt to access memory outside buffer bounds");
-                }
-                mem.set(mem.subarray(src, src + num), dest);
-            },
-            emscripten_resize_heap: emscripten_resize_heap,
-
-        },    
-    };
-    let gameData = null;
+    let randomStr = ''; // 反應式變量來存儲隨機字符串
+    let cbind = {}; // 導出 WebAssembly 模塊的對象
     onMount(async () => {
-        // try {
-            const wasmUrl = '/c/test.wasm';  // Ensure this path is correct
-            const wasmResponse = await fetch(wasmUrl);
-            const { instance } = await WebAssembly.instantiateStreaming(wasmResponse, importObject);
-
-            Module = instance.exports;
-            // Do not reassign; use directly
-            if (!Module.memory) {
-                Module.memory = importObject.env.memory;
-            }
-            
-            console.log('WebAssembly module loaded and ready.');
-
-            const response = await fetch('/json/output3.json');
-            gameData = await response.json();
-            console.log(gameData);
-            const gameDataJsonString = JSON.stringify(gameData);
-       
-            const inputString = "aaaaaaaaaaafiejfieifjiejfabbbbbbbbbbbbb1";
-            const inputPtr = Module.malloc(inputString.length + 1); // Allocate memory for string
-            stringToUTF8(inputString, inputPtr);
-            console.log('Input string pointer:', inputPtr);
-            const ptr = Module.processData(inputPtr);
-            console.log('Hello:', UTF8ToString(ptr));
-
-            Module.free(inputPtr); 
-
+        const wasmUrl = '/c/test6.wasm';
+        const cbind = await fetch(wasmUrl);; // 初始化並獲取 WebAssembly 模塊的導出
+        const buffer = cbind.malloc(100); // 分配內存
+        const r = cbind.getRandomStr(buffer); // 獲取隨機字符串的長度
+        console.log('len is', r);
+        randomStr = cbind.UTF8ToString(buffer); // 將內存中的字符串轉換為 JS 字符串
+        console.log(randomStr);
+        cbind.free(buffer); // 釋放內存
     });
 </script>
+
+<h1>Random String: {randomStr}</h1>
