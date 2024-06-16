@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "cJSON.h"
-// #include <emscripten.h>
+#include <emscripten.h>
 typedef struct {
     char *id;
     char *name; // 已存在
@@ -337,6 +337,13 @@ int item_count;
 Event *events;
 int event_count;
 
+
+EMSCRIPTEN_KEEPALIVE
+char* hello() {
+    return "Hello, World!";
+}
+
+EMSCRIPTEN_KEEPALIVE
 char* getGameDataAsJson() {
     cJSON *gameData = cJSON_CreateObject();
     cJSON *scenesObject = cJSON_CreateObject();
@@ -402,7 +409,8 @@ char* getGameDataAsJson() {
 
     return jsonString;
 }
-int main() {
+
+int initGame() {
     const char *filename = "output3.json";
     char *json_data = read_json_file(filename);
     if (!json_data) {
@@ -496,5 +504,4 @@ int main() {
 
     return EXIT_SUCCESS;
 }
-
 

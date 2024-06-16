@@ -1,0 +1,222 @@
+Scene name: Enchanted Forest, background: /scene/forest.jpeg
+Scene name: Dark Castle, background: /scene/castle.jpeg
+Scene name: Dragon's Lair, background: /scene/dragon_lair.jpeg
+First character name: Mage (you), avatar: /character/mage/avatar.jpeg
+Parsing 10 dialogues
+Parsing dialogue 1
+Initialized dialogue
+Character: mage
+Text: 我必須在這個不同的世界找到並打敗一條龍，才能回到我的世界。
+Parsing 1 options
+Option 1 text: 開始冒險
+Option 1 next: forest_exploration
+Parsing dialogue 2
+Initialized dialogue
+Character: mage
+Text: 我正在探索森林，尋找通往城堡的路。
+Parsing 2 options
+Option 1 text: 繼續尋找
+Option 1 event: change_scene_to_castle
+Option 2 text: 使用神秘藥劑
+Option 2 event: mysterious_potion_effect
+Parsing dialogue 3
+Initialized dialogue
+Character: mage
+Text: 我已經到達城堡，龍就在裡面。
+Parsing 1 options
+Option 1 text: 進入城堡
+Option 1 next: dragon_encounter
+Parsing dialogue 4
+Initialized dialogue
+Character: mage
+Text: 我使用了神秘藥劑，直接到達了龍的巢穴。
+Parsing 1 options
+Option 1 text: 進入龍的巢穴
+Option 1 next: dragon_encounter
+Parsing dialogue 5
+Initialized dialogue
+Character: dragon
+Text: 你是誰？為什麼來到我的巢穴？
+Parsing 2 options
+Option 1 text: 我來這裡是為了打敗你，回到我的世界。
+Option 1 next: dragon_battle
+Option 2 text: 我只是路過，沒有惡意。
+Option 2 next: dragon_peace
+Parsing dialogue 6
+Initialized dialogue
+Character: mage
+Text: 我揮舞我的魔杖，與龍進行激烈的戰鬥。
+Parsing 1 options
+Option 1 text: 使用最強的魔法攻擊
+Option 1 next: return_home
+Parsing dialogue 7
+Initialized dialogue
+Character: mage
+Text: 我試圖與龍和解，希望它能幫我回到我的世界。
+Parsing 1 options
+Option 1 text: 請求龍的幫助
+Option 1 next: return_home_peace
+Parsing dialogue 8
+Initialized dialogue
+Character: mage
+Text: 我打敗了龍，成功回到了我的世界。
+Parsing 1 options
+Option 1 text: 結束冒險
+Option 1 next: end
+Parsing dialogue 9
+Initialized dialogue
+Character: mage
+Text: 我與龍和解，成功回到了我的世界。
+Parsing 1 options
+Option 1 text: 結束冒險
+Option 1 next: end
+Parsing dialogue 10
+Initialized dialogue
+Character: mage
+Text: 範例遊戲結束，請點選故事開始來開啟正式遊戲
+Parsing 1 options
+Option 1 text: 點我點我！
+Parsing 2 items
+Item 1 name: Magic Wand, description: A wand that can channel your magical power, icon: /item/magic_wand.png
+Item 2 name: Mysterious Potion, description: A mysterious potion, who knows what it will do, icon: /item/mysterious_potion.png
+Parsing 6 events
+Event 1 scene: forest, dialogue: beginning
+Event 2 scene: castle, dialogue: castle_arrival
+Event 3 scene: dragon_lair, dialogue: direct_to_dragon_lair
+Event 4 scene: forest, dialogue: return_home
+Event 5 scene: forest, dialogue: return_home_peace
+Event 6 scene: forest, dialogue: end
+Game data JSON:
+{
+	"scenes":	{
+		"Scene 1":	{
+			"name":	"Enchanted Forest",
+			"background":	"/scene/forest.jpeg"
+		},
+		"Scene 2":	{
+			"name":	"Dark Castle",
+			"background":	"/scene/castle.jpeg"
+		},
+		"Scene 3":	{
+			"name":	"Dragon's Lair",
+			"background":	"/scene/dragon_lair.jpeg"
+		}
+	},
+	"characters":	{
+		"Character 1":	{
+			"name":	"Mage (you)",
+			"avatar":	"/character/mage/avatar.jpeg",
+			"tachie":	"/character/mage/tachie3.png"
+		},
+		"Character 2":	{
+			"name":	"Dragon",
+			"avatar":	"/character/dragon/avatar.jpeg",
+			"tachie":	"/character/dragon/tachie.png"
+		},
+		"Character 3":	{
+			"name":	"Elf",
+			"avatar":	"/character/elf/avatar.jpeg",
+			"tachie":	"/character/elf/tachie.png"
+		}
+	},
+	"dialogue":	{
+		"Dialogue 1":	{
+			"character":	"mage",
+			"text":	"我必須在這個不同的世界找到並打敗一條龍，才能回到我的世界。",
+			"options":	{
+			}
+		},
+		"Dialogue 2":	{
+			"character":	"mage",
+			"text":	"我正在探索森林，尋找通往城堡的路。",
+			"options":	{
+			}
+		},
+		"Dialogue 3":	{
+			"character":	"mage",
+			"text":	"我已經到達城堡，龍就在裡面。",
+			"options":	{
+			}
+		},
+		"Dialogue 4":	{
+			"character":	"mage",
+			"text":	"我使用了神秘藥劑，直接到達了龍的巢穴。",
+			"options":	{
+			}
+		},
+		"Dialogue 5":	{
+			"character":	"dragon",
+			"text":	"你是誰？為什麼來到我的巢穴？",
+			"options":	{
+			}
+		},
+		"Dialogue 6":	{
+			"character":	"mage",
+			"text":	"我揮舞我的魔杖，與龍進行激烈的戰鬥。",
+			"options":	{
+			}
+		},
+		"Dialogue 7":	{
+			"character":	"mage",
+			"text":	"我試圖與龍和解，希望它能幫我回到我的世界。",
+			"options":	{
+			}
+		},
+		"Dialogue 8":	{
+			"character":	"mage",
+			"text":	"我打敗了龍，成功回到了我的世界。",
+			"options":	{
+			}
+		},
+		"Dialogue 9":	{
+			"character":	"mage",
+			"text":	"我與龍和解，成功回到了我的世界。",
+			"options":	{
+			}
+		},
+		"Dialogue 10":	{
+			"character":	"mage",
+			"text":	"範例遊戲結束，請點選故事開始來開啟正式遊戲",
+			"options":	{
+			}
+		}
+	},
+	"items":	{
+		"Item 1":	{
+			"name":	"Magic Wand",
+			"description":	"A wand that can channel your magical power",
+			"icon":	"/item/magic_wand.png"
+		},
+		"Item 2":	{
+			"name":	"Mysterious Potion",
+			"description":	"A mysterious potion, who knows what it will do",
+			"icon":	"/item/mysterious_potion.png"
+		}
+	},
+	"events":	{
+		"Event 1":	{
+			"scene":	"forest",
+			"dialogue":	"beginning"
+		},
+		"Event 2":	{
+			"scene":	"castle",
+			"dialogue":	"castle_arrival"
+		},
+		"Event 3":	{
+			"scene":	"dragon_lair",
+			"dialogue":	"direct_to_dragon_lair"
+		},
+		"Event 4":	{
+			"scene":	"forest",
+			"dialogue":	"return_home"
+		},
+		"Event 5":	{
+			"scene":	"forest",
+			"dialogue":	"return_home_peace"
+		},
+		"Event 6":	{
+			"scene":	"forest",
+			"dialogue":	"end"
+		}
+	}
+}
