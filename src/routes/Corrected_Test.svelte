@@ -1,17 +1,23 @@
 <script>
     import { onMount } from 'svelte';
-
+    
+    import { WASI } from '@wasmer/wasi';
+    import { WasmFs } from '@wasmer/wasmfs';
     let Module = {};
     let gameDataJson = '';
-
-    function stringToUTF8(str, ptr) {
-        const memory = Module.memory || importObject.env.memory;
-        const data = new Uint8Array(memory.buffer, ptr);
-        for (let i = 0; i < str.length; i++) {
-            data[i] = str.charCodeAt(i);
+    const wasmFs = new WasmFs();
+    const wasi = new WASI({
+        args: [],
+        env: {},
+        preopens: {
+            '/sandbox': '/some_real_directory'
+        },
+        bindings: {
+            ...WASI.defaultBindings, // 如果這行代碼引起錯誤，請移除它
+            fs: wasmFs.fs
         }
-        data[str.length] = 0;  // Null-terminate the string
-    }
+    });
+
 
     function UTF8ToString(ptr) {
         // Use the memory from Module directly if available, else use importObject's memory
@@ -28,16 +34,14 @@
 
     const importObject = {
         env: {
-            // ...wasi.getImports().env,
-            memory: new WebAssembly.Memory({ initial: 256, maximum: 512 }),
+            memory: new WebAssembly.Memory({ initial: 1, maximum: 2 }),
             table: new WebAssembly.Table({ initial: 0, element: 'anyfunc' }),
-            __wbindgen_add_to_stack_pointer: () => {return 0; },
             emscripten_memcpy_js: function(dest, src, num) {
                 new Uint8Array(importObject.env.memory.buffer).set(new Uint8Array(importObject.env.memory.buffer, src, num), dest);
             },
             emscripten_resize_heap: emscripten_resize_heap,
-
-        },    
+        ...wasi.getImports() // 使用 getImports 方法添加 WASI 實例的導入
+        },
     };
     let gameData = null;
     onMount(async () => {
@@ -60,32 +64,20 @@
             const gameDataJsonString = JSON.stringify(gameData);
             // console.log(gameDataJsonString);
 
-            // if(Module.processData)
-            // {
-            //     const ptr = Module.processData(gameDataJsonString);
-            //     console.log('processData:', UTF8ToString(ptr));
-            // } else {
-            //     console.log('processData not found');
-            // }
-
+            if(Module.processData)
+            {
+                const ptr = Module.processData(gameDataJsonString);
+                console.log('processData:', UTF8ToString(ptr));
+            } else {
+                console.log('processData not found');
+            }
             // if (Module.initGame) {
             //     Module.initGame();
             // }
-            // if (Module.hello) {
-            //     const ptr = Module.hello("Hello from Svelte");
-            //     console.log('Hello:', UTF8ToString(ptr));
-            // }
-
-            const inputString = gameDataJsonString;
-            const inputPtr = Module.malloc(gameDataJsonString.length + 1); // Allocate memory for string
-            // const inputPtr = Module.malloc(inputString.length + 1); // Allocate memory for string
-            stringToUTF8(inputString, inputPtr);
-            console.log('Input string pointer:', inputPtr);
-            const ptr = Module.hello(inputPtr);
-            console.log('Hello:', UTF8ToString(ptr));
-
-            Module.free(inputPtr); 
-
+            if (Module.hello) {
+                const ptr = Module.hello();
+                console.log('Hello:', UTF8ToString(ptr));
+            }
             // if (Module.getGameDataAsJson) {
             //     const ptr = Module.getGameDataAsJson();
             //     console.log('Game data JSON pointer:', ptr);
