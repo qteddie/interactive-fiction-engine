@@ -25,14 +25,14 @@
 .character-backpack .item {
     margin: 10px; /* 為每個物品添加一些外部空間 */
     background-color:  transparent;
-    
+    border: transparent;
    /*border: 1px solid black;*/
 
 }
 
 .character-backpack .item img {
-    width: 45px; /* Adjust as needed */
-    height: 45px; /* Adjust as needed */
+    width: 50px; /* Adjust as needed */
+    height: 50px; /* Adjust as needed */
 }
 
 

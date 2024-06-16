@@ -74,7 +74,7 @@
             currentCharacter = gameData.character.David;
             currentDialogueIndex = 0; // 將對話索引重設為 0
             playerName = ''; // 將玩家名稱重設為空字串
-            mana = 10; // 將 mana 重設為 100
+            mana = 0; // 將 mana 重設為 100
             backpack = gameData.item; // 將背包重設為初始物品
             showEndScreen = false; // 將是否顯示結束畫面重設為 false
             showContainer = true; // 將是否顯示開始畫面重設為 true
@@ -201,11 +201,12 @@
         }
     }
     function triggerWatchEvent() {
-    const event = gameData.events["Take_watch"];
+    const event = gameData.event["Take_watch"];
 
     currentDialogue = gameData.dialogue[event.dialogue];
     showDialogue(currentDialogue.text);
     currentScene = gameData.scene[event.scene];
+    currentCharacter = gameData.character[currentDialogue.character];
     }
 
 </script>

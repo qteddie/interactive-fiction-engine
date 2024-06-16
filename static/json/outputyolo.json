@@ -57,12 +57,12 @@
             "tachie": "/character/dog/dog.png"
         },
         "fight_david": {
-            "name": "戰鬥主角",
+            "name": "狂暴化主角",
             "avatar": "/character/fight_david/avatar.jpeg",
             "tachie": "/character/fight_david/fight_david.png"
         },
         "angry_lucy": {
-            "name": "憤怒的Lucy",
+            "name": "憤怒隊長",
             "avatar": "/character/angry_lucy/avatar.jpeg",
             "tachie": "/character/angry_lucy/angry_lucy.png"
         }
@@ -247,7 +247,7 @@
     "dialogue": {
         "beginning": {
             "character": "David",
-            "text": "這是哪裡，你們是誰。",
+            "text": "這是哪裡，你們是誰（摸摸口袋有一隻不明針）。",
             "options": [
                 {
                     "text": "問問身邊的人",
@@ -363,7 +363,7 @@
             "text": "(瘋狂訓練）。",
             "options": [
                 {
-                    "text": "LUCY走過來",
+                    "text": "LUCY走過來,詢問針的功用",
                     "event": "Get_boost"
                 }
             ]
@@ -558,7 +558,7 @@
             "options": [
                 {
                     "text": "和反抗小隊請教",
-                    "event": "discusstion"
+                    "event": "Discusstion"
                 }
             ]
         },
@@ -588,7 +588,7 @@
         },
         "final_battle": {
             "character": "David",
-            "text": "(想要毀掉這萬惡之源，於是你指揮機器人和亞當打起來)",
+            "text": "(想要毀掉這萬惡之源，於是你指揮機器人和代理人打起來)",
             "options": [
                 {
                     "text": "雙方都受到重傷，而企業的統治力也不復存在",
