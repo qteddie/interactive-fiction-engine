@@ -1,17 +1,4 @@
 all:
-	emcc -Oz \
-	-s WASM=1 \
-	-s EXPORTED_RUNTIME_METHODS='["cwrap"]' \
-	-s TOTAL_MEMORY=4294967296 \
-	-I./libs/jansson-emcc/src \
-	-I./libs/tomlc99 \
-	src/main.c ./libs/tomlc99/toml.c \
-	-o main.js \
-	-L./libs/jansson-emcc/src/.libs \
-	-ljansson \
-	# --preload-file static/toml/eddie.toml
+	gcc engine.c -o engine
 clean:
-	rm -f main.js
-	# -lyaml
-	# -L./libs/libyaml/src/.libs \
-	# -I./libs/libyaml/include \
+	rm engine
